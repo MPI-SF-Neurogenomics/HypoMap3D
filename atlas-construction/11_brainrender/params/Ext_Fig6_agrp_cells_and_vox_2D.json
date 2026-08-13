@@ -1,0 +1,17 @@
+{
+    "SLICE_THICKNESS": 200,
+    "PLAY_FOR_CELLS": 50,
+    "START_RANGE": 6700,
+    "STOP_RANGE": 7500,
+    "ANNOTATE_REGIONS": false,
+    "SCATTERSIZE_CELL": 0.2,
+    "SCATTERSIZE_VOX": 0.4,
+    "LINEWIDTH": 0.6,
+    "XLIM": [-1900, 1900],
+    "YLIM": [3200, 800],
+    "MIN_CELL_P_TO_PLOT": 0.05,
+    "PLOT_NUCLEI_BELOW": false,
+    "CLUSTER_TO_PLOT": "Gb3-228",
+    "PROB_CMAP": "viridis",
+    "MODALITY_VOX": "rel_mass"
+}

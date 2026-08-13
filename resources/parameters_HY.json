@@ -1,0 +1,76 @@
+{
+    "model_name": "all_HY",
+    "outdir": "4_HY/",
+    "dataset": "3_solo/all_solo/datasets/singlets_only.h5ad",
+    "hvgs": "4_HY/hy_control_4500.csv",
+    "model": {
+        "setup_anndata_kwargs": {
+            "batch_key": "Sample",
+            "size_factor_key": null,
+            "labels_key": null,
+            "categorical_covariate_keys": null,
+            "continuous_covariate_keys": null
+        },
+        "model_kwargs": {
+            "n_hidden": 512,
+            "n_layers": 4,
+            "n_latent": 45,
+            "dispersion": "gene-batch",
+            "gene_likelihood": "zinb"
+        },
+        "train_kwargs": {
+            "datasplitter_kwargs": {"drop_last": true},
+            "max_epochs": 400,
+            "batch_size": 1024,
+            "accelerator": "gpu",
+            "load_sparse_tensor": true,
+            "early_stopping": true,
+            "early_stopping_monitor": "elbo_validation",
+            "early_stopping_patience": 45,
+            "plan_kwargs": {
+                "n_epochs_kl_warmup": 400,
+                "lr_scheduler_metric": "elbo_validation",
+                "lr": 1e-3,
+                "reduce_lr_on_plateau": true,
+                "lr_patience": 30,
+                "lr_factor": 0.6
+            },
+            "check_val_every_n_epoch": 1
+        }
+    },
+    "pca": {
+        "gpu": false,
+        "kwargs":{
+            "n_pcs": 100
+        }
+    },
+    "neighbors": {
+        "gpu": false,
+        "kwargs": {
+            "n_neighbors": 15,
+            "random_state": 22
+        }
+    },
+    "umap": {
+        "gpu": false,
+        "kwargs": {
+            "spread": 1,
+            "min_dist": 0.15,
+            "random_state": 22
+        }
+    },
+    "tsne": {
+        "gpu": false,
+        "kwargs": {
+            "perplexity": 8
+        }
+    },
+    "leiden": {
+        "gpu": false,
+        "kwargs": {
+            "resolution": 1,
+            "random_state": 22
+        }
+
+    }
+}

@@ -1,0 +1,371 @@
+Sample,Author_Sex_harmonized,Strain,Diet,Treatment,Age,Mean_age_in_weeks,IsControl
+SC1-01_SAMN18754353,,C57BL/6J,Normal chow,Ad lib. NC,,,Y
+SC1-01_SAMN18754354,,C57BL/6J,Normal chow,Ad lib. NC,,,Y
+SC1-01_SAMN18754356,,C57BL/6J,Normal chow,Ad lib. NC,,,Y
+SC1-01_SAMN18754357,,C57BL/6J,Normal chow,Ad lib. NC,,,Y
+SC1-01_SAMN18754358,,C57BL/6J,Normal chow,Ad lib. NC,,,Y
+SC1-01_SAMN18754359,,C57BL/6J,Normal chow,Ad lib. NC,,,Y
+SC1-01_SAMN18754360,,C57BL/6J,Normal chow,Ad lib. NC,,,Y
+SC1-01_SAMN18754361,,C57BL/6J,Normal chow,Ad lib. NC,,,Y
+SC1-01_SAMN18754362,,C57BL/6J,Normal chow,Ad lib. NC,,,Y
+SC1-02_SAMN25071604,female,C57BL/6N,Normal chow,control lactating,2-5 months,15.2075,N
+SC1-02_SAMN25071605,female,C57BL/6N,Normal chow,aggressive lactating,2-5 months,15.2075,N
+SC1-02_SAMN25071606,female,C57BL/6N,Normal chow,non aggressive lactating,2-5 months,15.2075,N
+SC1-02_SAMN25071607,female,C57BL/6N,Normal chow,control lactating,2-5 months,15.2075,N
+SC1-02_SAMN25071608,female,C57BL/6N,Normal chow,aggressive lactating,2-5 months,15.2075,N
+SC1-02_SAMN25071609,female,C57BL/6N,Normal chow,aggressive lactating,2-5 months,15.2075,N
+SC1-02_SAMN25071610,female,C57BL/6N,Normal chow,non aggressive lactating,2-5 months,15.2075,N
+SC1-02_SAMN25071611,female,C57BL/6N,Normal chow,control virgin,2-5 months,15.2075,Y
+SC1-02_SAMN25071612,female,C57BL/6N,Normal chow,non aggressive virgin,2-5 months,15.2075,Y
+SC1-02_SAMN25071613,female,C57BL/6N,Normal chow,control virgin,2-5 months,15.2075,Y
+SC1-02_SAMN25071614,female,C57BL/6N,Normal chow,non aggressive virgin,2-5 months,15.2075,Y
+SC1-02_SAMN25071615,female,C57BL/6N,Normal chow,mating virgin,2-5 months,15.2075,N
+SC1-02_SAMN25071616,female,C57BL/6N,Normal chow,non aggressive virgin,2-5 months,15.2075,Y
+SC1-02_SAMN25071617,female,C57BL/6N,Normal chow,mating virgin,2-5 months,15.2075,N
+SC1-02_SAMN25071618,female,C57BL/6N,Normal chow,control post-lactating,2-5 months,15.2075,N
+SC1-02_SAMN25071619,female,C57BL/6N,Normal chow,control post-lactating,2-5 months,15.2075,N
+SC1-03_SAMN06215610,male,C57BL/6J,Normal chow,Ad lib. NC,4-12 weeks,8.0,Y
+SC1-03_SAMN06215611,male,C57BL/6J,HFD_1week,Ad lib. 60% HFD,4-12 weeks,8.0,N
+SC1-03_SAMN06215612,male,C57BL/6J,LFD_1week,Ad lib. 10% LFD,4-12 weeks,8.0,N
+SC1-03_SAMN06215613,male,C57BL/6J,Normal chow,Ad lib. NC,4-12 weeks,8.0,Y
+SC1-03_SAMN06215614,male,C57BL/6J,Normal chow,Ad lib. NC,4-12 weeks,8.0,Y
+SC1-03_SAMN06215615,female,C57BL/6J,Fasted,24 h fast,4-12 weeks,8.0,N
+SC1-03_SAMN06215616,female,C57BL/6J,Normal chow,Ad lib. NC,4-12 weeks,8.0,Y
+SC1-03_SAMN06215617,male,C57BL/6J,Fasted,24 h fast,4-12 weeks,8.0,N
+SC1-03_SAMN06215618,male,C57BL/6J,Normal chow,Ad lib. NC,4-12 weeks,8.0,Y
+SC1-03_SAMN06215619,mixed,C57BL/6J,Refed,24 h fast + 2 h refeeding,4-12 weeks,8.0,N
+SC1-03_SAMN06215620,mixed,C57BL/6J,Fasted,24 h fast,4-12 weeks,8.0,N
+SC1-04_SAMN05858627,,B6D2F1,Fasted,24 h fast,8-10 weeks,9.0,N
+SC1-04_SAMN05858628,,B6D2F1,Normal chow,Ad lib. NC,8-10 weeks,9.0,Y
+SC1-04_SAMN05858629,,B6D2F1,Normal chow,Ad lib. NC,8-10 weeks,9.0,Y
+SC1-04_SAMN05858630,,B6D2F1,Fasted,24 h fast,8-10 weeks,9.0,N
+SC1-04_SAMN05858631,,B6D2F1,Normal chow,Ad lib. NC,8-10 weeks,9.0,Y
+SC1-04_SAMN05858632,,B6D2F1,Normal chow,Ad lib. NC,8-10 weeks,9.0,Y
+SC1-04_SAMN05858633,,B6D2F1,Fasted,24 h fast,8-10 weeks,9.0,N
+SC1-04_SAMN05858634,,B6D2F1,Fasted,24 h fast,8-10 weeks,9.0,N
+SC1-04_SAMN05858635,,B6D2F1,Fasted,24 h fast,8-10 weeks,9.0,N
+SC1-04_SAMN05858636,,B6D2F1,Normal chow,Ad lib. NC,8-10 weeks,9.0,Y
+SC1-04_SAMN05858637,,B6D2F1,Normal chow,Ad lib. NC,8-10 weeks,9.0,Y
+SC1-04_SAMN05858638,,B6D2F1,Normal chow,Ad lib. NC,8-10 weeks,9.0,Y
+SC1-04_SAMN05858639,,B6D2F1,Normal chow,Ad lib. NC,8-10 weeks,9.0,Y
+SC1-04_SAMN05858640,,B6D2F1,Normal chow,Ad lib. NC,8-10 weeks,9.0,Y
+SC1-04_SAMN05858641,,B6D2F1,Fasted,24 h fast,8-10 weeks,9.0,N
+SC1-04_SAMN05858642,,B6D2F1,Fasted,24 h fast,8-10 weeks,9.0,N
+SC1-04_SAMN05858643,,B6D2F1,Fasted,24 h fast,8-10 weeks,9.0,N
+SC1-05_SAMN29598487,male,C57BL/6J,Normal chow,Ad lib. NC,6-8 weeks,7.0,Y
+SC1-05_SAMN29598488,male,C57BL/6J,Normal chow,Ad lib. NC,6-8 weeks,7.0,Y
+SC1-05_SAMN29598489,male,C57BL/6J,Fasted,16 h overnight fast,6-8 weeks,7.0,N
+SC1-05_SAMN29598490,male,C57BL/6J,Fasted,16 h overnight fast,6-8 weeks,7.0,N
+SC1-05_SAMN29598491,male,C57BL/6J,Normal chow,Ad lib. NC,6-8 weeks,7.0,Y
+SC1-05_SAMN29598492,male,C57BL/6J,Normal chow,Ad lib. NC,6-8 weeks,7.0,Y
+SC1-06_SAMN14341535,male,C57BL/6J,Normal chow,Ad lib. NC,30-35 days,4.642857142857143,Y
+SC1-06_SAMN14341536,female,C57BL/6J,Normal chow,Ad lib. NC,30-35 days,4.642857142857143,Y
+SC1-06_SAMN14341537,female,C57BL/6J,Normal chow,Ad lib. NC,30-35 days,4.642857142857143,Y
+SC1-06_SAMN14341538,male,C57BL/6J,Normal chow,Ad lib. NC,30-35 days,4.642857142857143,Y
+SC1-07_2018-0410,male,C57BL/6N,Normal chow,Ad lib. NC Plain,50-110 days,11.428571428571429,Y
+SC1-07_2018-0420,male,C57BL/6N,Normal chow,Ad lib. NC Control,50-110 days,11.428571428571429,Y
+SC1-07_2018-0422,male,C57BL/6N,Normal chow,Ad lib. NC Aggressive,50-110 days,11.428571428571429,N
+SC1-07_2018-0428,female,C57BL/6N,Normal chow,Ad lib. NC Control,50-110 days,11.428571428571429,Y
+SC1-07_2018-0429,male,C57BL/6N,Normal chow,Ad lib. NC Control,50-110 days,11.428571428571429,Y
+SC1-07_2018-0519,male,C57BL/6N,Normal chow,Ad lib. NC M-F_CI_dangled,50-110 days,11.428571428571429,N
+SC1-07_2018-0520,male,C57BL/6N,Normal chow,Ad lib. NC Control,50-110 days,11.428571428571429,Y
+SC1-07_2018-0527,male,C57BL/6N,Normal chow,Ad lib. NC Plain,50-110 days,11.428571428571429,Y
+SC1-07_2018-0630,male,C57BL/6N,Normal chow,Ad lib. NC Aggressive,50-110 days,11.428571428571429,N
+SC1-07_2018-0701,male,C57BL/6N,Normal chow,Ad lib. NC M-F_CI_pencil_cup,50-110 days,11.428571428571429,N
+SC1-07_2018-0703,male,C57BL/6N,Normal chow,Ad lib. NC M-F_CI_pencil_cup,50-110 days,11.428571428571429,N
+SC1-07_2018-0707,female,C57BL/6N,Normal chow,Ad lib. NC Plain,50-110 days,11.428571428571429,Y
+SC1-07_2018-0715,male,C57BL/6N,Normal chow,Ad lib. NC Mating,50-110 days,11.428571428571429,N
+SC1-07_2018-0728,male,C57BL/6N,Normal chow,Ad lib. NC Other,50-110 days,11.428571428571429,N
+SC1-07_2018-0802,female,C57BL/6N,Normal chow,Ad lib. NC Mating,50-110 days,11.428571428571429,N
+SC1-07_2018-0803,male,C57BL/6N,Normal chow,Ad lib. NC Aggressive,50-110 days,11.428571428571429,N
+SC1-07_2018-0812-1,male,C57BL/6N,Normal chow,Ad lib. NC Single Housed + Social Fear,50-110 days,11.428571428571429,N
+SC1-07_2018-0812-2,female,C57BL/6N,Normal chow,Ad lib. NC Mating,50-110 days,11.428571428571429,N
+SC1-07_2018-0812-3,female,C57BL/6N,Normal chow,Ad lib. NC Mating,50-110 days,11.428571428571429,N
+SC1-07_2019-0323,male,C57BL/6N,Normal chow,Ad lib. NC Other,50-110 days,11.428571428571429,N
+SC1-07_2019-0324,male,C57BL/6N,Normal chow,Ad lib. NC Other,50-110 days,11.428571428571429,N
+SC1-07_2019-0325,male,C57BL/6N,Normal chow,Ad lib. NC Goup Housed + Social Fear,50-110 days,11.428571428571429,N
+SC1-07_2019-0330,male,C57BL/6N,Normal chow,Ad lib. NC Single Housed + Social Fear,50-110 days,11.428571428571429,N
+SC1-07_2019-0331,male,C57BL/6N,Normal chow,Ad lib. NC M-F_CI_dangled,50-110 days,11.428571428571429,N
+SC1-07_2019-0413,male,C57BL/6N,Normal chow,Ad lib. NC Other,50-110 days,11.428571428571429,N
+SC1-07_2019-0414,male,C57BL/6N,Normal chow,Ad lib. NC M-F_CI_dangled,50-110 days,11.428571428571429,N
+SC1-08_SAMN11975081,,C57BL/6J,Normal chow,Ad lib. NC,45 days,6.428571428571429,Y
+SC1-08_SAMN11975082,,C57BL/6J,Normal chow,Ad lib. NC,45 days,6.428571428571429,Y
+SC1-09_SAMN10059869,,C57BL/6J,HFHC_2weeks,HFHC_2weeks,8 weeks,8.0,N
+SC1-09_SAMN10059873,,C57BL/6J,HFHC_2weeks,HFHC_2weeks,8 weeks,8.0,N
+SC1-09_SAMN10059874,,C57BL/6J,HFHC_2weeks,HFHC_2weeks,8 weeks,8.0,N
+SC1-10_SAMN10741813,female,C57BL/6J,Normal chow,Ad lib. NC,30 days,4.285714285714286,Y
+SC1-10_SAMN10741814,male,C57BL/6J,Normal chow,Ad lib. NC,30 days,4.285714285714286,Y
+SC1-11_SAMN08975390,male,C57BL/6J,Normal chow,Ad lib. NC,50-90 days,10.0,Y
+SC1-11_SAMN08975391,male,C57BL/6J,Normal chow,Ad lib. NC,50-90 days,10.0,Y
+SC1-11_SAMN08975392,male,C57BL/6J,Normal chow,Ad lib. NC,50-90 days,10.0,Y
+SC1-11_SAMN08975393,female,C57BL/6J,Normal chow,Ad lib. NC,50-90 days,10.0,Y
+SC1-11_SAMN08975394,female,C57BL/6J,Normal chow,Ad lib. NC,50-90 days,10.0,Y
+SC1-11_SAMN08975395,female,C57BL/6J,Normal chow,Ad lib. NC,50-90 days,10.0,Y
+SC1-12_SAMN18093164,,C57BL/6J,Normal chow,Ad lib. NC,10-12 days,1.5714285714285714,Y
+SC1-12_SAMN18093165,,C57BL/6J,Normal chow,Ad lib. NC,10-12 days,1.5714285714285714,Y
+SC1-12_SAMN18093166,,C57BL/6J,Normal chow,Ad lib. NC,10-12 days,1.5714285714285714,Y
+SC1-12_SAMN18093167,,C57BL/6J,Normal chow,Ad lib. NC,10-12 days,1.5714285714285714,Y
+SC1-12_SAMN18093168,,C57BL/6J,Normal chow,Ad lib. NC,10-12 days,1.5714285714285714,Y
+SC1-13_SAMN08730884,male,CD-1,Normal chow,Ad lib. NC,30 days,4.285714285714286,Y
+SC1-13_SAMN08730918,female,CD-1,Normal chow,Ad lib. NC,26 days,3.7142857142857135,Y
+SC1-13_SAMN08730919,female,CD-1,Normal chow,Ad lib. NC,26 days,3.7142857142857135,Y
+SC1-13_SAMN08730943,female,CD-1,Normal chow,Ad lib. NC,19 days,2.7142857142857144,Y
+SC1-13_SAMN08730944,female,CD-1,Normal chow,Ad lib. NC,19 days,2.7142857142857144,Y
+SC1-13_SAMN08730951,female,CD-1,Normal chow,Ad lib. NC,19 days,2.7142857142857144,Y
+SC1-13_SAMN08730952,female,CD-1,Normal chow,Ad lib. NC,19 days,2.7142857142857144,Y
+SC1-13_SAMN08730986,male,Swiss,Normal chow,Ad lib. NC,25-27 days,3.7142857142857135,Y
+SC1-13_SAMN08730987,male,Swiss,Normal chow,Ad lib. NC,25-27 days,3.7142857142857135,Y
+SC1-13_SAMN08730999,missing,missing,Normal chow,Ad lib. NC,19 days,2.7142857142857144,Y
+SC1-13_SAMN08731000,missing,missing,Normal chow,Ad lib. NC,19 days,2.7142857142857144,Y
+SC1-14_SAMN12058578,,C57BL/6J,Normal chow,Ad lib. NC,23 days,3.2857142857142856,Y
+SC1-15_SAMN11554052,male,C57BL/6J,Normal chow,Ad lib. NC,13-20 weeks,16.5,Y
+SC1-15_SAMN11554053,male,C57BL/6J,HFD_9-16weeks,Ad lib. HFD,13-20 weeks,16.5,N
+SC1-15_SAMN11554054,male,C57BL/6J,Normal chow,Ad lib. NC,13-20 weeks,16.5,Y
+SC1-15_SAMN11554055,male,C57BL/6J,HFD_9-16weeks,Ad lib. HFD,13-20 weeks,16.5,N
+SC1-15_SAMN11554056,male,C57BL/6J,Normal chow,Ad lib. NC,13-20 weeks,16.5,Y
+SC1-15_SAMN11554057,male,C57BL/6J,HFD_9-16weeks,Ad lib. HFD,13-20 weeks,16.5,N
+SC1-15_SAMN11554058,male,C57BL/6J,Normal chow,Ad lib. NC,13-20 weeks,16.5,Y
+SC1-15_SAMN11554059,male,C57BL/6J,HFD_9-16weeks,Ad lib. HFD,13-20 weeks,16.5,N
+SC1-15_SAMN11554060,male,C57BL/6J,Normal chow,Ad lib. NC,13-20 weeks,16.5,Y
+SC1-15_SAMN11554061,male,C57BL/6J,HFD_9-16weeks,Ad lib. HFD,13-20 weeks,16.5,N
+SC1-15_SAMN11554062,male,C57BL/6J,Normal chow,Ad lib. NC,13-20 weeks,16.5,Y
+SC1-15_SAMN11554063,male,C57BL/6J,HFD_9-16weeks,Ad lib. HFD,13-20 weeks,16.5,N
+SC1-15_SAMN11554064,male,C57BL/6J,Normal chow,Ad lib. NC,13-20 weeks,16.5,Y
+SC1-15_SAMN11554065,male,C57BL/6J,HFD_9-16weeks,Ad lib. HFD,13-20 weeks,16.5,N
+SC1-16_SAMN18813523,,,Normal chow,Ad lib. NC + Insulin,,,N
+SC1-16_SAMN18813524,,,Normal chow,Ad lib. NC + Saline,,,Y
+SC1-16_SAMN18813525,,,Normal chow,Ad lib. NC + Insulin,,,N
+SC1-16_SAMN18813526,,,Normal chow,Ad lib. NC + Saline,,,Y
+SC1-17_SAMN12039425,,C57BL/6,Normal chow,Ad lib. NC + constant dark,8 weeks,8.0,N
+SC1-18_SAMN09688207,,C57BL/6,Normal chow,Ad lib. NC + constant dark,8 weeks,8.0,N
+SC1-18_SAMN09688209,,C57BL/6,Normal chow,Ad lib. NC + constant dark followed 1 h light stimulus,8 weeks,8.0,N
+SC1-18_SAMN09688210,,C57BL/6,Normal chow,Ad lib. NC + constant dark,8 weeks,8.0,N
+SC1-18_SAMN09688211,,C57BL/6,Normal chow,Ad lib. NC + constant dark,8 weeks,8.0,N
+SC1-18_SAMN09688212,,C57BL/6,Normal chow,Ad lib. NC + constant dark,8 weeks,8.0,N
+SC1-18_SAMN09688213,,C57BL/6,Normal chow,Ad lib. NC + constant dark,8 weeks,8.0,N
+SC1-18_SAMN09688214,,C57BL/6,Normal chow,Ad lib. NC + constant dark,8 weeks,8.0,N
+SC1-18_SAMN09688215,,C57BL/6,Normal chow,Ad lib. NC + constant dark,8 weeks,8.0,N
+SC1-18_SAMN09688216,,C57BL/6,Normal chow,Ad lib. NC + constant dark,8 weeks,8.0,N
+SC1-18_SAMN09688217,,C57BL/6,Normal chow,Ad lib. NC + constant dark,8 weeks,8.0,N
+SC1-18_SAMN09688218,,C57BL/6,Normal chow,Ad lib. NC + constant dark,8 weeks,8.0,N
+SC1-18_SAMN09688219,,C57BL/6,Normal chow,Ad lib. NC + constant dark,8 weeks,8.0,N
+SC1-18_SAMN09688220,,C57BL/6,Normal chow,Ad lib. NC + constant dark,8 weeks,8.0,N
+SC2-01_SAMN27630452,male,C57BL/6N,Normal chow,Ad lib. NC + chronic mild stress (CMS) + acute restraint stress (ARS),11 weeks,11.0,N
+SC2-01_SAMN27630453,female,C57BL/6N,Normal chow,Ad lib. NC + chronic mild stress (CMS) + acute restraint stress (ARS),11 weeks,11.0,N
+SC2-01_SAMN27630454,male,C57BL/6N,Normal chow,Ad lib. NC + control (unstressed),11 weeks,11.0,Y
+SC2-01_SAMN27630455,female,C57BL/6N,Normal chow,Ad lib. NC + control (unstressed),11 weeks,11.0,Y
+SC2-01_SAMN27630456,male,C57BL/6N,Normal chow,Ad lib. NC + acute restraint stress (ARS),10 weeks,10.0,N
+SC2-01_SAMN27630457,female,C57BL/6N,Normal chow,Ad lib. NC + acute restraint stress (ARS),10 weeks,10.0,N
+SC2-01_SAMN27630458,male,C57BL/6N,Normal chow,Ad lib. NC + control (unstressed),10 weeks,10.0,Y
+SC2-01_SAMN27630459,female,C57BL/6N,Normal chow,Ad lib. NC + control (unstressed),10 weeks,10.0,Y
+SC2-02_SAMN35028080,mixed,C57BL/6,Normal chow,Ad lib. NC,7 weeks,7.0,Y
+SC2-02_SAMN35028081,mixed,C57BL/6,Normal chow,Ad lib. NC,7 weeks,7.0,Y
+SC2-03_SAMN23075094,female,C57BL/6,Normal chow,Ad lib. NC,3 months,13.035,Y
+SC2-03_SAMN23075095,female,C57BL/6,Normal chow,Ad lib. NC,3 months,13.035,Y
+SC2-03_SAMN23075096,female,C57BL/6,Normal chow,Ad lib. NC,3 months,13.035,Y
+SC2-03_SAMN23075097,female,C57BL/6,Normal chow,Ad lib. NC,3 months,13.035,Y
+SC2-03_SAMN23075098,female,C57BL/6,Normal chow,Ad lib. NC,19-24 months,93.4175,N
+SC2-03_SAMN23075099,female,C57BL/6,Normal chow,Ad lib. NC,19-24 months,93.4175,N
+SC2-03_SAMN23075100,female,C57BL/6,Normal chow,Ad lib. NC,19-24 months,93.4175,N
+SC2-03_SAMN23075101,female,C57BL/6,Normal chow,Ad lib. NC,19-24 months,93.4175,N
+SC2-04_SC2-04,,Oxt-IRES-Cre: CAG-Sun1-sfGFP,NC diet or HFHS diet pooled,Ad lib. NC diet or HFHS diet pooled,26 weeks,26.0,N
+SC2-05_SAMN33439313,female,C57BL/6N,Normal chow,Ad lib. NC none-Control (collected at 23 dpi),13-14 weeks,13.5,Y
+SC2-05_SAMN33439314,female,C57BL/6N,Normal chow,Ad lib. NC + intranasal IVA infection H1N1 A/California/07/2009-23 days post infection,13-14 weeks,13.5,N
+SC2-05_SAMN33439315,female,C57BL/6N,Normal chow,Ad lib. NC + intranasal IVA infection H1N1 A/California/07/2009-7 days post infection,11-12 weeks,11.5,N
+SC2-05_SAMN33439316,female,C57BL/6N,Normal chow,Ad lib. NC + intranasal IVA infection H1N1 A/California/07/2009-3 days post infection,10-11 weeks,10.5,N
+SC2-06_SAMN14730700,,FosTRAP2 (Jax 030323),Normal chow,Ad lib. NC + fast & Tamoxifen at some point for Fos Trap,6-12 weeks,9.0,Y
+SC2-06_SAMN14730701,,FosTRAP2 (Jax 030323),Normal chow,Ad lib. NC + fast & Tamoxifen at some point for Fos Trap,6-12 weeks,9.0,Y
+SC2-06_SAMN14730702,,FosTRAP2 (Jax 030323),Normal chow,Ad lib. NC + fast & Tamoxifen at some point for Fos Trap,6-12 weeks,9.0,Y
+SC2-06_SAMN14730703,,FosTRAP2 (Jax 030323),Normal chow,Ad lib. NC + fast & Tamoxifen at some point for Fos Trap,6-12 weeks,9.0,Y
+SC2-06_SAMN14730704,,FosTRAP2 (Jax 030323),Normal chow,Ad lib. NC + fast & Tamoxifen at some point for Fos Trap,6-12 weeks,9.0,Y
+SC2-07_SAMN28911485,male,C57BL/6JRj,HFHS,High-fat high-sugar (HFHS) diet,5-6 weeks,5.5,N
+SC2-07_SAMN28911486,male,C57BL/6JRj,HFHS,High-fat high-sugar (HFHS) diet,5-6 weeks,5.5,N
+SC2-07_SAMN28911487,male,C57BL/6JRj,Normal chow,Ad lib. NC,5-6 weeks,5.5,Y
+SC2-08_SAMN30500892,,TRalpha1+m,Normal chow,Ad lib. NC,,,Y
+SC2-08_SAMN30500893,,TRalpha1+m,Normal chow,Ad lib. NC,,,Y
+SC2-08_SAMN30500894,,C57BL/6NCrl,Normal chow,Ad lib. NC,,,Y
+SC2-08_SAMN30500895,,C57BL/6NCrl,Normal chow,Ad lib. NC,,,Y
+SC2-09_SAMN30438149,,C57BL/6J,Normal chow scheduled,scheduled NC feeding,13-21 weeks,17.0,N
+SC2-09_SAMN30438150,,C57BL/6J,Fasted,fasted,13-21 weeks,17.0,N
+SC2-09_SAMN30438151,,C57BL/6J,Normal chow,Ad lib. NC,13-21 weeks,17.0,Y
+SC2-09_SAMN30438152,,C57BL/6J,unknown,mixed NC (scheduled and ad lib.),13-21 weeks,17.0,N
+SC2-09_SAMN30438153,,C57BL/6J,unknown,mixed NC (scheduled and ad lib.),13-21 weeks,17.0,N
+SC2-09_SAMN30438154,,C57BL/6J,unknown,mixed NC (scheduled and ad lib.),13-21 weeks,17.0,N
+SC2-09_SAMN30438155,,C57BL/6J,unknown,mixed NC (scheduled and ad lib.),13-21 weeks,17.0,N
+SC2-09_SAMN30438156,,C57BL/6J,Normal chow scheduled,scheduled NC feeding,13-21 weeks,17.0,N
+SC2-09_SAMN30438157,,C57BL/6J,Fasted,fasted overnight,13-21 weeks,17.0,N
+SC2-09_SAMN30438158,,C57BL/6J,Normal chow,Ad lib. NC,13-21 weeks,17.0,Y
+SC2-09_SAMN30438159,,C57BL/6J,unknown,mixed NC (scheduled and ad lib.),13-21 weeks,17.0,N
+SC2-09_SAMN30438160,,C57BL/6J,unknown,mixed NC (scheduled and ad lib.),13-21 weeks,17.0,N
+SC2-10_SAMN32316700,male,C57BL/6J,Normal chow,Ad lib. NC + sham pellet implant for 3 weeks,10 weeks,10.0,Y
+SC2-10_SAMN32316701,male,C57BL/6J,Normal chow,Ad lib. NC + sham pellet implant for 3 weeks,10 weeks,10.0,Y
+SC2-10_SAMN32316702,male,C57BL/6J,Normal chow,Ad lib. NC + DOCA-salt pellet implantat for 3 weeks,10 weeks,10.0,N
+SC2-10_SAMN32316703,male,C57BL/6J,Normal chow,Ad lib. NC + DOCA-salt pellet implantat for 3 weeks,10 weeks,10.0,N
+SC2-11_SAMN37907545-L8TX-180504-01-F01,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),59 days,8.428571428571429,Y
+SC2-11_SAMN37907545-L8TX-180504-01-G01,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),59 days,8.428571428571429,Y
+SC2-11_SAMN37907547-L8TX-180607-01-D05,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),55 days,7.857142857142857,Y
+SC2-11_SAMN37907577-L8TX-181019-01-C06,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),56 days,8.0,Y
+SC2-11_SAMN37907577-L8TX-181019-01-D06,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),56 days,8.0,Y
+SC2-11_SAMN37907577-L8TX-181019-01-E06,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),56 days,8.0,Y
+SC2-11_SAMN37907577-L8TX-181019-01-G06,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),56 days,8.0,Y
+SC2-11_SAMN37907578-L8TX-181019-01-B06,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),56 days,8.0,Y
+SC2-11_SAMN37907578-L8TX-181019-01-F06,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),56 days,8.0,Y
+SC2-11_SAMN37907580-L8TX-181031-01-A07,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),53 days,7.571428571428571,Y
+SC2-11_SAMN37907580-L8TX-181031-01-B07,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),53 days,7.571428571428571,Y
+SC2-11_SAMN37907580-L8TX-181031-01-C07,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),53 days,7.571428571428571,Y
+SC2-11_SAMN37907580-L8TX-181031-01-E08,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),53 days,7.571428571428571,Y
+SC2-11_SAMN37907580-L8TX-181031-01-H06,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),53 days,7.571428571428571,Y
+SC2-11_SAMN37907583-L8TX-181126-01-C11,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),54 days,7.714285714285714,Y
+SC2-11_SAMN37907583-L8TX-181126-01-D11,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),54 days,7.714285714285714,Y
+SC2-11_SAMN37907583-L8TX-181126-01-E11,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),54 days,7.714285714285714,Y
+SC2-11_SAMN37907583-L8TX-181126-01-F11,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),54 days,7.714285714285714,Y
+SC2-11_SAMN37907583-L8TX-181126-01-G11,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),54 days,7.714285714285714,Y
+SC2-11_SAMN37926652-L8TX-200902-01-B11,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),65 days,9.285714285714286,Y
+SC2-11_SAMN37926653-L8TX-200903-01-C01,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),65 days,9.285714285714286,Y
+SC2-11_SAMN37926654-L8TX-200903-01-D12,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),64 days,9.142857142857142,Y
+SC2-11_SAMN37926655-L8TX-200903-01-H11,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),64 days,9.142857142857142,Y
+SC2-11_SAMN37926656-L8TX-200903-01-A12,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),64 days,9.142857142857142,Y
+SC2-11_SAMN37926660-L8TX-201016-01-A04,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),61 days,8.714285714285714,Y
+SC2-11_SAMN37926661-L8TX-201016-01-B04,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),61 days,8.714285714285714,Y
+SC2-11_SAMN37926662-L8TX-201015-01-B03,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),62 days,8.857142857142858,Y
+SC2-11_SAMN37926663-L8TX-201016-01-E04,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),62 days,8.857142857142858,Y
+SC2-11_SAMN37926664-L8TX-201015-01-E02,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),62 days,8.857142857142858,Y
+SC2-11_SAMN37926665-L8TX-201023-01-E09,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),67 days,9.571428571428571,Y
+SC2-11_SAMN37926666-L8TX-201022-01-D06,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),67 days,9.571428571428571,Y
+SC2-11_SAMN37926667-L8TX-201113-01-H06,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),69 days,9.857142857142858,Y
+SC2-11_SAMN37926672-L8TX-210304-01-F01,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),60 days,8.571428571428571,Y
+SC2-11_SAMN37926691-L8TX-220331-01-D05,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),65 days,9.285714285714286,Y
+SC2-11_SAMN37926693-L8TX-220407-01-E06,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),60 days,8.571428571428571,Y
+SC2-11_SAMN37926923-L8TX-200813-01-G10,female,C57BL/6J,Normal chow,Ad lib. NC + sac at dark (12:12h cycle),66 days,9.428571428571429,N
+SC2-11_SAMN37926924-L8TX-200820-01-G03,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),57 days,8.142857142857142,Y
+SC2-11_SAMN37926926-L8TX-200827-01-G09,male,C57BL/6J,Normal chow,Ad lib. NC + sac at dark (12:12h cycle),59 days,8.428571428571429,N
+SC2-11_SAMN37926955-L8TX-201029-01-G10,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),58 days,8.285714285714286,Y
+SC2-11_SAMN37926977-L8TX-201105-01-B02,male,C57BL/6J,Normal chow,Ad lib. NC + sac at dark (12:12h cycle),54 days,7.714285714285714,N
+SC2-11_SAMN37927004-L8TX-201210-01-C04,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),67 days,9.571428571428571,Y
+SC2-11_SAMN37927024-L8TX-201210-01-D04,female,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),60 days,8.571428571428571,Y
+SC2-11_SAMN37927028-L8TX-201210-01-E04,female,C57BL/6J,Normal chow,Ad lib. NC + sac at dark (12:12h cycle),58 days,8.285714285714286,N
+SC2-11_SAMN37927030-L8TX-201217-01-F06,male,C57BL/6J,Normal chow,Ad lib. NC + sac at dark (12:12h cycle),60 days,8.571428571428571,N
+SC2-11_SAMN37927062-L8TX-210325-01-H07,female,C57BL/6J,Normal chow,Ad lib. NC + sac at dark (12:12h cycle),68 days,9.714285714285714,N
+SC2-11_SAMN37927069-L8TX-210401-01-D09,male,C57BL/6J,Normal chow,Ad lib. NC + sac at light (14:10h cycle),65 days,9.285714285714286,Y
+SC2-12_SAMN33906278,,C57BL/6NCrl,Normal chow,Ad lib. NC + Ultrasound stimulation,6-9 weeks,7.5,N
+SC2-12_SAMN33906279,,C57BL/6NCrl,Normal chow,Ad lib. NC + Ultrasound sham treatment,6-9 weeks,7.5,Y
+SC2-13_M2TX-200730-202-C01,female,Snap25-IRES2-Cre/wt: Ai14(RCL-tdT)/wt,Normal chow,Ad lib. NC,543 days,77.57142857142857,N
+SC2-13_M2TX-200730-202-D01,female,Snap25-IRES2-Cre/wt: Ai14(RCL-tdT)/wt,Normal chow,Ad lib. NC,543 days,77.57142857142857,N
+SC2-13_M2TX-200923-203-C01,female,Snap25-IRES2-Cre/wt: Ai14(RCL-tdT)/wt,Normal chow,Ad lib. NC,541 days,77.28571428571429,N
+SC2-13_M2TX-200923-203-D01,female,Snap25-IRES2-Cre/wt: Ai14(RCL-tdT)/wt,Normal chow,Ad lib. NC,541 days,77.28571428571429,N
+SC2-13_M2TX-200924-203-B01,male,Snap25-IRES2-Cre/wt: Ai14(RCL-tdT)/wt,Normal chow,Ad lib. NC,542 days,77.42857142857143,N
+SC2-13_M2TX-200924-203-C01,male,Snap25-IRES2-Cre/wt: Ai14(RCL-tdT)/wt,Normal chow,Ad lib. NC,542 days,77.42857142857143,N
+SC2-13_M2TX-201001-203-C01,male,Ai14(RCL-tdT)/wt,Normal chow,Ad lib. NC,551 days,78.71428571428571,N
+SC2-13_M2TX-201001-203-D01,male,Ai14(RCL-tdT)/wt,Normal chow,Ad lib. NC,551 days,78.71428571428571,N
+SC2-13_M2TX-201015-202-D01,male,Ai14(RCL-tdT)/wt,Normal chow,Ad lib. NC,545 days,77.85714285714286,N
+SC2-13_M2TX-201015-202-E01,male,Ai14(RCL-tdT)/wt,Normal chow,Ad lib. NC,545 days,77.85714285714286,N
+SC2-13_M2TX-201015-202-F01,male,Ai14(RCL-tdT)/wt,Normal chow,Ad lib. NC,545 days,77.85714285714286,N
+SC2-14_SAMEA12921925,female,Orex-HA: CL4-TCR,unknown,CD4+ T cell Transfer,6-8 weeks old,7.0,Y
+SC2-15_SAMN27529643,female,C57BL/6J,Normal chow,Ad lib. NC + 45 days post-infection with Trypanosoma brucei,6-8 weeks,7.0,N
+SC2-15_SAMN27529644,female,C57BL/6J,Normal chow,Ad lib. NC + 45 days post-infection with Trypanosoma brucei,6-8 weeks,7.0,N
+SC2-15_SAMN27529645,female,C57BL/6J,Normal chow,Ad lib. NC + 25 days post-infection with Trypanosoma brucei,6-8 weeks,7.0,N
+SC2-15_SAMN27529646,female,C57BL/6J,Normal chow,Ad lib. NC + 25 days post-infection with Trypanosoma brucei,6-8 weeks,7.0,N
+SC2-15_SAMN27529647,female,C57BL/6J,Normal chow,Ad lib. NC,6-8 weeks,7.0,Y
+SC2-15_SAMN27529648,female,C57BL/6J,Normal chow,Ad lib. NC,6-8 weeks,7.0,Y
+SC2-16_SAMN28869070,male,C57BL/6J,Normal chow,Ad lib. NC + adamantinomatous craniopharyngioma cystic fluid injection,8 weeks,8.0,N
+SC2-16_SAMN28869149,male,C57BL/6J,Normal chow,Ad lib. NC + sham injection,8 weeks,8.0,Y
+SC2-17_SAMN33482278,male,C57BL/6N,HFD_7weeks,Ad. lib HFD + acute hypoglycaemia (AH) diabetic (HFD+STZ),18 week,18.0,N
+SC2-17_SAMN33482279,male,C57BL/6N,HFD_7weeks,Ad. lib HFD + recurrent hypoglycaemia (RH) diabetic (HFD+STZ),18 week,18.0,N
+SC2-17_SAMN33482280,male,C57BL/6N,HFD_7weeks,Ad. lib HFD + acute hypoglycaemia (AH) diabetic (HFD+STZ),18 week,18.0,N
+SC2-17_SAMN33482281,male,C57BL/6N,HFD_7weeks,Ad. lib HFD + recurrent hypoglycaemia (RH) diabetic (HFD+STZ),18 week,18.0,N
+SC2-18_SAMN30618850,male,DBA/2J,Normal chow,"antibiotics, then NC + A. muciniphila gavage",10 weeks,10.0,N
+SC2-18_SAMN30618851,male,DBA/2J,Normal chow,"antibiotics, then NC + A. muciniphila gavage",10 weeks,10.0,N
+SC2-18_SAMN30618852,male,DBA/2J,Normal chow,"antibiotics, then NC + A. muciniphila gavage",10 weeks,10.0,N
+SC2-18_SAMN30618853,male,DBA/2J,Normal chow + fructose in water,"antibiotics, then NC + liquid fructose + A. muciniphila gavage",10 weeks,10.0,N
+SC2-18_SAMN30618854,male,DBA/2J,Normal chow + fructose in water,"antibiotics, then NC + liquid fructose + A. muciniphila gavage",10 weeks,10.0,N
+SC2-18_SAMN30618855,male,DBA/2J,Normal chow + fructose in water,"antibiotics, then NC + liquid fructose + A. muciniphila gavage",10 weeks,10.0,N
+SC2-18_SAMN30618856,male,DBA/2J,Normal chow,"antibiotics, then NC + PBS gavage",10 weeks,10.0,N
+SC2-18_SAMN30618857,male,DBA/2J,Normal chow,"antibiotics, then NC + PBS gavage",10 weeks,10.0,N
+SC2-18_SAMN30618858,male,DBA/2J,Normal chow,"antibiotics, then NC + PBS gavage",10 weeks,10.0,N
+SC2-18_SAMN30618859,male,DBA/2J,Normal chow + fructose in water,"antibiotics, then NC + liquid fructose + PBS gavage",10 weeks,10.0,N
+SC2-18_SAMN30618860,male,DBA/2J,Normal chow + fructose in water,"antibiotics, then NC + liquid fructose + PBS gavage",10 weeks,10.0,N
+SC2-18_SAMN30618861,male,DBA/2J,Normal chow + fructose in water,"antibiotics, then NC + liquid fructose + PBS gavage",10 weeks,10.0,N
+SC2-19_A006200239-175209,male,C57BL/6J,Normal chow,Ad lib. NC,13 weeks,13.0,Y
+SC2-19_A006200239-175220,male,C57BL/6J,Normal chow,Ad lib. NC,13 weeks,13.0,Y
+SC2-19_A006200239-175230,male,C57BL/6J,Normal chow,Ad lib. NC,13 weeks,13.0,Y
+SC2-19_A006200239-175241,male,C57BL/6J,Normal chow,Ad lib. NC,13 weeks,13.0,Y
+SC2-20_F019-HY1,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F019-HY2,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F019-HY3,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F019-HY4,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F019-HY5,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F019-HY6,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F021-HY1,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F021-HY2,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F021-HY3,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F021-HY4,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F021-HY5,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F021-HY6,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F022-HY1,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F022-HY2,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F022-HY3,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F022-HY4,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F022-HY5,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_F022-HY6,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_M022-HY1,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_M022-HY2,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_M022-HY3,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_M022-HY4,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_M022-HY5,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-20_M022-HY6,,C57BL/6J,Normal chow,Ad lib. NC,56 days,8.0,Y
+SC2-21_SAMN37445722,female,C57BL/6J,Normal chow,Ad lib. NC + sleep deprivation + sac at end of light phase,2-3 months,10.8625,N
+SC2-21_SAMN37445723,female,C57BL/6J,Normal chow,Ad lib. NC + sleep deprivation + sac at end of light phase,2-3 months,10.8625,N
+SC2-21_SAMN37445724,female,C57BL/6J,Normal chow,Ad lib. NC + sleep deprivation + sac at end of light phase,2-3 months,10.8625,N
+SC2-21_SAMN37445725,female,C57BL/6J,Normal chow,Ad lib. NC + sleep deprivation + sac at end of light phase,2-3 months,10.8625,N
+SC2-21_SAMN37445726,female,C57BL/6J,Normal chow,Ad lib. NC + sleep deprivation + sac at end of light phase,2-3 months,10.8625,N
+SC2-21_SAMN37445727,male,C57BL/6J,Normal chow,Ad lib. NC + sleep deprivation + sac at end of light phase,2-3 months,10.8625,N
+SC2-21_SAMN37445728,male,C57BL/6J,Normal chow,Ad lib. NC + sleep deprivation + sac at end of light phase,2-3 months,10.8625,N
+SC2-21_SAMN37445729,male,C57BL/6J,Normal chow,Ad lib. NC + sleep deprivation + sac at end of light phase,2-3 months,10.8625,N
+SC2-21_SAMN37445730,male,C57BL/6J,Normal chow,Ad lib. NC + sleep deprivation + sac at end of light phase,2-3 months,10.8625,N
+SC2-21_SAMN37445731,male,C57BL/6J,Normal chow,Ad lib. NC + sleep deprivation + sac at end of light phase,2-3 months,10.8625,N
+SC2-21_SAMN37445732,female,C57BL/6J,Normal chow,Ad lib. NC + sac at end of light phase,2-3 months,10.8625,Y
+SC2-21_SAMN37445733,female,C57BL/6J,Normal chow,Ad lib. NC + sac at end of light phase,2-3 months,10.8625,Y
+SC2-21_SAMN37445734,female,C57BL/6J,Normal chow,Ad lib. NC + sac at end of light phase,2-3 months,10.8625,Y
+SC2-21_SAMN37445735,female,C57BL/6J,Normal chow,Ad lib. NC + sac at end of light phase,2-3 months,10.8625,Y
+SC2-21_SAMN37445736,male,C57BL/6J,Normal chow,Ad lib. NC + sac at end of light phase,2-3 months,10.8625,Y
+SC2-21_SAMN37445737,male,C57BL/6J,Normal chow,Ad lib. NC + sac at end of light phase,2-3 months,10.8625,Y
+SC2-21_SAMN37445738,male,C57BL/6J,Normal chow,Ad lib. NC + sac at end of light phase,2-3 months,10.8625,Y
+SC2-21_SAMN37445739,male,C57BL/6J,Normal chow,Ad lib. NC + sac at end of light phase,2-3 months,10.8625,Y
+SC2-21_SAMN37445740,male,C57BL/6J,Normal chow,Ad lib. NC + sac at end of light phase,2-3 months,10.8625,Y
+SC2-22_SAMN44516392,female,C57BL/6J,Normal chow,Ad lib. NC,65 days,9.285714285714286,Y
+SC2-22_SAMN44516393,female,C57BL/6J,Normal chow,Ad lib. NC,65 days,9.285714285714286,Y
+SC2-22_SAMN44516394,male,C57BL/6J,Normal chow,Ad lib. NC,65 days,9.285714285714286,Y
+SC2-22_SAMN44516395,male,C57BL/6J,Normal chow,Ad lib. NC,65 days,9.285714285714286,Y
+SC2-22_SAMN44516420,female,Trpc2-/-,Normal chow,Ad lib. NC,65 days,9.285714285714286,N
+SC2-22_SAMN44516421,male,Trpc2-/-,Normal chow,Ad lib. NC,65 days,9.285714285714286,N
+SC2-22_SAMN44516422,female,Trpc2-/+,Normal chow,Ad lib. NC,65 days,9.285714285714286,Y
+SC2-22_SAMN44516423,male,Trpc2-/+,Normal chow,Ad lib. NC,65 days,9.285714285714286,Y
+SC2-22_SAMN44516436,female,Advillin-Cre: Gabrb3-fl/+,Normal chow,Ad lib. NC,65 days,9.285714285714286,N
+SC2-22_SAMN44516437,male,Advillin-Cre: Gabrb3-fl/+,Normal chow,Ad lib. NC,65 days,9.285714285714286,N
+SC2-22_SAMN44516438,female,Advillin-Cre(-/+): Gabrb3-fl(-/+)/+,Normal chow,Ad lib. NC,65 days,9.285714285714286,Y
+SC2-22_SAMN44516439,male,Advillin-Cre(-/+): Gabrb3-fl(-/+)/+,Normal chow,Ad lib. NC,65 days,9.285714285714286,Y
+SC2-22_SAMN44516452,male,Cnga2-/y,Normal chow,Ad lib. NC,65 days,9.285714285714286,Y
+SC2-22_SAMN44516453,male,Cnga2-/y,Normal chow,Ad lib. NC,65 days,9.285714285714286,N
+SC2-22_SAMN44516454,male,Cnga2+/y,Normal chow,Ad lib. NC,65 days,9.285714285714286,Y
+SC2-22_SAMN44516455,male,Cnga2+/y,Normal chow,Ad lib. NC,65 days,9.285714285714286,Y
+SC2-23_SAMN34591639,male,C57BL/6J,Normal chow,Ad lib. NC + sac in dark phase,10 weeks,10.0,N
+SC2-23_SAMN34591640,male,C57BL/6J,Normal chow,Ad lib. NC + sac in dark phase,10 weeks,10.0,N
+SC2-23_SAMN34591641,male,C57BL/6J,Normal chow,Ad lib. NC,10 weeks,10.0,Y
+SC2-23_SAMN34591642,male,C57BL/6J,Normal chow,Ad lib. NC,10 weeks,10.0,Y
+SC2-24_SAMN43828887,,AgRP-Cre,Normal chow,Ad lib. NC + mcherry control virus,,,N
+SC2-24_SAMN43828888,,AgRP-Cre,Refed,Rabies + Refed,,,N
+SC2-24_SAMN43828889,,AgRP-Cre,Normal chow,Ad lib. NC + Rabies,,,N
+SC2-24_SAMN43828890,,AgRP-Cre,Fasted,Rabies + Fasted,,,N
+SC2-24_SAMN43828891,,AgRP-Cre,Normal chow,Ad lib. NC + Rabies,,,N
+SC2-25_SAMN46505598,male,C57BL/6J,Normal chow,Ad lib. NC + vehicle,36 weeks,36.0,Y
+SC2-25_SAMN46505599,male,C57BL/6J,HFD_12weeks,Ad lib. HFD + vehicle,36 weeks,36.0,N
+SC2-25_SAMN46505600,male,C57BL/6J,HFD_12weeks,Ad lib. HFD + acyl-GIP,36 weeks,36.0,N
+SC2-25_SAMN46505601,male,C57BL/6J,HFD_12weeks,Ad lib. HFD + GIPR antagonist,36 weeks,36.0,N
+SC2-25_SAMN46505602,male,C57BL/6J,HFD_12weeks,Ad lib. HFD + acyl-GLP-1,36 weeks,36.0,N
+SC2-25_SAMN46505603,male,C57BL/6J,HFD_12weeks,Ad lib. HFD + MAR709,36 weeks,36.0,N
+SC2-25_SAMN46505604,male,C57BL/6J,HFD_12weeks,Ad lib. HFD + MAR709,36 weeks,36.0,N
+SC2-25_SAMN46505605,male,C57BL/6J,HFD_12weeks,Ad lib. HFD + acyl-GLP-1,36 weeks,36.0,N
+SC2-25_SAMN46505606,male,C57BL/6J,HFD_12weeks,Ad lib. HFD + GIPR antagonist,36 weeks,36.0,N
+SC2-25_SAMN46505607,male,C57BL/6J,HFD_12weeks,Ad lib. HFD + acyl-GIP,36 weeks,36.0,N
+SC2-25_SAMN46505608,male,C57BL/6J,HFD_12weeks,Ad lib. HFD + vehicle,36 weeks,36.0,N
+SC2-25_SAMN46505609,male,C57BL/6J,Normal chow,Ad lib. NC + vehicle,36 weeks,36.0,Y

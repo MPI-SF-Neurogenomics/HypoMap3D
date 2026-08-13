@@ -1,0 +1,17 @@
+{
+    "SLICE_THICKNESS": 200,
+    "START_RANGE": 5000,
+    "STOP_RANGE": 5800,
+    "ANNOTATE_REGIONS": false,
+    "SCATTERSIZE": 0.8,
+    "LINEWIDTH": 0.6,
+    "XLIM": [-100, 1900],
+    "YLIM": [3200, 800],
+    "MIN_P": 0,
+    "CMAP_NAME": "viridis",
+    "PLOT_NUCLEI_BELOW": false,
+    "CLUSTERS_TO_PLOT": ["Gb4-438", "Gb4-441", "Gb4-444", "Gl4-1", "Gl4-220", "Gl4-218"],
+    "RESTRICT_P_TO_HY": true,
+    "MODALITY": "rel_mass",
+    "IS_BREGMA_COORDS": false
+}

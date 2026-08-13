@@ -1,0 +1,1201 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Spatial smoothing &#8212; HypoMap3D</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=a1637f0b"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pages/tutorials/SpatialSmoothing';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Projection and Label Transfer" href="ProjectAndTransferLabels.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/hm3d-logo.png" class="logo__image only-light" alt="HypoMap3D - Home"/>
+    <img src="../../_static/hm3d-logo.png" class="logo__image only-dark pst-js-only" alt="HypoMap3D - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Datasets:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../datasets/singlecell.html">Single Cell Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/spatial.html">Spatial Objects</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="SingleCellExploration.html">Single Cell Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SpatialSlicePlotting.html">Spatial Slice Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RegionCellTypeSelection.html">Region-based Cell Type Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ProjectAndTransferLabels.html">Projection and Label Transfer</a></li>
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Spatial smoothing</a></li>
+
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/pages/tutorials/SpatialSmoothing.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Spatial smoothing</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Spatial smoothing</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Init-new-voxel-store">Init new voxel store</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Load-and-prepare-cell-level-ST-data">Load and prepare cell-level ST data</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Load-adata">Load adata</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Putting-CCF-coords-into-the-right-place">Putting CCF coords into the right place</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Wrap-all-cells-into-the-same-hemisphere">Wrap all cells into the same hemisphere</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Filter-cells-for-the-bounding-box-of-HypoMap3D's-voxel-space">Filter cells for the bounding box of HypoMap3D’s voxel space</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Create-voxel-coordinate-system">Create voxel coordinate system</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Get-ID-to-abc-like-and-ID-to-descriptive-labels-mapper-for-later">Get ID to abc-like and ID to descriptive labels mapper for later</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Smoothing">Smoothing</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="Spatial-smoothing">
+<h1>Spatial smoothing<a class="headerlink" href="#Spatial-smoothing" title="Link to this heading">#</a></h1>
+<p>This tutorial demonstrates how to generate voxel-wise cell type membership probabilities/relative masses for your single-cell-resolved spatial transcriptomics (ST) dataset.</p>
+<p>In this notebook, we will:</p>
+<ol class="arabic simple">
+<li><p>Use HypoMap3D’s voxel store to initialize a new store</p></li>
+<li><p>Assign cells to voxels and smooth membership probabilities</p></li>
+</ol>
+<p>Requirements:</p>
+<ol class="arabic simple">
+<li><p>HypoMap3D’s code base and environment. For this, follow the instructions at the root of the Git repo.</p></li>
+<li><p>HypoMap3D’s voxel store. Download it and place it into DATADIR/9_objects/spatial/hypomap3d_spatial_voxel_level.zarr</p></li>
+<li><p>An ST dataset with CCF coordinates as well as HypoMap3D cell type labels as transferred in the ProjectAndTransferLabels notebook. In this tutorial, we will use HypoMap3D’s cell-level spatial data. If you want to rerun the notebook as is, download the cell-level spatial data into DATADIR/9_objects/spatial/hypomap3d_spatial_cell_level.h5ad</p></li>
+</ol>
+<p>Of course, the above paths can be modified but then they have to be changed accordingly below as well.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">zarr.core.dtype</span><span class="w"> </span><span class="kn">import</span> <span class="n">VariableLengthUTF8</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">dotenv_values</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">gaussian_filter</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tqdm</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setting up filepaths from config</span>
+<span class="n">CONFIG</span> <span class="o">=</span> <span class="n">dotenv_values</span><span class="p">(</span><span class="s2">&quot;config.env&quot;</span><span class="p">)</span>
+<span class="n">DATADIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">CONFIG</span><span class="p">[</span><span class="s1">&#39;DATADIR&#39;</span><span class="p">])</span>
+
+<span class="n">VOXEL_IN_FP</span> <span class="o">=</span> <span class="n">DATADIR</span> <span class="o">/</span> <span class="s2">&quot;9_objects&quot;</span> <span class="o">/</span> <span class="s2">&quot;spatial&quot;</span> <span class="o">/</span> <span class="s1">&#39;hypomap3d_spatial_voxel_level.zarr&#39;</span> <span class="c1"># for default structure</span>
+<span class="n">SC_IN_FP</span> <span class="o">=</span> <span class="n">DATADIR</span> <span class="o">/</span> <span class="s2">&quot;9_objects&quot;</span> <span class="o">/</span> <span class="s2">&quot;spatial&quot;</span> <span class="o">/</span> <span class="s1">&#39;hypomap3d_spatial_cell_level.h5ad&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Notebook constants</span>
+<span class="n">ROOT_REGION_ID</span> <span class="o">=</span> <span class="mi">997</span>
+
+<span class="n">SIGMA</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">MIN_SUPPORT</span> <span class="o">=</span> <span class="mf">0.15</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Init-new-voxel-store">
+<h1>Init new voxel store<a class="headerlink" href="#Init-new-voxel-store" title="Link to this heading">#</a></h1>
+<p>For this matter, we will set up a new voxel store in the same form as the HypoMap3D voxel space by copying over the groups that remain constant.</p>
+<p>But before we do so, please provide a path for it.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">VOXEL_OUT_FP</span> <span class="o">=</span> <span class="n">DATADIR</span> <span class="o">/</span> <span class="s2">&quot;example_notebooks&quot;</span> <span class="o">/</span> <span class="s2">&quot;SpatialSmoothing&quot;</span> <span class="o">/</span> <span class="s2">&quot;voxel_store.zarr&quot;</span> <span class="c1"># change it if desired</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">copy_group</span><span class="p">(</span><span class="n">src_group</span><span class="p">,</span> <span class="n">dst_group</span><span class="p">):</span>
+    <span class="c1"># Copy arrays</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">arr</span> <span class="ow">in</span> <span class="n">src_group</span><span class="o">.</span><span class="n">arrays</span><span class="p">():</span>
+        <span class="n">dst_group</span><span class="o">.</span><span class="n">create_array</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">arr</span><span class="p">,</span>
+            <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="n">dst_group</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">attrs</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">subgroup</span> <span class="ow">in</span> <span class="n">src_group</span><span class="o">.</span><span class="n">groups</span><span class="p">():</span>
+        <span class="n">new_group</span> <span class="o">=</span> <span class="n">dst_group</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">new_group</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">subgroup</span><span class="o">.</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="n">copy_group</span><span class="p">(</span><span class="n">subgroup</span><span class="p">,</span> <span class="n">new_group</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Open source store</span>
+<span class="n">src_store</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">VOXEL_IN_FP</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create destination store</span>
+<span class="n">voxel_store</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">VOXEL_OUT_FP</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="c1"># Copy subgroups</span>
+<span class="k">for</span> <span class="n">group_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">,</span> <span class="s2">&quot;region&quot;</span><span class="p">]:</span>
+    <span class="n">new_group</span> <span class="o">=</span> <span class="n">voxel_store</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">group_name</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">new_group</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">src_store</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">)</span>
+    <span class="n">copy_group</span><span class="p">(</span><span class="n">src_store</span><span class="p">[</span><span class="n">group_name</span><span class="p">],</span> <span class="n">new_group</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">voxel_store</span><span class="o">.</span><span class="n">tree</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold">/</span>
+├── <span style="font-weight: bold">bbox</span>
+│   ├── <span style="font-weight: bold">ccf_mm</span>
+│   │   ├── <span style="font-weight: bold">max</span> (3,) float32
+│   │   └── <span style="font-weight: bold">min</span> (3,) float32
+│   ├── <span style="font-weight: bold">shape</span> (3,) float32
+│   └── <span style="font-weight: bold">voxel_25_um</span>
+│       ├── <span style="font-weight: bold">max</span> (3,) float32
+│       └── <span style="font-weight: bold">min</span> (3,) float32
+└── <span style="font-weight: bold">region</span>
+    ├── <span style="font-weight: bold">acronyms</span> (176,) StringDType()
+    ├── <span style="font-weight: bold">ids</span> (176,) int32
+    ├── <span style="font-weight: bold">region_labels</span> (168, 144, 107) uint32
+    └── <span style="font-weight: bold">region_masks</span> (176, 168, 144, 107) bool
+</pre></div>
+</div>
+</section>
+<section id="Load-and-prepare-cell-level-ST-data">
+<h1>Load and prepare cell-level ST data<a class="headerlink" href="#Load-and-prepare-cell-level-ST-data" title="Link to this heading">#</a></h1>
+<section id="Load-adata">
+<h2>Load adata<a class="headerlink" href="#Load-adata" title="Link to this heading">#</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load cell-level spatial dataset</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">SC_IN_FP</span><span class="p">)</span>
+<span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+AnnData object with n_obs × n_vars = 1401313 × 56939
+    obs: &#39;Dataset&#39;, &#39;Sample&#39;, &#39;Author&#39;, &#39;Technology&#39;, &#39;Donor&#39;, &#39;Sex&#39;, &#39;RegionID&#39;, &#39;RegionAcronym&#39;, &#39;RegionName&#39;, &#39;total_counts&#39;, &#39;total_hvg_counts&#39;, &#39;total_genes&#39;, &#39;IsHY&#39;, &#39;L1_descr_max_p&#39;, &#39;L1_abc_like_max_p&#39;, &#39;L1_max_p&#39;, &#39;L2_descr_max_p&#39;, &#39;L2_abc_like_max_p&#39;, &#39;L2_max_p&#39;, &#39;L3_descr_max_p&#39;, &#39;L3_abc_like_max_p&#39;, &#39;L3_max_p&#39;, &#39;L4_descr_max_p&#39;, &#39;L4_abc_like_max_p&#39;, &#39;L4_max_p&#39;, &#39;L5_descr_max_p&#39;, &#39;L5_abc_like_max_p&#39;, &#39;L5_max_p&#39;
+    var: &#39;gene_stable_ids&#39;, &#39;IsHVG&#39;
+    uns: &#39;L1_ID&#39;, &#39;L1_abc_like&#39;, &#39;L1_descr&#39;, &#39;L2_ID&#39;, &#39;L2_abc_like&#39;, &#39;L2_descr&#39;, &#39;L3_ID&#39;, &#39;L3_abc_like&#39;, &#39;L3_descr&#39;, &#39;L4_ID&#39;, &#39;L4_abc_like&#39;, &#39;L4_descr&#39;, &#39;L5_ID&#39;, &#39;L5_abc_like&#39;, &#39;L5_descr&#39;, &#39;flags&#39;, &#39;pathmat&#39;
+    obsm: &#39;P_L1&#39;, &#39;P_L2&#39;, &#39;P_L3&#39;, &#39;P_L4&#39;, &#39;P_L5&#39;, &#39;X_embed&#39;, &#39;X_umap&#39;, &#39;X_umap_sc&#39;, &#39;coords_ccf_mm&#39;, &#39;coords_ccf_mm_wrap&#39;, &#39;coords_source&#39;, &#39;coords_voxels_25um&#39;, &#39;coords_voxels_25um_bounded&#39;
+    varm: &#39;IsCaptured&#39;
+</pre></div></div>
+</div>
+</section>
+<section id="Putting-CCF-coords-into-the-right-place">
+<h2>Putting CCF coords into the right place<a class="headerlink" href="#Putting-CCF-coords-into-the-right-place" title="Link to this heading">#</a></h2>
+<p>For purpose of guiding you through some steps you probably have to do with your data we insert the CCF coordinates back into .obs here as this is likely how your data looks</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s1">&#39;x_ccf&#39;</span><span class="p">,</span> <span class="s1">&#39;y_ccf&#39;</span><span class="p">,</span> <span class="s1">&#39;z_ccf&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_ccf_mm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>This is probably how your data looks:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s1">&#39;x_ccf&#39;</span><span class="p">,</span> <span class="s1">&#39;y_ccf&#39;</span><span class="p">,</span> <span class="s1">&#39;z_ccf&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>x_ccf</th>
+      <th>y_ccf</th>
+      <th>z_ccf</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>SP2-01_C57BL6J-638850.30_1018093344101520397-3</th>
+      <td>8.498350</td>
+      <td>6.113867</td>
+      <td>4.970232</td>
+    </tr>
+    <tr>
+      <th>SP2-01_C57BL6J-638850.30_1018093344101520363-3</th>
+      <td>8.498876</td>
+      <td>6.100787</td>
+      <td>4.942921</td>
+    </tr>
+    <tr>
+      <th>SP2-01_C57BL6J-638850.30_1018093344101070149-6</th>
+      <td>8.485158</td>
+      <td>5.753897</td>
+      <td>3.276683</td>
+    </tr>
+    <tr>
+      <th>SP2-01_C57BL6J-638850.30_1018093344101070178-4</th>
+      <td>8.494820</td>
+      <td>5.671684</td>
+      <td>3.321470</td>
+    </tr>
+    <tr>
+      <th>SP2-01_C57BL6J-638850.30_1018093344101520467-4</th>
+      <td>8.497904</td>
+      <td>6.138259</td>
+      <td>5.039371</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p><strong>Note that we use CCF coordinates in mm!</strong></p>
+<p>If your data comes in micrometer the next cell would most likely detect it and transform the data into mm</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">x_ccf</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data is most likely micrometer, transforming to mm&quot;</span><span class="p">)</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">x_ccf</span> <span class="o">/=</span> <span class="mi">1000</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">y_ccf</span> <span class="o">/=</span> <span class="mi">1000</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">z_ccf</span> <span class="o">/=</span> <span class="mi">1000</span>
+</pre></div>
+</div>
+</div>
+<p>Now let us place your ccf coordinates in mm into .obsm</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ccf_df</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s1">&#39;x_ccf&#39;</span><span class="p">,</span> <span class="s1">&#39;y_ccf&#39;</span><span class="p">,</span> <span class="s1">&#39;z_ccf&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">ccf_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_ccf_mm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ccf_df</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Wrap-all-cells-into-the-same-hemisphere">
+<h2>Wrap all cells into the same hemisphere<a class="headerlink" href="#Wrap-all-cells-into-the-same-hemisphere" title="Link to this heading">#</a></h2>
+<p>HypoMap3D operates on one hemisphere only as to create a volume that is sampled as dense as possible.</p>
+<p>Hence, cells protruding into the right hemisphere are mirrored into the left along the midline of the brain, which is at CCF 5.7.</p>
+<p>That coordiante is saved in the bounding box group of the initialized voxel store along with the other coordinates required to restrict the cell-level data to the same 3D space as HypoMap3D:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_min</span><span class="p">,</span> <span class="n">y_min</span><span class="p">,</span> <span class="n">z_min</span> <span class="o">=</span> <span class="n">voxel_store</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">][</span><span class="s2">&quot;ccf_mm&quot;</span><span class="p">][</span><span class="s2">&quot;min&quot;</span><span class="p">][:]</span>
+<span class="n">x_max</span><span class="p">,</span> <span class="n">y_max</span><span class="p">,</span> <span class="n">z_max</span> <span class="o">=</span> <span class="n">voxel_store</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">][</span><span class="s2">&quot;ccf_mm&quot;</span><span class="p">][</span><span class="s2">&quot;max&quot;</span><span class="p">][:]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_midline</span> <span class="o">=</span> <span class="n">z_max</span>
+<span class="n">z_midline</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+np.float32(5.7)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Wrap z coordinate</span>
+<span class="n">z_coord</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_ccf_mm&#39;</span><span class="p">][</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">z_coord_wrapped</span> <span class="o">=</span> <span class="n">z_midline</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">z_midline</span> <span class="o">-</span> <span class="n">z_coord</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_ccf_mm_wrap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_ccf_mm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_ccf_mm_wrap&#39;</span><span class="p">][</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">z_coord_wrapped</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Filter-cells-for-the-bounding-box-of-HypoMap3D's-voxel-space">
+<h2>Filter cells for the bounding box of HypoMap3D’s voxel space<a class="headerlink" href="#Filter-cells-for-the-bounding-box-of-HypoMap3D's-voxel-space" title="Link to this heading">#</a></h2>
+<p>Using the min and max coordinates we extracted from the voxel store previously, we remove cells not within this volume.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">keep_mask</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_ccf_mm_wrap&#39;</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">x_max</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_ccf_mm_wrap&#39;</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">x_min</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_ccf_mm_wrap&#39;</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">y_max</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_ccf_mm_wrap&#39;</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">y_min</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_ccf_mm_wrap&#39;</span><span class="p">][</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">z_max</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_ccf_mm_wrap&#39;</span><span class="p">][</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">z_min</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">keep_mask</span><span class="p">,</span> <span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Create-voxel-coordinate-system">
+<h2>Create voxel coordinate system<a class="headerlink" href="#Create-voxel-coordinate-system" title="Link to this heading">#</a></h2>
+<p>This transforms mm into indices that are used to access the 25 um cubed voxel space</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># These will be indices along the whole CCF 25 um voxel space</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_voxels_25um&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_ccf_mm_wrap&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">/</span> <span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="c1"># These will be indices starting at 0 at the start of HypoMap3D&#39;s voxel space</span>
+<span class="n">bbox_min_25um</span> <span class="o">=</span> <span class="n">voxel_store</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">][</span><span class="s2">&quot;voxel_25_um&quot;</span><span class="p">][</span><span class="s2">&quot;min&quot;</span><span class="p">][:]</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_voxels_25um_bounded&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_voxels_25um&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">bbox_min_25um</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Get-ID-to-abc-like-and-ID-to-descriptive-labels-mapper-for-later">
+<h2>Get ID to abc-like and ID to descriptive labels mapper for later<a class="headerlink" href="#Get-ID-to-abc-like-and-ID-to-descriptive-labels-mapper-for-later" title="Link to this heading">#</a></h2>
+<p>These are used as to add more metadata into the voxel store</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_keys</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">all_descr</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">all_abc</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;L</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_ID&quot;</span><span class="p">])</span>
+    <span class="n">descr</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;L</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_descr&quot;</span><span class="p">])</span>
+    <span class="n">abc</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;L</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_abc_like&quot;</span><span class="p">])</span>
+
+    <span class="n">all_keys</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+    <span class="n">all_descr</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">descr</span><span class="p">)</span>
+    <span class="n">all_abc</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">abc</span><span class="p">)</span>
+
+<span class="n">descr_mapper</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">all_keys</span><span class="p">,</span> <span class="n">all_descr</span><span class="p">)}</span>
+<span class="n">abclike_mapper</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">all_keys</span><span class="p">,</span> <span class="n">all_abc</span><span class="p">)}</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="Smoothing">
+<h1>Smoothing<a class="headerlink" href="#Smoothing" title="Link to this heading">#</a></h1>
+<p>In essence, the following operations are performed:</p>
+<ul class="simple">
+<li><p>Aggregation of cells into voxels</p></li>
+<li><p>Generation of support and evidence matrices for normalized convolution</p></li>
+<li><p>Normalized gaussian convolution of path propbabilites to get P(leaf cluster), in this case L5</p></li>
+<li><p>Summation of L5 descendants to derive lower granularity probailities (i.e L1-L4)</p></li>
+</ul>
+<p>For more information, please consider the manuscript.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract root mask and derive voxel shape from it</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">src_store</span><span class="p">[</span><span class="s1">&#39;region&#39;</span><span class="p">][</span><span class="s1">&#39;ids&#39;</span><span class="p">][:])</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">ROOT_REGION_ID</span><span class="p">)</span> <span class="c1"># root region (all region encompassing)</span>
+<span class="n">root_mask</span> <span class="o">=</span> <span class="n">src_store</span><span class="p">[</span><span class="s1">&#39;region&#39;</span><span class="p">][</span><span class="s1">&#39;region_masks&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+<span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span> <span class="o">=</span> <span class="n">root_mask</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">n_voxels</span> <span class="o">=</span> <span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span> <span class="o">*</span> <span class="n">nz</span>
+
+<span class="nb">print</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">),</span> <span class="n">n_voxels</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(168, 144, 107) 2588544
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[64]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">smooth_adata</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">voxel_store</span><span class="p">,</span> <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;Sample&quot;</span><span class="p">):</span>
+
+    <span class="c1">##################################</span>
+    <span class="c1">################# Sample-wise voxel aggregation</span>
+    <span class="c1">##################################</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sample-wise voxel agg.&quot;</span><span class="p">)</span>
+    <span class="n">nc</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;P_L5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Intialize empty total grids</span>
+    <span class="n">total_mass</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nc</span><span class="p">,</span> <span class="n">n_voxels</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">total_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_voxels</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">total_coverage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_voxels</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">total_embed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">45</span><span class="p">,</span> <span class="n">n_voxels</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="c1"># embedding are dense</span>
+
+    <span class="n">unique_sample</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">batch_key</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">unique_sample</span><span class="p">):</span>
+
+        <span class="n">sample_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">batch_key</span><span class="p">]</span> <span class="o">==</span> <span class="n">sample</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">n_points</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_indices</span><span class="p">)</span>
+
+        <span class="c1"># Subset and extract only voxel coords for that sample</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">sample_indices</span><span class="p">]</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;coords_voxels_25um_bounded&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">ravel_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span><span class="n">coords</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">))</span>
+
+        <span class="c1"># Construct counts grid</span>
+        <span class="n">sample_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span>
+            <span class="n">ravel_coords</span><span class="p">,</span>
+            <span class="n">minlength</span><span class="o">=</span><span class="n">n_voxels</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+        <span class="c1"># Infer coverage grid from counts grid</span>
+        <span class="n">sample_coverage</span> <span class="o">=</span> <span class="p">(</span><span class="n">sample_counts</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+        <span class="c1"># Add intermediate grid to totals</span>
+        <span class="n">total_counts</span> <span class="o">+=</span> <span class="n">sample_counts</span>
+        <span class="n">total_coverage</span> <span class="o">+=</span> <span class="n">sample_coverage</span>
+
+        <span class="c1"># Add probabilties to grid</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;P_L5&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tocoo</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span>
+            <span class="n">total_mass</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">col</span><span class="p">,</span> <span class="n">ravel_coords</span><span class="p">[</span><span class="n">P</span><span class="o">.</span><span class="n">row</span><span class="p">]),</span>
+            <span class="n">P</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Add embedding direct to total</span>
+        <span class="n">embed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">subset</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_embed&quot;</span><span class="p">])</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">total_embed</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">ravel_coords</span><span class="p">,</span> <span class="n">embed</span><span class="p">)</span>
+
+    <span class="c1">##################################</span>
+    <span class="c1">################# Setting up support matrix</span>
+    <span class="c1">##################################</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Setting up support matrix&quot;</span><span class="p">)</span>
+    <span class="n">sampled_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">total_coverage</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="c1"># binary matrix 1 - point was sampled in this voxel 0 - missing</span>
+    <span class="n">sampled_mask</span> <span class="o">=</span> <span class="n">sampled_mask</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+
+    <span class="n">smoothed_support</span> <span class="o">=</span> <span class="n">gaussian_filter</span><span class="p">(</span><span class="n">sampled_mask</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">SIGMA</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">smoothed_root_mask</span> <span class="o">=</span> <span class="n">gaussian_filter</span><span class="p">(</span><span class="n">root_mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="n">SIGMA</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Set OOB to nan to propagate to all further grids</span>
+    <span class="n">smoothed_support</span><span class="p">[</span><span class="o">~</span><span class="n">root_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="c1"># Normalized convolution - we don&#39;t care for voxels out of bound (not in brain/root)</span>
+    <span class="n">smoothed_evidence</span> <span class="o">=</span> <span class="n">smoothed_support</span> <span class="o">/</span> <span class="p">(</span><span class="n">smoothed_root_mask</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span>
+
+    <span class="c1"># Save to zarr voxel store</span>
+    <span class="n">voxel_store</span><span class="o">.</span><span class="n">create_array</span><span class="p">(</span><span class="s1">&#39;evidence&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">))</span>
+    <span class="n">voxel_store</span><span class="p">[</span><span class="s1">&#39;evidence&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">smoothed_evidence</span>
+
+    <span class="c1">##################################</span>
+    <span class="c1">################# Smoothing grids</span>
+    <span class="c1">##################################</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Smoothing grids&quot;</span><span class="p">)</span>
+    <span class="c1"># normalization_factors</span>
+    <span class="n">inv_total_coverage</span> <span class="o">=</span> <span class="n">total_coverage</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">inv_total_coverage</span><span class="p">[</span><span class="n">inv_total_coverage</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">inv_total_coverage</span><span class="p">[</span><span class="n">inv_total_coverage</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># ---------------------------------- Counts ---------------------------------- #</span>
+
+    <span class="c1"># Compute average counts per voxel across all samples</span>
+    <span class="n">avg_counts</span> <span class="o">=</span> <span class="n">total_counts</span> <span class="o">*</span> <span class="n">inv_total_coverage</span>
+    <span class="n">avg_counts</span> <span class="o">=</span> <span class="n">avg_counts</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+
+    <span class="c1"># Smooth counts</span>
+    <span class="n">smoothed_avg_counts</span> <span class="o">=</span> <span class="n">gaussian_filter</span><span class="p">(</span><span class="n">avg_counts</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">SIGMA</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Normalize convolution by support grid</span>
+    <span class="n">smoothed_avg_counts</span> <span class="o">/=</span> <span class="n">smoothed_support</span>
+
+    <span class="c1"># Save to zarr voxel store</span>
+    <span class="n">voxel_store</span><span class="o">.</span><span class="n">create_array</span><span class="p">(</span><span class="s1">&#39;counts&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">))</span>
+    <span class="n">voxel_store</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">smoothed_avg_counts</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------- Embedding -------------------------------- #</span>
+
+    <span class="c1"># Compute average embedding per voxel across all samples</span>
+    <span class="n">avg_embed</span> <span class="o">=</span> <span class="n">total_embed</span> <span class="o">*</span> <span class="n">inv_total_coverage</span>
+    <span class="n">avg_embed</span> <span class="o">=</span> <span class="n">avg_embed</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+
+    <span class="n">n_features</span> <span class="o">=</span> <span class="n">total_embed</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Smooth embeddings</span>
+    <span class="n">smoothed_avg_embed</span> <span class="o">=</span> <span class="n">gaussian_filter</span><span class="p">(</span><span class="n">avg_embed</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">SIGMA</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+    <span class="c1"># Normalize convolution by support grid</span>
+    <span class="n">smoothed_avg_embed</span> <span class="o">/=</span> <span class="n">smoothed_support</span>
+
+    <span class="c1"># Save to zarr voxel store</span>
+    <span class="n">voxel_store</span><span class="o">.</span><span class="n">create_array</span><span class="p">(</span><span class="s1">&#39;latent_embedding&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">))</span>
+    <span class="n">voxel_store</span><span class="p">[</span><span class="s1">&#39;latent_embedding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">smoothed_avg_embed</span>
+
+    <span class="c1"># ----------------------------------- Mass ----------------------------------- #</span>
+    <span class="c1"># All operations are in-place to avoid copies in memory</span>
+
+    <span class="c1"># Compute average mass</span>
+    <span class="n">avg_mass</span> <span class="o">=</span> <span class="n">total_mass</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">avg_mass</span><span class="p">,</span> <span class="n">inv_total_coverage</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">avg_mass</span><span class="p">)</span>
+    <span class="n">avg_mass</span> <span class="o">=</span> <span class="n">avg_mass</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nc</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+
+    <span class="c1"># Smoothing along x, y and z dimensions</span>
+    <span class="n">smoothed_avg_mass</span> <span class="o">=</span> <span class="n">avg_mass</span>
+    <span class="n">gaussian_filter</span><span class="p">(</span>
+        <span class="n">smoothed_avg_mass</span><span class="p">,</span>
+        <span class="n">sigma</span><span class="o">=</span><span class="n">SIGMA</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span>
+        <span class="n">cval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="n">output</span><span class="o">=</span><span class="n">smoothed_avg_mass</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Normalize convolution by support</span>
+    <span class="n">smoothed_avg_mass</span> <span class="o">/=</span> <span class="n">smoothed_support</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span>
+
+    <span class="c1"># ------------------------------- Probabilities ------------------------------ #</span>
+
+    <span class="c1"># Probabilities theoretically can be derived by mass / counts</span>
+    <span class="n">smoothed_probs</span> <span class="o">=</span> <span class="n">smoothed_avg_mass</span> <span class="o">/</span> <span class="n">smoothed_avg_counts</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="c1"># Renormalize by voxelsums for true probabilities</span>
+    <span class="n">voxel_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">smoothed_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">smoothed_probs</span> <span class="o">/=</span> <span class="n">voxel_sum</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span>
+
+    <span class="c1"># --------------------- Propagating Upwards to L1, L2 etc -------------------- #</span>
+
+    <span class="n">pathmat</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s1">&#39;pathmat&#39;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pathmat</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="p">(</span><span class="n">pathmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">level</span>
+            <span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+
+            <span class="n">P</span> <span class="o">=</span> <span class="n">smoothed_probs</span>
+            <span class="n">M</span> <span class="o">=</span> <span class="n">smoothed_avg_mass</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">labels</span><span class="p">,</span> <span class="n">inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+
+            <span class="n">A</span> <span class="o">=</span> <span class="n">inv</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+
+            <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">smoothed_probs</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">smoothed_avg_mass</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+        <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;L</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Get relative mass safely</span>
+        <span class="n">mass_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># (n_features, 1, 1, 1)</span>
+        <span class="n">RM</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">mass_sum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">M</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mass_sum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mass_sum</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+            <span class="mf">0.0</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="c1"># Create level group</span>
+        <span class="n">lvl_grp</span> <span class="o">=</span> <span class="n">voxel_store</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Initialise arrays in Zarr voxel store</span>
+        <span class="n">lvl_grp</span><span class="o">.</span><span class="n">create_array</span><span class="p">(</span><span class="s1">&#39;prob&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">))</span>
+        <span class="n">lvl_grp</span><span class="o">.</span><span class="n">create_array</span><span class="p">(</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">))</span>
+        <span class="n">lvl_grp</span><span class="o">.</span><span class="n">create_array</span><span class="p">(</span><span class="s1">&#39;rel_mass&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">))</span>
+
+        <span class="c1"># Write to Zarr arrays</span>
+        <span class="n">lvl_grp</span><span class="p">[</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">P</span>
+        <span class="n">lvl_grp</span><span class="p">[</span><span class="s2">&quot;mass&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span>
+        <span class="n">lvl_grp</span><span class="p">[</span><span class="s2">&quot;rel_mass&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">RM</span>
+
+        <span class="c1"># Write metadata</span>
+        <span class="n">lvl_grp</span><span class="o">.</span><span class="n">create_array</span><span class="p">(</span>
+            <span class="s2">&quot;ids&quot;</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_features</span><span class="p">,),</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">VariableLengthUTF8</span><span class="p">(),</span>
+            <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">lvl_grp</span><span class="p">[</span><span class="s2">&quot;ids&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">labels</span>
+
+        <span class="n">lvl_grp</span><span class="o">.</span><span class="n">create_array</span><span class="p">(</span>
+            <span class="s2">&quot;descr&quot;</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_features</span><span class="p">,),</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">VariableLengthUTF8</span><span class="p">(),</span>
+            <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">lvl_grp</span><span class="p">[</span><span class="s2">&quot;descr&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">descr_mapper</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">]</span>
+
+        <span class="n">lvl_grp</span><span class="o">.</span><span class="n">create_array</span><span class="p">(</span>
+            <span class="s2">&quot;abc-like&quot;</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_features</span><span class="p">,),</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">VariableLengthUTF8</span><span class="p">(),</span>
+            <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">lvl_grp</span><span class="p">[</span><span class="s2">&quot;abc-like&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">abclike_mapper</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[66]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smooth_adata</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">voxel_store</span><span class="p">,</span> <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;Sample&quot;</span><span class="p">)</span> <span class="c1"># batch key is the .obs column of your sample information</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Sample-wise voxel agg.
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|█████████████████████████████████████████| 158/158 [01:38&lt;00:00,  1.60it/s]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Setting up support matrix
+Smoothing grids
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[67]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">voxel_store</span><span class="o">.</span><span class="n">tree</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[67]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold">/</span>
+├── <span style="font-weight: bold">L1</span>
+│   ├── <span style="font-weight: bold">abc-like</span> (6,) StringDType()
+│   ├── <span style="font-weight: bold">descr</span> (6,) StringDType()
+│   ├── <span style="font-weight: bold">ids</span> (6,) StringDType()
+│   ├── <span style="font-weight: bold">mass</span> (6, 168, 144, 107) float32
+│   ├── <span style="font-weight: bold">prob</span> (6, 168, 144, 107) float32
+│   └── <span style="font-weight: bold">rel_mass</span> (6, 168, 144, 107) float32
+├── <span style="font-weight: bold">L2</span>
+│   ├── <span style="font-weight: bold">abc-like</span> (82,) StringDType()
+│   ├── <span style="font-weight: bold">descr</span> (82,) StringDType()
+│   ├── <span style="font-weight: bold">ids</span> (82,) StringDType()
+│   ├── <span style="font-weight: bold">mass</span> (82, 168, 144, 107) float32
+│   ├── <span style="font-weight: bold">prob</span> (82, 168, 144, 107) float32
+│   └── <span style="font-weight: bold">rel_mass</span> (82, 168, 144, 107) float32
+├── <span style="font-weight: bold">L3</span>
+│   ├── <span style="font-weight: bold">abc-like</span> (274,) StringDType()
+│   ├── <span style="font-weight: bold">descr</span> (274,) StringDType()
+│   ├── <span style="font-weight: bold">ids</span> (274,) StringDType()
+│   ├── <span style="font-weight: bold">mass</span> (274, 168, 144, 107) float32
+│   ├── <span style="font-weight: bold">prob</span> (274, 168, 144, 107) float32
+│   └── <span style="font-weight: bold">rel_mass</span> (274, 168, 144, 107) float32
+├── <span style="font-weight: bold">L4</span>
+│   ├── <span style="font-weight: bold">abc-like</span> (716,) StringDType()
+│   ├── <span style="font-weight: bold">descr</span> (716,) StringDType()
+│   ├── <span style="font-weight: bold">ids</span> (716,) StringDType()
+│   ├── <span style="font-weight: bold">mass</span> (716, 168, 144, 107) float32
+│   ├── <span style="font-weight: bold">prob</span> (716, 168, 144, 107) float32
+│   └── <span style="font-weight: bold">rel_mass</span> (716, 168, 144, 107) float32
+├── <span style="font-weight: bold">L5</span>
+│   ├── <span style="font-weight: bold">abc-like</span> (932,) StringDType()
+│   ├── <span style="font-weight: bold">descr</span> (932,) StringDType()
+│   ├── <span style="font-weight: bold">ids</span> (932,) StringDType()
+│   ├── <span style="font-weight: bold">mass</span> (932, 168, 144, 107) float32
+│   ├── <span style="font-weight: bold">prob</span> (932, 168, 144, 107) float32
+│   └── <span style="font-weight: bold">rel_mass</span> (932, 168, 144, 107) float32
+├── <span style="font-weight: bold">bbox</span>
+│   ├── <span style="font-weight: bold">ccf_mm</span>
+│   │   ├── <span style="font-weight: bold">max</span> (3,) float32
+│   │   └── <span style="font-weight: bold">min</span> (3,) float32
+│   ├── <span style="font-weight: bold">shape</span> (3,) float32
+│   └── <span style="font-weight: bold">voxel_25_um</span>
+│       ├── <span style="font-weight: bold">max</span> (3,) float32
+│       └── <span style="font-weight: bold">min</span> (3,) float32
+├── <span style="font-weight: bold">counts</span> (168, 144, 107) float32
+├── <span style="font-weight: bold">evidence</span> (168, 144, 107) float32
+├── <span style="font-weight: bold">latent_embedding</span> (45, 168, 144, 107) float32
+└── <span style="font-weight: bold">region</span>
+    ├── <span style="font-weight: bold">acronyms</span> (176,) StringDType()
+    ├── <span style="font-weight: bold">ids</span> (176,) int32
+    ├── <span style="font-weight: bold">region_labels</span> (168, 144, 107) uint32
+    └── <span style="font-weight: bold">region_masks</span> (176, 168, 144, 107) bool
+</pre></div>
+</div>
+<p>To see how to interact with the voxel store please check out the sp_slice tutorial!</p>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ProjectAndTransferLabels.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Projection and Label Transfer</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Spatial smoothing</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Init-new-voxel-store">Init new voxel store</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Load-and-prepare-cell-level-ST-data">Load and prepare cell-level ST data</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Load-adata">Load adata</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Putting-CCF-coords-into-the-right-place">Putting CCF coords into the right place</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Wrap-all-cells-into-the-same-hemisphere">Wrap all cells into the same hemisphere</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Filter-cells-for-the-bounding-box-of-HypoMap3D's-voxel-space">Filter cells for the bounding box of HypoMap3D’s voxel space</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Create-voxel-coordinate-system">Create voxel coordinate system</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Get-ID-to-abc-like-and-ID-to-descriptive-labels-mapper-for-later">Get ID to abc-like and ID to descriptive labels mapper for later</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Smoothing">Smoothing</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By MPI-SF | Neurogenomics
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Max Planck Institute for Metabolism Research.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

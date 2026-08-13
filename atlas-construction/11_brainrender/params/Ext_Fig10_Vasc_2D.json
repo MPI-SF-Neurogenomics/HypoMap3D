@@ -1,0 +1,20 @@
+{
+    "SLICE_THICKNESS": 1000,
+    "START_RANGE": 4750,
+    "STOP_RANGE": 8500,
+    "ANNOTATE_REGIONS": false,
+    "SCATTERSIZE": 0.8,
+    "LINEWIDTH": 0.6,
+    "XLIM": [-100, 1900],
+    "YLIM": [3200, 800],
+    "MIN_P": 0,
+    "CMAP_NAME": "viridis",
+    "PLOT_NUCLEI_BELOW": false,
+    "CLUSTERS_TO_PLOT": [
+                        "NN4-20", "NN4-21", "NN4-22", "NN4-23", "NN4-24", 
+                        "NN4-17", "NN4-18", "NN4-19"
+                        ],
+    "IS_BREGMA_COORDS": false,
+    "RESTRICT_P_TO_HY": false,
+    "MODALITY": "rel_mass"
+}

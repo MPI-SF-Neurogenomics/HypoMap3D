@@ -1,0 +1,85 @@
+[project]
+name = "HypoMap3D"
+version = "0.1.0"
+requires-python = "==3.11.5"
+
+dependencies = [
+    "scanpy[skmisc]==1.11.5",
+    "scvi-tools[cuda]==1.2.2",
+    "cupy-cuda12x",
+    "cudf-cu12==25.12.*",
+    "cugraph-cu12==25.12.*",
+    "cuml-cu12==25.12.*",
+    "nx-cugraph-cu12==25.12.*",
+    "rapids-singlecell>=0.13.3",
+    "igraph>=0.11.8",
+    "torch",
+    "torchvision",
+    "torchaudio",
+    "pynrrd",
+    "toml",
+    "zarr>=3.1.3",
+    "adjusttext",
+    "plotly",
+    "brainrender==2.1.17",
+    "cuvs-cu12==25.12.*",
+    "openpyxl>=3.1.5",
+    "scipy<=1.16.0",
+    "python-dotenv>=1.2.1",
+    "numpy>=2.0",
+    "cell-type-mapper",
+    "kaleido==0.2.1",
+]
+
+[dependency-groups]
+dev = [
+    "jupyter",
+    "rpy2==3.5.1",
+    "ipykernel>=6,<7"
+]
+docs = [
+    "myst-nb",
+    "myst-parser",
+    "sphinx",
+    "sphinx-autobuild",
+    "sphinx-book-theme",
+    "sphinxcontrib-bibtex",
+    "sphinxcontrib-mermaid",
+    "nbsphinx>=0.9.8"
+]
+
+[tool.uv]
+environments = [
+    "sys_platform == 'linux'",
+]
+override-dependencies = [
+    "linkml; sys_platform == 'never'", # remove signficiant bloat from cell-type-mapper
+    "abc-atlas-access; sys_platform == 'never'", # remove signficiant bloat from cell-type-mapper
+]
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cu124", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+cell-type-mapper = { git = "https://github.com/AllenInstitute/cell_type_mapper" }
+
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
+
+[build-system]
+requires = ["hatchling", "Cython"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+  'src/hm3d_utils',
+  'src/project_utils',
+]
+
+[tool.ruff]
+extend-exclude = ["*.pyx", "*.pxd", "*.pxi"]
+
+[tool.ruff.lint]
+ignore = ["E731", "E402"]

@@ -1,0 +1,66 @@
+# Journal-Basic Matplotlib Style
+
+# Figure Size & DPI
+figure.figsize : 3.54330708661, 3.54330708661  # 90 mm × 90 mm in inches
+figure.dpi : 96
+savefig.dpi : 600
+savefig.transparent : False
+
+# Font
+font.family : sans-serif
+mathtext.fontset : stixsans
+pdf.fonttype : 42
+ps.fonttype : 42
+svg.fonttype : none
+
+# Font Sizes
+font.size : 8
+axes.titlesize : 10
+axes.labelsize : 7
+xtick.labelsize : 5
+ytick.labelsize : 5
+legend.fontsize : 7
+
+# Colors
+figure.facecolor : white
+axes.facecolor : white
+axes.edgecolor : black
+
+# Axes lines and spines
+axes.linewidth : 0.6
+axes.grid : False
+
+axes.spines.top : False
+axes.spines.right : False
+
+# Axes label padding
+axes.labelpad : 0
+
+# Tick parameters
+xtick.direction : in
+ytick.direction : in
+
+xtick.major.size : 2
+ytick.major.size : 2
+
+xtick.major.width : 0.6
+ytick.major.width : 0.6
+
+xtick.minor.visible : False
+ytick.minor.visible : False
+
+xtick.major.pad : 1.5
+ytick.major.pad : 1.5
+xtick.minor.pad : 1
+ytick.minor.pad : 1
+
+# Lines
+lines.linewidth : 0.8
+lines.markersize : 3
+
+# Legend
+legend.frameon : False
+
+# Minimize subplot margins
+# figure.subplot.top : 0.97
+# figure.subplot.right : 0.97

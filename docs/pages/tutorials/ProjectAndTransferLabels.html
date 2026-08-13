@@ -1,0 +1,1440 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Projection and Label Transfer &#8212; HypoMap3D</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=a1637f0b"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pages/tutorials/ProjectAndTransferLabels';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Spatial smoothing" href="SpatialSmoothing.html" />
+    <link rel="prev" title="Region-based Cell Type Selection" href="RegionCellTypeSelection.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/hm3d-logo.png" class="logo__image only-light" alt="HypoMap3D - Home"/>
+    <img src="../../_static/hm3d-logo.png" class="logo__image only-dark pst-js-only" alt="HypoMap3D - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Datasets:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../datasets/singlecell.html">Single Cell Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/spatial.html">Spatial Objects</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="SingleCellExploration.html">Single Cell Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SpatialSlicePlotting.html">Spatial Slice Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RegionCellTypeSelection.html">Region-based Cell Type Selection</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Projection and Label Transfer</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="SpatialSmoothing.html">Spatial smoothing</a></li>
+
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/pages/tutorials/ProjectAndTransferLabels.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Projection and Label Transfer</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Projection and Label Transfer</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#File-paths">File paths</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-loading">Data loading</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#scArches-projection">scArches projection</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Raw-counts-sanity-check">Raw counts sanity check</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Setting-batch-column">Setting batch column</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Copy-query-data-with-all-genes">Copy query data with all genes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Query-preparation-according-to-model">Query preparation according to model</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Label-transfer">Label transfer</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Step-1:-Let's-get-membership-probabilities-for-L5-cell-types">Step 1: Let’s get membership probabilities for L5 cell types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Step-2:-Let's-get-hard-cell-type-assignments-for-all-levels">Step 2: Let’s get hard cell type assignments for all levels</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Common-UMAP">Common UMAP</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Saving-the-adata">Saving the adata</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="Projection-and-Label-Transfer">
+<h1>Projection and Label Transfer<a class="headerlink" href="#Projection-and-Label-Transfer" title="Link to this heading">#</a></h1>
+<p>This tutorial demonstrates how to project other datasets into HypoMap3D’s single cell embedding space for label transfer.</p>
+<p>In this notebook, we will:</p>
+<ol class="arabic simple">
+<li><p>Project query cells (such as your own data) into HypoMap3D’s embedding space (scArches)</p></li>
+<li><p>Transfer labels and membership probabilities</p></li>
+<li><p>Project the query cells into HypoMap3D’s UMAP space</p></li>
+</ol>
+<p>Requirements:</p>
+<ol class="arabic simple">
+<li><p>HypoMap3D’s code base and environment. For this, follow the instructions at the root of the Git repo.</p></li>
+<li><p>HypoMap3D single cell atlas. Download it and place it into DATADIR/9_objects/singlecell/hypomap3d_singlecell_all.h5ad</p></li>
+<li><p>HypoMap3D’s scVI model. Download it and place it into DATADIR/9_objects/scvi/model.pt</p></li>
+<li><p>Your own query dataset.</p></li>
+</ol>
+<p>Of course, the above paths can be modified but then they have to be changed accordingly below as well.</p>
+<section id="Imports">
+<h2>Imports<a class="headerlink" href="#Imports" title="Link to this heading">#</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>from pathlib import Path
+import warnings
+import os
+
+import numpy as np
+import pandas as pd
+import scanpy as sc
+import anndata as ad
+import scvi
+import matplotlib.pyplot as plt
+from dotenv import dotenv_values
+import torch
+import scipy.sparse as sp
+
+from hm3d_utils.manifold import project_to_ref_umap
+from hm3d_utils.clustering import project_query
+
+warnings.simplefilter(action=&#39;ignore&#39;, category=FutureWarning)
+sc.set_figure_params(frameon=False, figsize=(10,10), transparent=True)
+scvi.settings.seed = 12345
+
+use_gpu = torch.cuda.is_available()
+print(f&quot;GPU is available: {use_gpu}&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Seed set to 12345
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+GPU is available: True
+</pre></div></div>
+</div>
+</section>
+<section id="File-paths">
+<h2>File paths<a class="headerlink" href="#File-paths" title="Link to this heading">#</a></h2>
+<p>The following ones are automatic and only require a change if you downloaded the files somewhere else.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG = dotenv_values(&quot;config.env&quot;) # file at the root of your cloned repo
+DATADIR = Path(CONFIG[&#39;DATADIR&#39;]) # root of your DATADIR
+
+# Path to director of scVI model
+SCVI_DIR  = DATADIR / &quot;9_objects&quot; / &quot;scvi&quot;
+
+# Path to reference object
+REF_FP = DATADIR / &quot;9_objects&quot; / &quot;singlecell&quot; / &quot;hypomap3d_singlecell_all.h5ad&quot;
+</pre></div>
+</div>
+</div>
+<p>The following cell contains the path to your data, so change the path accordingly, and remove the “#”.</p>
+<p>In this notebook, we will use the non-control cells from the Gutgesell dataset for demonstration if QUERY_FP remains undefined.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span># QUERY_FP = Path(&quot;path/to/your/data.h5ad&quot;) #change and uncomment me if you want to use your own data
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="Data-loading">
+<h1>Data loading<a class="headerlink" href="#Data-loading" title="Link to this heading">#</a></h1>
+<p>Let’s load the reference (HypoMap3D)</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>ref_adata = sc.read_h5ad(REF_FP, backed=&quot;r&quot;)
+ref_adata = ref_adata[ref_adata.obs.IsControl].to_memory() # projection and label transfer are performed on control cells only
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>ref_adata
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+AnnData object with n_obs × n_vars = 896959 × 56939
+    obs: &#39;CellID&#39;, &#39;Dataset&#39;, &#39;Sample&#39;, &#39;total_counts&#39;, &#39;n_genes&#39;, &#39;pct_mito&#39;, &#39;Author&#39;, &#39;Source&#39;, &#39;Data_source_link&#39;, &#39;GEO&#39;, &#39;Publication_Link&#39;, &#39;Suspension&#39;, &#39;Technology&#39;, &#39;Author_Sex_harmonized&#39;, &#39;sex_per_sample_inferred&#39;, &#39;Strain&#39;, &#39;Diet&#39;, &#39;Treatment&#39;, &#39;Age&#39;, &#39;Mean_age_in_weeks&#39;, &#39;IsControl&#39;, &#39;L1_ID&#39;, &#39;L2_ID&#39;, &#39;L3_ID&#39;, &#39;L4_ID&#39;, &#39;L5_ID&#39;, &#39;L1_descr&#39;, &#39;L2_descr&#39;, &#39;L3_descr&#39;, &#39;L4_descr&#39;, &#39;L5_descr&#39;, &#39;L1_abc_like&#39;, &#39;L2_abc_like&#39;, &#39;L3_abc_like&#39;, &#39;L4_abc_like&#39;, &#39;L5_abc_like&#39;
+    var: &#39;gene_ids&#39;, &#39;IsMouseTF&#39;, &#39;IsHumanTFOrtholog&#39;, &#39;IsSourceGene&#39;, &#39;IsTargetGene&#39;, &#39;IsHvgExcludedGene&#39;, &#39;IsAnnotationExcludedGene&#39;, &#39;IsPriorityGene&#39;, &#39;IsTopGene&#39;, &#39;IsHvg&#39;
+    obsm: &#39;X_embed&#39;, &#39;X_spatial_umap&#39;, &#39;X_umap&#39;
+</pre></div></div>
+</div>
+<p>Let’s load the query adata.</p>
+<p>If you provided the path to your object above it will be used.</p>
+<p>Otherwise, a subset of HypoMap3D’s non-control data will be used, deleting some genes in the process as to simulate a dataset that might not cover all of HypoMap3D’s feature space.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>if &quot;QUERY_FP&quot; in globals():
+    query_adata = sc.read_h5ad(QUERY_FP) #load user dataset
+else:
+    import random
+    query_adata = sc.read_h5ad(REF_FP, backed=&quot;r&quot;)
+
+    # Randomly remove 10% of HypoMap3D&#39;s HVGs
+    hvgs = ref_adata.var.loc[ref_adata.var.IsHvg].index.to_list()
+    genes_to_remove = set(random.sample(hvgs, k=len(hvgs) // 10))
+
+    gene_subset = [g for g in query_adata.var_names if g not in genes_to_remove]
+
+    # Load non-control cells of Gutgesell dataset
+    query_adata = query_adata[
+        (query_adata.obs.Dataset == &quot;SC2-25&quot;) &amp; (~query_adata.obs.IsControl),
+        gene_subset
+    ].to_memory()
+
+    # Remove information to get barebone query
+    query_adata.obs = query_adata.obs.loc[:, [&quot;CellID&quot;, &quot;Sample&quot;]]
+    del query_adata.obsm
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_adata
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+AnnData object with n_obs × n_vars = 121626 × 56489
+    obs: &#39;CellID&#39;, &#39;Sample&#39;
+    var: &#39;gene_ids&#39;, &#39;IsMouseTF&#39;, &#39;IsHumanTFOrtholog&#39;, &#39;IsSourceGene&#39;, &#39;IsTargetGene&#39;, &#39;IsHvgExcludedGene&#39;, &#39;IsAnnotationExcludedGene&#39;, &#39;IsPriorityGene&#39;, &#39;IsTopGene&#39;, &#39;IsHvg&#39;
+</pre></div></div>
+</div>
+</section>
+<section id="scArches-projection">
+<h1>scArches projection<a class="headerlink" href="#scArches-projection" title="Link to this heading">#</a></h1>
+<section id="Raw-counts-sanity-check">
+<h2>Raw counts sanity check<a class="headerlink" href="#Raw-counts-sanity-check" title="Link to this heading">#</a></h2>
+<p>scArches operates on raw counts, so you need to ensure that query_adata.X contains raw counts!</p>
+<p>Here, we just print the frequency distribution of some gene count values for simplicity.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>value_counts = pd.Series(query_adata[:100,:100].X.toarray().flatten()).value_counts().sort_index()
+value_counts.head(10)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.0    9634
+1.0     166
+2.0      52
+3.0      32
+4.0      29
+5.0      12
+6.0      18
+7.0       6
+8.0      11
+9.0       9
+Name: count, dtype: int64
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>value_counts.tail(10)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+14.0    2
+18.0    2
+19.0    3
+22.0    1
+23.0    1
+24.0    1
+27.0    1
+28.0    1
+37.0    1
+48.0    1
+Name: count, dtype: int64
+</pre></div></div>
+</div>
+<p>All numbers on the left are floats with 0 as decimals –&gt; raw counts.</p>
+</section>
+<section id="Setting-batch-column">
+<h2>Setting batch column<a class="headerlink" href="#Setting-batch-column" title="Link to this heading">#</a></h2>
+<p>Next, we must set the batch column for scArches. This will be the .obs column specifying your sample for instance</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_adata.obs.head(2)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CellID</th>
+      <th>Sample</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>SC2-25_SAMN46505599_AAACAGCCAAGGTACG</th>
+      <td>SC2-25_SAMN46505599_AAACAGCCAAGGTACG</td>
+      <td>SC2-25_SAMN46505599</td>
+    </tr>
+    <tr>
+      <th>SC2-25_SAMN46505599_AAACAGCCAATAGCAA</th>
+      <td>SC2-25_SAMN46505599_AAACAGCCAATAGCAA</td>
+      <td>SC2-25_SAMN46505599</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>BATCH_COL = &quot;Sample&quot; # change me if your data uses a different name
+</pre></div>
+</div>
+</div>
+<p>The problem is that the name of the batch column MUST be “Sample” due to the model specifications.</p>
+<p>Hence, we use your provided BATCH_COL, replacing its column name with Sample in the query adata.</p>
+<p>DO not worry, the object that is being saved later is the object with all genes. Hence, your previous column name will be maintained.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_adata.obs = query_adata.obs.rename(columns={BATCH_COL: &quot;Sample&quot;})
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Copy-query-data-with-all-genes">
+<h2>Copy query data with all genes<a class="headerlink" href="#Copy-query-data-with-all-genes" title="Link to this heading">#</a></h2>
+<p>Non-HVGs are lost during the projection, so let’s keep a version that has all genes for later.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes = query_adata.copy()
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_adata
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+AnnData object with n_obs × n_vars = 121626 × 56489
+    obs: &#39;CellID&#39;, &#39;Sample&#39;
+    var: &#39;gene_ids&#39;, &#39;IsMouseTF&#39;, &#39;IsHumanTFOrtholog&#39;, &#39;IsSourceGene&#39;, &#39;IsTargetGene&#39;, &#39;IsHvgExcludedGene&#39;, &#39;IsAnnotationExcludedGene&#39;, &#39;IsPriorityGene&#39;, &#39;IsTopGene&#39;, &#39;IsHvg&#39;
+</pre></div></div>
+</div>
+</section>
+<section id="Query-preparation-according-to-model">
+<h2>Query preparation according to model<a class="headerlink" href="#Query-preparation-according-to-model" title="Link to this heading">#</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span># prepare query adata
+query_adata = scvi.model.SCVI.prepare_query_anndata(query_adata, str(SCVI_DIR), inplace = False)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-blue-fg">INFO    </span> File <span class="ansi-magenta-fg">/REDACTED-path/HypoMap3D-data/v0.9/9_objects/scvi/</span><span class="ansi-magenta-intense-fg">model.pt</span> already downloaded
+<span class="ansi-blue-fg">INFO    </span> Found <span class="ansi-cyan-intense-fg ansi-bold">90.0</span>% reference vars in query data.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span># create the new query model instance.
+vae_query = scvi.model.SCVI.load_query_data(
+    query_adata,
+    str(SCVI_DIR)
+)
+
+# train
+vae_query.train(max_epochs=20, plan_kwargs=dict(weight_decay=0.0))
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-blue-fg">INFO    </span> File <span class="ansi-magenta-fg">/REDACTED-path/HypoMap3D-data/v0.9/9_objects/scvi/</span><span class="ansi-magenta-intense-fg">model.pt</span> already downloaded
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+You are using a CUDA device (&#39;NVIDIA A40&#39;) that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision(&#39;medium&#39; | &#39;high&#39;)` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/beegfs/home/mfeldmann/repos/HypoMap3D/.venv/lib/python3.11/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The &#39;train_dataloader&#39; does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=63` in the `DataLoader` to improve performance.
+/beegfs/home/mfeldmann/repos/HypoMap3D/.venv/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py:534: Found 60 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "901bf4647c7243c5a1e546d0c8cbe00a", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+`Trainer.fit` stopped: `max_epochs=20` reached.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span># get latent representation into query adata that has all genes
+query_all_genes.obsm[&quot;X_embed&quot;] = vae_query.get_latent_representation()
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="Label-transfer">
+<h1>Label transfer<a class="headerlink" href="#Label-transfer" title="Link to this heading">#</a></h1>
+<section id="Step-1:-Let's-get-membership-probabilities-for-L5-cell-types">
+<h2>Step 1: Let’s get membership probabilities for L5 cell types<a class="headerlink" href="#Step-1:-Let's-get-membership-probabilities-for-L5-cell-types" title="Link to this heading">#</a></h2>
+<p>This is performed by the project_query function in a hierarchy-aware manner where the most probable path along the clustering tree is chosen.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>pathmat, P_path = project_query(
+    ref_adata,
+    query_all_genes,
+    path_keys=[f&#39;L{i}_ID&#39; for i in range(1,6)],
+    k=50,
+    use_rep=&#39;X_embed&#39;,
+    use_gpu=use_gpu
+)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+2026-08-08 10:31:51 | [WARNING]
+            Precomputed reference neighbor adjacencies, `.obsp[&#39;50nn_adjacencies&#39;]`, not found.
+            Computing reference 50 neighbors and adding to `.obsp[&#39;50nn_adjacencies&#39;]`.
+
+</pre></div></div>
+</div>
+<p>The output of the project query function is a matrix of shape (n_cells, n_unique_L5_labels) containing the cell type membership probabilities for all L5 cell types.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>P_path
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;Compressed Sparse Row sparse matrix of dtype &#39;float32&#39;
+        with 355999 stored elements and shape (121626, 932)&gt;
+</pre></div></div>
+</div>
+<p>Further, pathmat tells us the paths from L1 to L5 along our clustering tree for each of the n_unique_L5_labels.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>pathmat
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([[&#39;Gb1-2&#39;, &#39;Gb2-39&#39;, &#39;Gb3-124&#39;, &#39;Gb4-319&#39;, &#39;Gb5-428&#39;],
+       [&#39;Gb1-2&#39;, &#39;Gb2-39&#39;, &#39;Gb3-124&#39;, &#39;Gb4-320&#39;, &#39;Gb5-429&#39;],
+       [&#39;Gb1-2&#39;, &#39;Gb2-39&#39;, &#39;Gb3-124&#39;, &#39;Gb4-321&#39;, &#39;Gb5-430&#39;],
+       ...,
+       [&#39;NN1-4&#39;, &#39;NN2-14&#39;, &#39;NN3-28&#39;, &#39;NN4-44&#39;, &#39;NN5-44&#39;],
+       [&#39;NN1-4&#39;, &#39;NN2-14&#39;, &#39;NN3-28&#39;, &#39;NN4-45&#39;, &#39;NN5-45&#39;],
+       [&#39;NN1-4&#39;, &#39;NN2-14&#39;, &#39;NN3-28&#39;, &#39;NN4-46&#39;, &#39;NN5-46&#39;]],
+      shape=(932, 5), dtype=object)
+</pre></div></div>
+</div>
+<p>Pathmat is required during smoothing, so let us keep it in the adata.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes.uns[&quot;pathmat&quot;] = pathmat
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Step-2:-Let's-get-hard-cell-type-assignments-for-all-levels">
+<h2>Step 2: Let’s get hard cell type assignments for all levels<a class="headerlink" href="#Step-2:-Let's-get-hard-cell-type-assignments-for-all-levels" title="Link to this heading">#</a></h2>
+<p>To get a hard cell type assignment, we will use the cell type with the highest probabilities.</p>
+<p>However, before doing so, let us prepare some cell type label mappers as to map our abc-like as well as our short from descriptive labels into obs next to the level-specific IDs.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>def build_id_mapping(n_df, id_pattern, target_pattern, levels=range(1, 6),):
+    mapping = {}
+
+    # --- 1. from wide dataframe ---
+    for i in levels:
+        id_col = id_pattern.format(i=i)
+        target_col = target_pattern.format(i=i)
+
+        if id_col in n_df.columns and target_col in n_df.columns:
+            mapping.update(
+                n_df[[id_col, target_col]]
+                .dropna()
+                .drop_duplicates()
+                .set_index(id_col)[target_col]
+                .to_dict()
+            )
+
+    return mapping
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>abclike_mapper = build_id_mapping(ref_adata.obs,
+    id_pattern=&quot;L{i}_ID&quot;,
+    target_pattern=&quot;L{i}_abc_like&quot;)
+
+descr_mapper = build_id_mapping(ref_adata.obs,
+    id_pattern=&quot;L{i}_ID&quot;,
+    target_pattern=&quot;L{i}_descr&quot;)
+<br/></pre></div>
+</div>
+</div>
+<p>Now, as to get cell type labels and label transfer confidences for all levels above L5, we add up cell type membership probabilities of all leaf cell types in a given branch to create the membership probabilities of the above levels.</p>
+<p>So for a given L4 cell type, we sum up the probabilities of all its L5 subclusters.</p>
+<p>The same operation is performed up until L1.</p>
+<p>We also keep the path probabilities for all levels separately and add them to the query adata.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><br/><span></span>def build_map_matrix(leaves_to_level):
+
+    leaves_to_level = np.asarray(leaves_to_level)
+    level_names, inv = np.unique(leaves_to_level, return_inverse=True)
+    rows = inv
+    cols = np.arange(len(leaves_to_level))
+    data = np.ones(len(leaves_to_level), dtype=np.uint8)
+    M = sp.coo_matrix(
+        (data, (rows, cols)),
+        shape=(len(level_names), len(leaves_to_level)),
+    ).tocsr()
+
+    return M, level_names
+
+def propagate_confidences(adata, pathmat, P_path):
+
+    # Build index maps
+
+    level_maps = [] # 4 arrays indicating the cluster label of the path at Level i
+    level_labels = {} # 4 keys, one for each level, mapping to arrays of unique cluster labels
+
+    for lvl in range(4):
+        labels = pathmat[:, lvl]
+        level_labels[lvl] = np.unique(labels)
+        level_maps.append(labels)
+
+    # sum up
+
+    P_levels = {}
+
+    for lvl in range(4):
+        M, ids = build_map_matrix(level_maps[lvl])
+
+        # (cells × leaves) @ (leaves × level_nodes)^T
+        # Multiplying the cell × L5 probability matrix with M.T sums the
+        # probabilities of all leaves belonging to the same parent cluster.
+        P_lvl = P_path @ M.T
+
+        P_levels[f&quot;L{lvl+1}&quot;] = P_lvl
+        adata.uns[f&quot;L{lvl+1}_ID&quot;] = ids
+        adata.uns[f&quot;L{lvl+1}_descr&quot;] = [descr_mapper[i] for i in ids]
+        adata.uns[f&quot;L{lvl+1}_abc_like&quot;] = [abclike_mapper[i] for i in ids]
+        adata.obsm[f&quot;P_L{lvl+1}&quot;] = P_lvl
+
+    ids = pathmat[:, 4]
+    adata.uns[f&quot;L5_ID&quot;] = ids
+    adata.uns[f&quot;L5_descr&quot;] = [descr_mapper[i] for i in ids]
+    adata.uns[f&quot;L5_abc_like&quot;] = [abclike_mapper[i] for i in ids]
+    adata.obsm[f&quot;P_L5&quot;] = P_path
+
+    for lvl in range(1, 6):
+        P = adata.obsm[f&quot;P_L{lvl}&quot;]
+
+        max_idx = np.asarray(P.argmax(axis=1)).ravel()
+        max_prob = np.asarray(P.max(axis=1).toarray()).ravel()
+
+        descr = np.asarray(adata.uns[f&quot;L{lvl}_descr&quot;])
+        abc = np.asarray(adata.uns[f&quot;L{lvl}_abc_like&quot;])
+
+        adata.obs[f&quot;L{lvl}_descr_max_p&quot;] = descr[max_idx]
+        adata.obs[f&quot;L{lvl}_abc_like_max_p&quot;] = abc[max_idx]
+        adata.obs[f&quot;L{lvl}_max_p&quot;] = max_prob
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>propagate_confidences(query_all_genes, pathmat, P_path)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+AnnData object with n_obs × n_vars = 121626 × 56489
+    obs: &#39;CellID&#39;, &#39;Sample&#39;, &#39;L1_descr_max_p&#39;, &#39;L1_abc_like_max_p&#39;, &#39;L1_max_p&#39;, &#39;L2_descr_max_p&#39;, &#39;L2_abc_like_max_p&#39;, &#39;L2_max_p&#39;, &#39;L3_descr_max_p&#39;, &#39;L3_abc_like_max_p&#39;, &#39;L3_max_p&#39;, &#39;L4_descr_max_p&#39;, &#39;L4_abc_like_max_p&#39;, &#39;L4_max_p&#39;, &#39;L5_descr_max_p&#39;, &#39;L5_abc_like_max_p&#39;, &#39;L5_max_p&#39;
+    var: &#39;gene_ids&#39;, &#39;IsMouseTF&#39;, &#39;IsHumanTFOrtholog&#39;, &#39;IsSourceGene&#39;, &#39;IsTargetGene&#39;, &#39;IsHvgExcludedGene&#39;, &#39;IsAnnotationExcludedGene&#39;, &#39;IsPriorityGene&#39;, &#39;IsTopGene&#39;, &#39;IsHvg&#39;
+    uns: &#39;L1_ID&#39;, &#39;L1_descr&#39;, &#39;L1_abc_like&#39;, &#39;L2_ID&#39;, &#39;L2_descr&#39;, &#39;L2_abc_like&#39;, &#39;L3_ID&#39;, &#39;L3_descr&#39;, &#39;L3_abc_like&#39;, &#39;L4_ID&#39;, &#39;L4_descr&#39;, &#39;L4_abc_like&#39;, &#39;L5_ID&#39;, &#39;L5_descr&#39;, &#39;L5_abc_like&#39;
+    obsm: &#39;X_embed&#39;, &#39;P_L1&#39;, &#39;P_L2&#39;, &#39;P_L3&#39;, &#39;P_L4&#39;, &#39;P_L5&#39;
+</pre></div></div>
+</div>
+<p>Now, the most likely labels for L1-L5 along with their confidences are in .obs.</p>
+<p>For instance, L2_abc_like_max_p and L2_descr_max_p are the most probable abc-like and short-form labels for L2 with L2_max_p specifying the membership probability (= confidence).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes.obs.head(2)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CellID</th>
+      <th>Sample</th>
+      <th>L1_descr_max_p</th>
+      <th>L1_abc_like_max_p</th>
+      <th>L1_max_p</th>
+      <th>L2_descr_max_p</th>
+      <th>L2_abc_like_max_p</th>
+      <th>L2_max_p</th>
+      <th>L3_descr_max_p</th>
+      <th>L3_abc_like_max_p</th>
+      <th>L3_max_p</th>
+      <th>L4_descr_max_p</th>
+      <th>L4_abc_like_max_p</th>
+      <th>L4_max_p</th>
+      <th>L5_descr_max_p</th>
+      <th>L5_abc_like_max_p</th>
+      <th>L5_max_p</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>SC2-25_SAMN46505599_AAACAGCCAAGGTACG</th>
+      <td>SC2-25_SAMN46505599_AAACAGCCAAGGTACG</td>
+      <td>SC2-25_SAMN46505599</td>
+      <td>Gl1-1 Glut</td>
+      <td>Gl1-1 Glut</td>
+      <td>1.0</td>
+      <td>Gl2-4 STN-PSTN Pitx2.Angpt1</td>
+      <td>Gl2-4 STN-PSTN Pitx2 Angpt1 Glut</td>
+      <td>1.0</td>
+      <td>Gl3-8 PSTN Egfem1</td>
+      <td>Gl3-8 STN-PSTN Pitx2 Angpt1 Glut_1</td>
+      <td>1.0</td>
+      <td>Gl4-17 PSTN Egfem1.Grp</td>
+      <td>Gl4-17 STN-PSTN Pitx2 Angpt1 Glut_1-3</td>
+      <td>1.0</td>
+      <td>Gl5-20 PSTN Egfem1.Grp</td>
+      <td>Gl5-20 STN-PSTN Pitx2 Angpt1 Glut_1-3-1</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>SC2-25_SAMN46505599_AAACAGCCAATAGCAA</th>
+      <td>SC2-25_SAMN46505599_AAACAGCCAATAGCAA</td>
+      <td>SC2-25_SAMN46505599</td>
+      <td>NN1-1 OPC-Oligo</td>
+      <td>NN1-1 OPC-Oligo</td>
+      <td>1.0</td>
+      <td>NN2-1 Oligo_1</td>
+      <td>NN2-1 Oligo_1</td>
+      <td>1.0</td>
+      <td>NN3-1 Oligo_1_1</td>
+      <td>NN3-1 Oligo_1_1</td>
+      <td>1.0</td>
+      <td>NN4-1 Oligo_1_1-1</td>
+      <td>NN4-1 Oligo_1_1-1</td>
+      <td>1.0</td>
+      <td>NN5-1 Oligo_1_1-1</td>
+      <td>NN5-1 Oligo_1_1-1</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>Membership probabilities for all cell types are in .obsm, with one matrix per level.</p>
+<p>For instance, for L3:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes.obsm[&quot;P_L3&quot;]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;Compressed Sparse Row sparse matrix of dtype &#39;float32&#39;
+        with 223202 stored elements and shape (121626, 274)&gt;
+</pre></div></div>
+</div>
+<p>The cell type labels are stored in .uns:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes.uns[&quot;L3_descr&quot;][:10] # printing just the first 10
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;Gb3-124 MPO Meis1&#39;,
+ &#39;Gb3-125 SI Lgr5&#39;,
+ &#39;Gb3-126 MPO Sema3d&#39;,
+ &#39;Gb3-127 MPO Penk&#39;,
+ &#39;Gb3-128 SI Chat&#39;,
+ &#39;Gb3-129 NDB Fign&#39;,
+ &#39;Gb3-130 ZI Hmcn1&#39;,
+ &#39;Gb3-131 LHA Arx&#39;,
+ &#39;Gb3-132 CP Nfix&#39;,
+ &#39;Gb3-133 ZI Onecut3&#39;]
+</pre></div></div>
+</div>
+<p>So, if you would want to get the membership probability for the cell type “Gb3-228 ARH Agrp” of a particular cell you could use:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>agrp_idx = list(query_all_genes.uns[&quot;L3_ID&quot;]).index(&quot;Gb3-228&quot;)
+cell_idx = 5 # let&#39;s just use the sixth cell here as an example
+
+p_agrp = query_all_genes.obsm[&quot;P_L3&quot;][cell_idx, agrp_idx]
+p_agrp
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+np.float32(0.0)
+</pre></div></div>
+</div>
+<p>Looks like that cell is not an AgRP neuron!</p>
+</section>
+</section>
+<section id="Common-UMAP">
+<h1>Common UMAP<a class="headerlink" href="#Common-UMAP" title="Link to this heading">#</a></h1>
+<p>Now we will project the query data into UMAP space of HypoMap3D for some sweet plots.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span># Saving previous UMAP coordinates as to not overwrite them
+if &quot;X_umap&quot; in query_all_genes.obsm.keys():
+    query_all_genes.obsm[&quot;X_umap_own&quot;] = query_all_genes.obsm[&quot;X_umap&quot;].copy()
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes.obsm[&#39;X_umap&#39;], _ = project_to_ref_umap(
+    ref_adata.obsm[&#39;X_embed&#39;], # ref embedding
+    query_all_genes.obsm[&#39;X_embed&#39;], # query embedding
+    ref_adata.obsm[&#39;X_umap&#39;], # ref umap
+    spread=1.0,
+    min_dist=0.5,
+    verbose=True,
+    use_gpu=use_gpu,
+    n_epochs=100,
+    seed=0
+)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "353f3e7e86cd44cbbb97a6288165b568", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+        completed  0  /  100 epochs
+        completed  10  /  100 epochs
+        completed  20  /  100 epochs
+        completed  30  /  100 epochs
+        completed  40  /  100 epochs
+        completed  50  /  100 epochs
+        completed  60  /  100 epochs
+        completed  70  /  100 epochs
+        completed  80  /  100 epochs
+        completed  90  /  100 epochs
+</pre></div></div>
+</div>
+<p>Let’s plot your cells on HypoMap3D background</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>l1_colors = {
+    &#39;Gl1-1 Glut&#39;: &quot;#8c564b&quot;,
+    &#39;Gb1-2 GABA&#39;: &quot;#aa40fc&quot;,
+    &#39;NN1-4 Astro-Epen&#39;: &quot;#17becf&quot;,
+    &#39;NN1-1 OPC-Oligo&#39;: &quot;#ffbb78&quot;,
+    &#39;NN1-2 Immune&#39;: &quot;#aec7e8&quot;,
+    &#39;NN1-3 Vascular&#39;: &quot;#98df8a&quot;
+}
+
+scattersize=2
+
+fig, ax = plt.subplots(figsize=(10, 10))
+
+# 1. Plot SC cells in gray
+sc.pl.umap(
+    ref_adata,
+    color=&quot;L1_descr&quot;,
+    ax=ax,
+    show=False,
+    palette=[&quot;grey&quot;],
+    s=scattersize,
+    legend_loc=None
+)
+
+# 2. Plot own cells with L1 palette
+sc.pl.umap(
+    query_all_genes,
+    color=&quot;L1_descr_max_p&quot;,
+    palette=l1_colors,
+    ax=ax,
+    show=False,
+    s=scattersize,
+)
+
+# Clean up plot appearance
+ax.set_title(&quot;&quot;)
+for spine in ax.spines.values():
+    spine.set_visible(False)
+ax.set_xticks([])
+ax.set_yticks([])
+ax.set_xlabel(&quot;&quot;)
+ax.set_ylabel(&quot;&quot;)
+ax.set_aspect(&#39;equal&#39;)
+
+fig.canvas.draw()
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: Length of palette colors is smaller than the number of categories (palette length: 1, categories length: 6. Some categories will have the same color.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/pages_tutorials_ProjectAndTransferLabels_69_1.png" class="no-scaled-link" height="623" src="../../_images/pages_tutorials_ProjectAndTransferLabels_69_1.png" width="734" />
+</div>
+</div>
+</section>
+<section id="Saving-the-adata">
+<h1>Saving the adata<a class="headerlink" href="#Saving-the-adata" title="Link to this heading">#</a></h1>
+<p>Change the path to your heart’s content.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>OUT_PATH = &quot;path/to/your/directory/adata_with_hypomap3d_labels.h5ad&quot;
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes.write_h5ad(OUT_PATH)
+</pre></div>
+</div>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="RegionCellTypeSelection.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Region-based Cell Type Selection</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="SpatialSmoothing.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Spatial smoothing</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Projection and Label Transfer</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#File-paths">File paths</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-loading">Data loading</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#scArches-projection">scArches projection</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Raw-counts-sanity-check">Raw counts sanity check</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Setting-batch-column">Setting batch column</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Copy-query-data-with-all-genes">Copy query data with all genes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Query-preparation-according-to-model">Query preparation according to model</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Label-transfer">Label transfer</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Step-1:-Let's-get-membership-probabilities-for-L5-cell-types">Step 1: Let’s get membership probabilities for L5 cell types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Step-2:-Let's-get-hard-cell-type-assignments-for-all-levels">Step 2: Let’s get hard cell type assignments for all levels</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Common-UMAP">Common UMAP</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Saving-the-adata">Saving the adata</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By MPI-SF | Neurogenomics
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Max Planck Institute for Metabolism Research.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

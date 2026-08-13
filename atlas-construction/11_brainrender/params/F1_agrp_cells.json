@@ -1,0 +1,9 @@
+{
+    "camera_pos": ["frontleft" ],
+    "show_root": false,
+
+    "restrict_p_to_hy": false,
+    "min_p": 0.1,
+
+    "clusters_to_plot": ["Gb3-228"]
+}

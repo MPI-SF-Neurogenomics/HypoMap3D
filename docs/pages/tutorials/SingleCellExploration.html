@@ -1,0 +1,1094 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Single Cell Exploration &#8212; HypoMap3D</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=a1637f0b"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pages/tutorials/SingleCellExploration';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Spatial Slice Plotting" href="SpatialSlicePlotting.html" />
+    <link rel="prev" title="Spatial Objects" href="../datasets/spatial.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/hm3d-logo.png" class="logo__image only-light" alt="HypoMap3D - Home"/>
+    <img src="../../_static/hm3d-logo.png" class="logo__image only-dark pst-js-only" alt="HypoMap3D - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Datasets:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../datasets/singlecell.html">Single Cell Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/spatial.html">Spatial Objects</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Single Cell Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SpatialSlicePlotting.html">Spatial Slice Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RegionCellTypeSelection.html">Region-based Cell Type Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ProjectAndTransferLabels.html">Projection and Label Transfer</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="SpatialSmoothing.html">Spatial smoothing</a></li>
+
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/pages/tutorials/SingleCellExploration.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Single Cell Exploration</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Loading-the-single-cell-dataset">Loading the single-cell dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Normalization-and-transformation">Normalization and transformation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Accessing-cell-metadata">Accessing cell metadata</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Cluster-assignments">Cluster assignments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Marker-gene-exploration:-KNDy-neurons">Marker gene exploration: KNDy neurons</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Subtype-analysis-at-L4">Subtype analysis at L4</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Improved-subtype-resolution-using-sister-markers">Improved subtype resolution using sister markers</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="Single-Cell-Exploration">
+<h1>Single Cell Exploration<a class="headerlink" href="#Single-Cell-Exploration" title="Link to this heading">#</a></h1>
+<p>This tutorial demonstrates how to handle the single cell reference atlas AnnData for the exploration of hypothalamic populations.</p>
+<p>In this notebook, we will:</p>
+<ol class="arabic simple">
+<li><p>Load and normalize the control single-cell dataset</p></li>
+<li><p>Explore cell-level metadata (dataset, suspension, inferred sex)</p></li>
+<li><p>Visualize hierarchical cluster assignments on UMAPs</p></li>
+<li><p>Identify and validate marker genes for a biologically relevant population (KNDy neurons in the arcuate nucleus)</p></li>
+</ol>
+<p>Requirements:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and <code class="docutils literal notranslate"><span class="pre">scanpy</span></code> python packages.</p></li>
+<li><p>HypoMap3D’s marker gene table and full single cell object.</p></li>
+</ol>
+<p>This tutorial assumes basic familiarity with Scanpy and AnnData objects.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Enable automatic reloading of modules during interactive work (optional)</span>
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+
+<span class="c1"># Conversion factor: millimeters to inches (for publication-style figures)</span>
+<span class="n">MM</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">25.4</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the path to each the required objects</span>
+<span class="n">FP_SC_ANNDATA</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;REPLACE FILEPATH HERE&#39;</span>
+<span class="n">FP_MARKER_TABLE</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;REPLACE FILEPATH HERE&#39;</span>
+</pre></div>
+</div>
+</div>
+<section id="Loading-the-single-cell-dataset">
+<h2>Loading the single-cell dataset<a class="headerlink" href="#Loading-the-single-cell-dataset" title="Link to this heading">#</a></h2>
+<p>We load the <strong>control</strong> single-cell dataset provided as an AnnData (<code class="docutils literal notranslate"><span class="pre">.h5ad</span></code>) file. This object includes:</p>
+<ul class="simple">
+<li><p>Gene expression raw counts (<code class="docutils literal notranslate"><span class="pre">adata.X</span></code>)</p></li>
+<li><p>Cell-level metadata (<code class="docutils literal notranslate"><span class="pre">adata.obs</span></code>)</p></li>
+<li><p>Precomputed embeddings such as UMAP (<code class="docutils literal notranslate"><span class="pre">adata.obsm</span></code>)</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Loading the control dataset via scanpy</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">FP_SC_ANNDATA</span><span class="p">)</span>
+
+<span class="c1"># Subset to only control cells</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;IsControl&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+AnnData object with n_obs × n_vars = 896959 × 56939
+    obs: &#39;CellID&#39;, &#39;Dataset&#39;, &#39;Sample&#39;, &#39;total_counts&#39;, &#39;n_genes&#39;, &#39;pct_mito&#39;, &#39;Author&#39;, &#39;Source&#39;, &#39;Data_source_link&#39;, &#39;GEO&#39;, &#39;Publication_Link&#39;, &#39;Suspension&#39;, &#39;Technology&#39;, &#39;Author_Sex_harmonized&#39;, &#39;sex_per_sample_inferred&#39;, &#39;Strain&#39;, &#39;Diet&#39;, &#39;Treatment&#39;, &#39;Age&#39;, &#39;Mean_age_in_weeks&#39;, &#39;IsControl&#39;, &#39;L1_ID&#39;, &#39;L2_ID&#39;, &#39;L3_ID&#39;, &#39;L4_ID&#39;, &#39;L5_ID&#39;, &#39;L1_descr&#39;, &#39;L2_descr&#39;, &#39;L3_descr&#39;, &#39;L4_descr&#39;, &#39;L5_descr&#39;, &#39;L1_abc_like&#39;, &#39;L2_abc_like&#39;, &#39;L3_abc_like&#39;, &#39;L4_abc_like&#39;, &#39;L5_abc_like&#39;
+    var: &#39;gene_ids&#39;, &#39;IsMouseTF&#39;, &#39;IsHumanTFOrtholog&#39;, &#39;IsSourceGene&#39;, &#39;IsTargetGene&#39;, &#39;IsHvgExcludedGene&#39;, &#39;IsAnnotationExcludedGene&#39;, &#39;IsPriorityGene&#39;, &#39;IsTopGene&#39;, &#39;IsHvg&#39;
+    obsm: &#39;X_embed&#39;, &#39;X_spatial_umap&#39;, &#39;X_umap&#39;
+</pre></div></div>
+</div>
+</section>
+<section id="Normalization-and-transformation">
+<h2>Normalization and transformation<a class="headerlink" href="#Normalization-and-transformation" title="Link to this heading">#</a></h2>
+<p>For visualization and downstream exploratory analysis, we normalize the data:</p>
+<ol class="arabic simple">
+<li><p>Normalize total counts per cell to 10,000 (CP10k)</p></li>
+<li><p>Apply a log1p transformation</p></li>
+</ol>
+<p>This is a standard Scanpy preprocessing workflow for visualization.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">target_sum</span><span class="o">=</span><span class="mi">10_000</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Accessing-cell-metadata">
+<h2>Accessing cell metadata<a class="headerlink" href="#Accessing-cell-metadata" title="Link to this heading">#</a></h2>
+<p>Cell-level metadata are stored in <code class="docutils literal notranslate"><span class="pre">adata.obs</span></code>. These include:</p>
+<ul class="simple">
+<li><p>Quality control metrics e.g. total_counts, and pct_mito</p></li>
+<li><p>Sample annotations e.g. Dataset, Sample, and Suspension</p></li>
+<li><p>Biological annotations e.g. cluster assignments</p></li>
+</ul>
+<p>Below, we explore the distribution of:</p>
+<ul class="simple">
+<li><p>Dataset</p></li>
+<li><p>Suspension</p></li>
+<li><p>Inferred sex</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Preview cell metadata</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CellID</th>
+      <th>Dataset</th>
+      <th>Sample</th>
+      <th>total_counts</th>
+      <th>n_genes</th>
+      <th>pct_mito</th>
+      <th>Author</th>
+      <th>Source</th>
+      <th>Data_source_link</th>
+      <th>GEO</th>
+      <th>...</th>
+      <th>L1_descr</th>
+      <th>L2_descr</th>
+      <th>L3_descr</th>
+      <th>L4_descr</th>
+      <th>L5_descr</th>
+      <th>L1_abc_like</th>
+      <th>L2_abc_like</th>
+      <th>L3_abc_like</th>
+      <th>L4_abc_like</th>
+      <th>L5_abc_like</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>SC1-01_SAMN18754353_AAACCCACAACCAGAG</th>
+      <td>SC1-01_SAMN18754353_AAACCCACAACCAGAG</td>
+      <td>SC1-01</td>
+      <td>SC1-01_SAMN18754353</td>
+      <td>17459.0</td>
+      <td>5884</td>
+      <td>0.131737</td>
+      <td>Affinati</td>
+      <td>SRA</td>
+      <td>NaN</td>
+      <td>GSE172204</td>
+      <td>...</td>
+      <td>Gl1-1 Glut</td>
+      <td>Gl2-35 VMH Nr5a1.Acvr1c</td>
+      <td>Gl3-113 VMH Cobll1</td>
+      <td>Gl4-290 VMH Cobll1.Vgll2</td>
+      <td>Gl5-390 VMH Cobll1.Vgll2</td>
+      <td>Gl1-1 Glut</td>
+      <td>Gl2-35 VMH Nr5a1 Acvr1c Glut</td>
+      <td>Gl3-113 VMH Nr5a1 Acvr1c Glut_3c</td>
+      <td>Gl4-290 VMH Nr5a1 Acvr1c Glut_3c-1</td>
+      <td>Gl5-390 VMH Nr5a1 Acvr1c Glut_3c-1-1</td>
+    </tr>
+    <tr>
+      <th>SC1-01_SAMN18754353_AAACCCAGTCATCTAG</th>
+      <td>SC1-01_SAMN18754353_AAACCCAGTCATCTAG</td>
+      <td>SC1-01</td>
+      <td>SC1-01_SAMN18754353</td>
+      <td>17067.0</td>
+      <td>5727</td>
+      <td>0.117185</td>
+      <td>Affinati</td>
+      <td>SRA</td>
+      <td>NaN</td>
+      <td>GSE172204</td>
+      <td>...</td>
+      <td>Gl1-1 Glut</td>
+      <td>Gl2-33 VMH Fezf1</td>
+      <td>Gl3-107 VMH Npffr1</td>
+      <td>Gl4-274 VMH Npffr1.Arhgap36</td>
+      <td>Gl5-371 VMH Npffr1.Arhgap36.Htr1b</td>
+      <td>Gl1-1 Glut</td>
+      <td>Gl2-33 VMH Fezf1 Glut</td>
+      <td>Gl3-107 VMH Fezf1 Glut_2</td>
+      <td>Gl4-274 VMH Fezf1 Glut_2-2</td>
+      <td>Gl5-371 VMH Fezf1 Glut_2-2-1</td>
+    </tr>
+    <tr>
+      <th>SC1-01_SAMN18754353_AAACGAAAGCAAGCCA</th>
+      <td>SC1-01_SAMN18754353_AAACGAAAGCAAGCCA</td>
+      <td>SC1-01</td>
+      <td>SC1-01_SAMN18754353</td>
+      <td>11905.0</td>
+      <td>4965</td>
+      <td>0.201596</td>
+      <td>Affinati</td>
+      <td>SRA</td>
+      <td>NaN</td>
+      <td>GSE172204</td>
+      <td>...</td>
+      <td>Gl1-1 Glut</td>
+      <td>Gl2-35 VMH Nr5a1.Acvr1c</td>
+      <td>Gl3-111 VMH Rai14</td>
+      <td>Gl4-286 VMH Rai14.Evc2</td>
+      <td>Gl5-386 VMH Rai14.Evc2</td>
+      <td>Gl1-1 Glut</td>
+      <td>Gl2-35 VMH Nr5a1 Acvr1c Glut</td>
+      <td>Gl3-111 VMH Nr5a1 Acvr1c Glut_3a</td>
+      <td>Gl4-286 VMH Nr5a1 Acvr1c Glut_3a-4</td>
+      <td>Gl5-386 VMH Nr5a1 Acvr1c Glut_3a-4-1</td>
+    </tr>
+    <tr>
+      <th>SC1-01_SAMN18754353_AAACGAAGTGCGGCTT</th>
+      <td>SC1-01_SAMN18754353_AAACGAAGTGCGGCTT</td>
+      <td>SC1-01</td>
+      <td>SC1-01_SAMN18754353</td>
+      <td>12268.0</td>
+      <td>5205</td>
+      <td>0.171177</td>
+      <td>Affinati</td>
+      <td>SRA</td>
+      <td>NaN</td>
+      <td>GSE172204</td>
+      <td>...</td>
+      <td>Gl1-1 Glut</td>
+      <td>Gl2-35 VMH Nr5a1.Acvr1c</td>
+      <td>Gl3-113 VMH Cobll1</td>
+      <td>Gl4-291 VMH Cobll1.Dgkk</td>
+      <td>Gl5-391 VMH Cobll1.Dgkk</td>
+      <td>Gl1-1 Glut</td>
+      <td>Gl2-35 VMH Nr5a1 Acvr1c Glut</td>
+      <td>Gl3-113 VMH Nr5a1 Acvr1c Glut_3c</td>
+      <td>Gl4-291 VMH Nr5a1 Acvr1c Glut_3c-2</td>
+      <td>Gl5-391 VMH Nr5a1 Acvr1c Glut_3c-2-1</td>
+    </tr>
+  </tbody>
+</table>
+<p>4 rows × 36 columns</p>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Count cells per dataset</span>
+<span class="n">dataset_counts</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;Dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+
+<span class="c1"># Count cells per suspension</span>
+<span class="n">suspension_counts</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;Suspension&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+
+<span class="c1"># Count cells per inferred sex</span>
+<span class="c1"># Sex is inferred based on Uty and Xist expression using sample-wise thresholds</span>
+<span class="n">sex_counts</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;sex_per_sample_inferred&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize metadata distributions using pie charts</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+
+<span class="c1"># Dataset distribution ------------------------------------------------------ #</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span>
+    <span class="n">dataset_counts</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">dataset_counts</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+    <span class="n">textprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+    <span class="n">rotatelabels</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Dataset&#39;</span><span class="p">)</span>
+
+<span class="c1"># Suspension distribution --------------------------------------------------- #</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span>
+    <span class="n">suspension_counts</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">suspension_counts</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+    <span class="n">textprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+    <span class="n">autopct</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.1f%%</span><span class="s1">&#39;</span>
+<span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Suspension&#39;</span><span class="p">)</span>
+
+<span class="c1"># Inferred sex distribution ------------------------------------------------- #</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span>
+    <span class="n">sex_counts</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">sex_counts</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+    <span class="n">textprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span>
+    <span class="n">autopct</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.1f%%</span><span class="s1">&#39;</span>
+<span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Inferred Sex&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/pages_tutorials_SingleCellExploration_12_0.png" src="../../_images/pages_tutorials_SingleCellExploration_12_0.png" />
+</div>
+</div>
+</section>
+<section id="Cluster-assignments">
+<h2>Cluster assignments<a class="headerlink" href="#Cluster-assignments" title="Link to this heading">#</a></h2>
+<p>HypoMap3D provides <strong>hierarchical cluster annotations</strong> stored in <code class="docutils literal notranslate"><span class="pre">adata.obs</span></code>. Each level is available in three complementary representations:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">L*_ID</span></code> → short cluster IDs (e.g. <code class="docutils literal notranslate"><span class="pre">Gl3-84</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L*_descr</span></code> → human-readable taxonomic labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L*_abc_like</span></code> → Allen Brain Atlas–compatible labels</p></li>
+</ul>
+<p>Here, we visualize:</p>
+<ol class="arabic simple">
+<li><p>All Level 1 (L1) cell types</p></li>
+<li><p>The Level 3 (L3) subclusters of a specific L1 population (<code class="docutils literal notranslate"><span class="pre">Gl1-8</span></code>)</p></li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;L1_descr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+L1_descr
+Gb1-2 GABA          328018
+Gl1-1 Glut          279075
+NN1-1 OPC-Oligo     140839
+NN1-4 Astro-Epen    108835
+NN1-3 Vascular       22077
+NN1-2 Immune         18115
+Name: count, dtype: int64
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">90</span><span class="o">*</span><span class="n">MM</span><span class="p">,</span> <span class="mi">180</span><span class="o">*</span><span class="n">MM</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+
+<span class="c1"># Full L1 UMAP --------------------------------------------------------------- #</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;L1_descr&#39;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;L1 Descriptive Cell Types&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Subset: NN1-1 OPC-Oligo cells and visualize their L3 children ------------------------ #</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;L1_ID&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NN1-1&#39;</span>
+<span class="n">subset</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># Convert view to actual AnnData object</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">subset</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;L3_descr&#39;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;Dark2&#39;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;NN1-1 OPC-Oligo children at L3&#39;</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/pages_tutorials_SingleCellExploration_15_0.png" src="../../_images/pages_tutorials_SingleCellExploration_15_0.png" />
+</div>
+</div>
+</section>
+<section id="Marker-gene-exploration:-KNDy-neurons">
+<h2>Marker gene exploration: KNDy neurons<a class="headerlink" href="#Marker-gene-exploration:-KNDy-neurons" title="Link to this heading">#</a></h2>
+<p>One population highlighted in the HypoMap3D publication is the <strong>KNDy neurons</strong> located in the arcuate nucleus.</p>
+<p>KNDy neurons are defined by co-expression of:</p>
+<ul class="simple">
+<li><p><em>Kiss1</em> (Kisspeptin)</p></li>
+<li><p><em>Tac2</em> (Neurokinin B)</p></li>
+<li><p><em>Pdyn</em> (Dynorphin)</p></li>
+</ul>
+<p>Below, we identify the corresponding L3 cluster using precomputed marker genes.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load marker genes (cluster vs all comparison)</span>
+<span class="n">df_markers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+    <span class="n">FP_MARKER_TABLE</span>
+<span class="p">)</span>
+
+<span class="c1"># Extract only markers genes with comparison OneVsAll</span>
+<span class="n">df_markers_vs_all</span> <span class="o">=</span> <span class="n">df_markers</span><span class="p">[</span>
+    <span class="n">df_markers</span><span class="p">[</span><span class="s1">&#39;comparison&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;OneVsAll&#39;</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Restrict to L3 clustering</span>
+<span class="n">df_L3_markers_vs_all</span> <span class="o">=</span> <span class="n">df_markers_vs_all</span><span class="p">[</span><span class="n">df_markers_vs_all</span><span class="p">[</span><span class="s1">&#39;clustering&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;L3&#39;</span><span class="p">]</span>
+
+<span class="c1"># Identify clusters expressing all three KNDy markers</span>
+<span class="n">kndy_clusters</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df_L3_markers_vs_all</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;celltype_descr&#39;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">g</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Kiss1&#39;</span><span class="p">,</span> <span class="s1">&#39;Tac2&#39;</span><span class="p">,</span> <span class="s1">&#39;Pdyn&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="s1">&#39;gene_name&#39;</span><span class="p">]))</span>
+    <span class="p">[</span><span class="s1">&#39;celltype_descr&#39;</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">kndy_clusters</span> <span class="c1"># only one in arcuate nucleus -&gt; KNDy neurons</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;Gl3-88 ARH Kiss1&#39;, &#39;Gl3-23 LHA Igf1&#39;]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract the top 20 most specific markers for the KNDy cluster</span>
+<span class="n">top_20_markers</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df_markers_vs_all</span><span class="p">[</span><span class="n">df_markers_vs_all</span><span class="p">[</span><span class="s1">&#39;celltype_descr&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Gl3-88 ARH Kiss1&#39;</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;rank&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)[</span><span class="s1">&#39;gene_name&#39;</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1"># Score all cells based on expression of these markers</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">score_genes</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">gene_list</span><span class="o">=</span><span class="n">top_20_markers</span><span class="p">,</span>
+    <span class="n">score_name</span><span class="o">=</span><span class="s1">&#39;marker_score&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize marker score and cluster location on UMAP</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">270</span><span class="o">*</span><span class="n">MM</span><span class="p">,</span> <span class="mi">90</span><span class="o">*</span><span class="n">MM</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">140</span><span class="p">)</span>
+
+<span class="c1"># Marker score -------------------------------------------------------------- #</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;marker_score&#39;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Top 20 Marker Score&#39;</span><span class="p">,</span>
+    <span class="n">s</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="c1"># Highlight KNDy cluster ---------------------------------------------------- #</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;L3_descr&#39;</span><span class="p">,</span>
+    <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Gl3-88 ARH Kiss1&#39;</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;gist_rainbow&#39;</span><span class="p">,</span>
+    <span class="n">legend_loc</span><span class="o">=</span><span class="s1">&#39;on data&#39;</span><span class="p">,</span>
+    <span class="n">legend_fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Gl3-88 ARH Kiss1&#39;</span><span class="p">,</span>
+    <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">na_in_legend</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/pages_tutorials_SingleCellExploration_20_0.png" src="../../_images/pages_tutorials_SingleCellExploration_20_0.png" />
+</div>
+</div>
+</section>
+<section id="Subtype-analysis-at-L4">
+<h2>Subtype analysis at L4<a class="headerlink" href="#Subtype-analysis-at-L4" title="Link to this heading">#</a></h2>
+<p>The KNDy population splits into multiple subtypes at <strong>L4</strong>. However, L3 marker genes alone provide limited discriminatory power.</p>
+<p>Below, we:</p>
+<ol class="arabic simple">
+<li><p>Visualize expression of canonical KNDy genes</p></li>
+<li><p>Examine subtype separation using dotplots</p></li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;L3_descr&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Gl3-88 ARH Kiss1&#39;</span>
+
+<span class="n">mosaic</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">&#39;Kiss1&#39;</span><span class="p">,</span> <span class="s1">&#39;Tac2&#39;</span><span class="p">,</span> <span class="s1">&#39;Pdyn&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;dotplot&#39;</span><span class="p">,</span> <span class="s1">&#39;dotplot&#39;</span><span class="p">,</span> <span class="s1">&#39;dotplot&#39;</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot_mosaic</span><span class="p">(</span>
+    <span class="n">mosaic</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">180</span><span class="o">*</span><span class="n">MM</span><span class="p">,</span> <span class="mi">90</span><span class="o">*</span><span class="n">MM</span><span class="p">),</span>
+    <span class="n">dpi</span><span class="o">=</span><span class="mi">140</span>
+<span class="p">)</span>
+
+<span class="c1"># Gene expression UMAPs ----------------------------------------------------- #</span>
+<span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Kiss1&#39;</span><span class="p">,</span> <span class="s1">&#39;Tac2&#39;</span><span class="p">,</span> <span class="s1">&#39;Pdyn&#39;</span><span class="p">]:</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">gene</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="n">gene</span><span class="p">],</span>
+        <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="n">gene</span><span class="p">,</span>
+        <span class="n">s</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+
+<span class="c1"># Marker dotplot ------------------------------------------------------------ #</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">dotplot</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span>
+    <span class="n">var_names</span><span class="o">=</span><span class="n">top_20_markers</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s1">&#39;L4_descr&#39;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="s1">&#39;dotplot&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/pages_tutorials_SingleCellExploration_22_0.png" src="../../_images/pages_tutorials_SingleCellExploration_22_0.png" />
+</div>
+</div>
+</section>
+<section id="Improved-subtype-resolution-using-sister-markers">
+<h2>Improved subtype resolution using sister markers<a class="headerlink" href="#Improved-subtype-resolution-using-sister-markers" title="Link to this heading">#</a></h2>
+<p>To better discriminate closely related subtypes, we use <strong>sister marker genes</strong> (markers defined by comparison against sibling clusters rather than all clusters).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract only markers genes with comparison OneVsSisters</span>
+<span class="n">df_markers_vs_sister</span> <span class="o">=</span> <span class="n">df_markers</span><span class="p">[</span>
+    <span class="n">df_markers</span><span class="p">[</span><span class="s1">&#39;comparison&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;OneVsSisters&#39;</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select markers for a specific L4 subtype</span>
+<span class="n">subtype_markers</span> <span class="o">=</span> <span class="n">df_markers_vs_sister</span><span class="p">[</span>
+    <span class="n">df_markers_vs_sister</span><span class="p">[</span><span class="s1">&#39;celltype_descr&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Gl4-213 ARH Kiss1.Slc38a3&#39;</span>
+<span class="p">]</span>
+
+<span class="n">top_subtype_markers</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">subtype_markers</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;rank&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">[</span><span class="s1">&#39;gene_name&#39;</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">90</span><span class="o">*</span><span class="n">MM</span><span class="p">,</span> <span class="mi">90</span><span class="o">*</span><span class="n">MM</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">140</span><span class="p">)</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">dotplot</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span>
+    <span class="n">var_names</span><span class="o">=</span><span class="n">top_subtype_markers</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s1">&#39;L4_descr&#39;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/pages_tutorials_SingleCellExploration_25_0.png" src="../../_images/pages_tutorials_SingleCellExploration_25_0.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../datasets/spatial.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Spatial Objects</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="SpatialSlicePlotting.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Spatial Slice Plotting</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Loading-the-single-cell-dataset">Loading the single-cell dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Normalization-and-transformation">Normalization and transformation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Accessing-cell-metadata">Accessing cell metadata</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Cluster-assignments">Cluster assignments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Marker-gene-exploration:-KNDy-neurons">Marker gene exploration: KNDy neurons</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Subtype-analysis-at-L4">Subtype analysis at L4</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Improved-subtype-resolution-using-sister-markers">Improved subtype resolution using sister markers</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By MPI-SF | Neurogenomics
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Max Planck Institute for Metabolism Research.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

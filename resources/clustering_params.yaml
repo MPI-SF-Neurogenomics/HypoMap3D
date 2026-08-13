@@ -1,0 +1,35 @@
+loop:
+  initial_solution_key: L1
+  max_levels: 10
+neighbors:
+  n_neighbors: 15
+  use_rep: X_embed
+leiden:
+  n_iterations: 5
+  n_jobs: 20
+  n_seeds: 100
+  resolution: [
+  ]
+consensus:
+  random_state: 0
+pruning:
+  max_stratum_size: 10000
+  min_stratum_size: 10
+  min_cluster_size: 100
+  min_marker_genes: 30
+  symmetric_intermediate_resolution: true
+  symmetric_highest_resolution: false
+  min_pct_expression: 0.1
+  min_specificity: 0.2
+  min_strata: 2
+  min_stratum_size: 10
+  nn_checks: 2 # no. of neighbouring clusters to check against
+  random_state: 0
+  significance_threshold: 0.001
+  strata_key: Sample
+  use_rep: X_embed
+masking:
+  enabled: false
+  min_nn_agreement: 0.5
+  n_neighbors: 40
+  use_rep: X_embed
