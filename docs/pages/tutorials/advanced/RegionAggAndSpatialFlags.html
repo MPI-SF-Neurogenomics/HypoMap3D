@@ -1,0 +1,2340 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>CCF region aggregation and spatial warning flags &#8212; HypoMap3D</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=a1637f0b"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pages/tutorials/advanced/RegionAggAndSpatialFlags';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="prev" title="Spatial smoothing" href="SpatialSmoothing.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/hm3d-logo.png" class="logo__image only-light" alt="HypoMap3D - Home"/>
+    <img src="../../../_static/hm3d-logo.png" class="logo__image only-dark pst-js-only" alt="HypoMap3D - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Datasets:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../datasets/singlecell.html">Single Cell Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../datasets/spatial.html">Spatial Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../datasets/taxonomy.html">Taxonomy Objects</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../SingleCellExploration.html">Single Cell Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SpatialSlicePlotting.html">Spatial Slice Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../RegionCellTypeSelection.html">Region-based Cell Type Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ProjectAndTransferLabels.html">Projection and Label Transfer</a></li>
+
+
+
+
+
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Advanced Tutorials</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="SpatialSmoothing.html">Spatial smoothing</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">CCF region aggregation and spatial warning flags</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/pages/tutorials/advanced/RegionAggAndSpatialFlags.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>CCF region aggregation and spatial warning flags</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#File-paths">File paths</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-loading">Data loading</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Notebook-settings">Notebook settings</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-aggregate-predictions-per-CCF-region">Let’s aggregate predictions per CCF region</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-get-metrics-describing-the-3D-pattern-of-spatial-predictions">Let’s get metrics describing the 3D pattern of spatial predictions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-get-signal-metrics">Let’s get signal metrics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-assign-warning-flags-to-all-clusters">Let’s assign warning flags to all clusters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-wrangling">Data wrangling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-set-our-thresholds">Let’s set our thresholds</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-add-our-flags">Let’s add our flags</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-save-the-flags">Let’s save the flags</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Plotting-flag-distributions">Plotting flag distributions</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="CCF-region-aggregation-and-spatial-warning-flags">
+<h1>CCF region aggregation and spatial warning flags<a class="headerlink" href="#CCF-region-aggregation-and-spatial-warning-flags" title="Link to this heading">#</a></h1>
+<p>This tutorial demonstrates how to aggregate voxel-wise predictions per CCF region and to generate spatial warning flags for the 3D spatial predictions generated in the SpatialSmoothing notebook.</p>
+<p>As an example, we will aggregate the data and recreate the flags from the paper up to a user-specified level here (default = L2).</p>
+<p>In this notebook, we will:</p>
+<ol class="arabic simple">
+<li><p>Aggregate predictions per CCF region.</p></li>
+<li><p>Derive DBSCAN metrics to describe the spatial pattern of spatial predictions (Shape)</p></li>
+<li><p>Calculate the number of high confidence ST cells to quantify the “Signal” from which spatial predictions were generated</p></li>
+<li><p>Flag predictions if chosen thresholds are exceeded.</p></li>
+</ol>
+<p>Requirements: To run the notebook you will need:</p>
+<ol class="arabic simple">
+<li><p>HypoMap3D’s code base and environment. For this, follow the instructions at the root of the Git repo.</p></li>
+<li><p>HypoMap3D cell-wise and voxel-wise spatial datasets. Download them and place it into DATADIR/9_objects/spatial/hypomap3d_spatial_voxel_level.zarr and DATADIR/9_objects/spatial/hypomap3d_spatial_cell_level.h5ad, respectively.</p></li>
+</ol>
+<p>Of course, the above paths can be modified but then they have to be changed accordingly below as well.</p>
+<p>If you wish to use our own data, file paths must be changed accordingly as well.</p>
+<section id="Imports">
+<h2>Imports<a class="headerlink" href="#Imports" title="Link to this heading">#</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">concurrent</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">dotenv_values</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage.filters</span><span class="w"> </span><span class="kn">import</span> <span class="n">threshold_otsu</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">DBSCAN</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Patch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.gridspec</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gridspec</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="File-paths">
+<h2>File paths<a class="headerlink" href="#File-paths" title="Link to this heading">#</a></h2>
+<p>Change them if you want to use your own data.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CONFIG</span> <span class="o">=</span> <span class="n">dotenv_values</span><span class="p">(</span><span class="s2">&quot;config.env&quot;</span><span class="p">)</span> <span class="c1"># file at the root of your cloned repo</span>
+<span class="n">DATADIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">CONFIG</span><span class="p">[</span><span class="s1">&#39;DATADIR&#39;</span><span class="p">])</span> <span class="c1"># root of your DATADIR</span>
+
+<span class="n">SPATIALDIR</span> <span class="o">=</span> <span class="n">DATADIR</span> <span class="o">/</span> <span class="s2">&quot;9_objects&quot;</span> <span class="o">/</span> <span class="s2">&quot;spatial&quot;</span>
+<span class="n">ZARR_FP</span> <span class="o">=</span> <span class="n">SPATIALDIR</span> <span class="o">/</span> <span class="s2">&quot;hypomap3d_spatial_voxel_level.zarr&quot;</span>
+<span class="n">ST_ADATA_FP</span> <span class="o">=</span> <span class="n">SPATIALDIR</span> <span class="o">/</span> <span class="s2">&quot;hypomap3d_spatial_cell_level.h5ad&quot;</span>
+
+<span class="n">OUTDIR</span> <span class="o">=</span> <span class="n">DATADIR</span> <span class="o">/</span> <span class="s2">&quot;tutorials&quot;</span>
+<span class="n">OUTDIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="Data-loading">
+<h3>Data loading<a class="headerlink" href="#Data-loading" title="Link to this heading">#</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load voxel grid Zarr store</span>
+<span class="n">voxel_store</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ZARR_FP</span><span class="p">)</span>
+<span class="c1">#voxel_store.tree()</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="Notebook-settings">
+<h2>Notebook settings<a class="headerlink" href="#Notebook-settings" title="Link to this heading">#</a></h2>
+<p>As the code can run quite a while to get the DBSCAN metrics for the full object later, we will only analyze for clustering resolutions L1-2 here.</p>
+<p>If you wish to analyze all levels, set MAX_LEVEL_TO_ANALYZE to 5.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MAX_LEVEL_TO_ANALYZE</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<section id="Let's-aggregate-predictions-per-CCF-region">
+<h3>Let’s aggregate predictions per CCF region<a class="headerlink" href="#Let's-aggregate-predictions-per-CCF-region" title="Link to this heading">#</a></h3>
+<p>Here, we sum up all voxel-wise relative masses per CCF region.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_region_distribution</span><span class="p">(</span><span class="n">voxel_store</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For a given level i, creates a DataFrame of shape (n_labels, n_regions)</span>
+<span class="sd">    where each entry is the sum of rel_mass for that label within that brain region,</span>
+<span class="sd">    excluding NaN voxels.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    voxel_store : zarr Group</span>
+<span class="sd">        The zarr store containing the arrays</span>
+<span class="sd">    level : int</span>
+<span class="sd">        The level i to use (e.g. 1 for L1, 2 for L2, etc.)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame of shape (n_labels, n_regions)</span>
+<span class="sd">        index: label descr</span>
+<span class="sd">        columns: brain region ids</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Load region labels and flatten</span>
+    <span class="n">region_labels_flat</span> <span class="o">=</span> <span class="n">voxel_store</span><span class="p">[</span><span class="s2">&quot;region&quot;</span><span class="p">][</span><span class="s2">&quot;region_labels&quot;</span><span class="p">][:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># (nx*ny*nz,)</span>
+    <span class="n">unique_regions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">region_labels_flat</span><span class="p">)</span>
+    <span class="n">n_regions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_regions</span><span class="p">)</span>
+
+    <span class="c1"># Map region ids to column indices</span>
+    <span class="n">region_to_idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">r</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">unique_regions</span><span class="p">)}</span>
+    <span class="n">region_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">region_to_idx</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">region_labels_flat</span><span class="p">])</span>  <span class="c1"># (n_voxels,)</span>
+
+    <span class="c1"># Get metadata</span>
+    <span class="n">label_descr</span> <span class="o">=</span> <span class="n">voxel_store</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;L</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;descr&quot;</span><span class="p">][:]</span>
+    <span class="n">n_labels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">label_descr</span><span class="p">)</span>
+
+    <span class="c1"># Preallocate result</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_labels</span><span class="p">,</span> <span class="n">n_regions</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="c1"># Iterate over labels one at a time to keep memory low</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_labels</span><span class="p">):</span>
+        <span class="c1"># Load single label slice and flatten</span>
+        <span class="n">label_mass</span> <span class="o">=</span> <span class="n">voxel_store</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;L</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;rel_mass&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># (n_voxels,)</span>
+
+        <span class="c1"># Mask out NaN voxels</span>
+        <span class="n">valid_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">label_mass</span><span class="p">)</span>
+
+        <span class="c1"># Only accumulate non-NaN values</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">region_idx</span><span class="p">[</span><span class="n">valid_mask</span><span class="p">],</span> <span class="n">label_mass</span><span class="p">[</span><span class="n">valid_mask</span><span class="p">])</span>
+
+    <span class="c1"># Prep output</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">label_descr</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">unique_regions</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># remove outside-of-brain indicator region</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">MAX_LEVEL_TO_ANALYZE</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_region_distribution</span><span class="p">(</span><span class="n">voxel_store</span><span class="p">,</span> <span class="n">level</span> <span class="o">=</span> <span class="n">i</span><span class="p">))</span>
+<span class="n">rm_complete</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The results are aggregated relative masses per Allen Brain Cell (ABC) region ID, with the “root” region filtered out by default.</p>
+<p>Some of those IDs are from non-hypothlamic regions which are only covered by a few voxels.</p>
+<p>Hence, we will filter the table to brain regions which were covered to a meaningful extent in HypoMap3D’s bounding box. The corresponding regions have their IDs and acronyms available in the zarr store.</p>
+<p>After filtering for meaningful regions and mapping their acronyms, we will renormalize the data, such that the relative masses sum up to 1 over all brain regions.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rm_complete</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>1</th>
+      <th>6</th>
+      <th>12</th>
+      <th>15</th>
+      <th>23</th>
+      <th>27</th>
+      <th>30</th>
+      <th>38</th>
+      <th>54</th>
+      <th>56</th>
+      <th>...</th>
+      <th>606826655</th>
+      <th>606826659</th>
+      <th>607344830</th>
+      <th>607344834</th>
+      <th>607344838</th>
+      <th>607344846</th>
+      <th>607344850</th>
+      <th>607344854</th>
+      <th>607344858</th>
+      <th>607344862</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Gb1-2 GABA</th>
+      <td>0.001156</td>
+      <td>0.011916</td>
+      <td>0.000149</td>
+      <td>0.000666</td>
+      <td>0.008469</td>
+      <td>0.000025</td>
+      <td>0.001316</td>
+      <td>0.001100</td>
+      <td>0.000139</td>
+      <td>0.060656</td>
+      <td>...</td>
+      <td>0.000014</td>
+      <td>0.000133</td>
+      <td>0.000041</td>
+      <td>0.000378</td>
+      <td>0.000033</td>
+      <td>0.000051</td>
+      <td>0.000041</td>
+      <td>4.264802e-07</td>
+      <td>0.000042</td>
+      <td>0.000097</td>
+    </tr>
+    <tr>
+      <th>Gl1-1 Glut</th>
+      <td>0.001087</td>
+      <td>0.010417</td>
+      <td>0.001106</td>
+      <td>0.006570</td>
+      <td>0.005710</td>
+      <td>0.000036</td>
+      <td>0.000740</td>
+      <td>0.007335</td>
+      <td>0.001130</td>
+      <td>0.003005</td>
+      <td>...</td>
+      <td>0.002007</td>
+      <td>0.002867</td>
+      <td>0.000128</td>
+      <td>0.001191</td>
+      <td>0.000073</td>
+      <td>0.000117</td>
+      <td>0.000074</td>
+      <td>6.176414e-06</td>
+      <td>0.000169</td>
+      <td>0.000396</td>
+    </tr>
+    <tr>
+      <th>NN1-1 OPC-Oligo</th>
+      <td>0.000722</td>
+      <td>0.061648</td>
+      <td>0.000806</td>
+      <td>0.002875</td>
+      <td>0.004488</td>
+      <td>0.000047</td>
+      <td>0.000344</td>
+      <td>0.001268</td>
+      <td>0.000906</td>
+      <td>0.009465</td>
+      <td>...</td>
+      <td>0.000258</td>
+      <td>0.000630</td>
+      <td>0.000261</td>
+      <td>0.001194</td>
+      <td>0.000188</td>
+      <td>0.000197</td>
+      <td>0.000136</td>
+      <td>1.249357e-05</td>
+      <td>0.000150</td>
+      <td>0.000332</td>
+    </tr>
+    <tr>
+      <th>NN1-2 Immune</th>
+      <td>0.000739</td>
+      <td>0.018307</td>
+      <td>0.000455</td>
+      <td>0.002621</td>
+      <td>0.007492</td>
+      <td>0.000031</td>
+      <td>0.001054</td>
+      <td>0.005476</td>
+      <td>0.000693</td>
+      <td>0.015901</td>
+      <td>...</td>
+      <td>0.000460</td>
+      <td>0.000589</td>
+      <td>0.000225</td>
+      <td>0.001545</td>
+      <td>0.000200</td>
+      <td>0.000466</td>
+      <td>0.000134</td>
+      <td>1.442631e-06</td>
+      <td>0.000215</td>
+      <td>0.000225</td>
+    </tr>
+    <tr>
+      <th>NN1-3 Vascular</th>
+      <td>0.004209</td>
+      <td>0.013169</td>
+      <td>0.000790</td>
+      <td>0.004443</td>
+      <td>0.010185</td>
+      <td>0.000040</td>
+      <td>0.000538</td>
+      <td>0.003712</td>
+      <td>0.000741</td>
+      <td>0.013107</td>
+      <td>...</td>
+      <td>0.001046</td>
+      <td>0.003313</td>
+      <td>0.000154</td>
+      <td>0.001816</td>
+      <td>0.000258</td>
+      <td>0.000363</td>
+      <td>0.000102</td>
+      <td>3.659279e-06</td>
+      <td>0.000133</td>
+      <td>0.000438</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 202 columns</p>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Build the mapping</span>
+<span class="n">region_ids</span> <span class="o">=</span> <span class="n">voxel_store</span><span class="p">[</span><span class="s2">&quot;region&quot;</span><span class="p">][</span><span class="s2">&quot;ids&quot;</span><span class="p">][:]</span>
+<span class="n">region_acronyms</span> <span class="o">=</span> <span class="n">voxel_store</span><span class="p">[</span><span class="s2">&quot;region&quot;</span><span class="p">][</span><span class="s2">&quot;acronyms&quot;</span><span class="p">][:]</span>
+<span class="n">acro_mapper</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">region_ids</span><span class="p">,</span> <span class="n">region_acronyms</span><span class="p">))</span>
+
+<span class="c1"># 2. Filter columns</span>
+<span class="n">rm_complete</span> <span class="o">=</span> <span class="n">rm_complete</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">rm_complete</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">region_ids</span><span class="p">)]</span>
+
+<span class="c1"># 3. Rename columns</span>
+<span class="n">rm_complete</span> <span class="o">=</span> <span class="n">rm_complete</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">acro_mapper</span><span class="p">)</span>
+
+<span class="c1"># 4. Normalize rows</span>
+<span class="n">row_sums</span> <span class="o">=</span> <span class="n">rm_complete</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">rm_complete</span> <span class="o">=</span> <span class="n">rm_complete</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">row_sums</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rm_complete</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>TMv</th>
+      <th>int</th>
+      <th>IF</th>
+      <th>PT</th>
+      <th>AAA</th>
+      <th>PVa</th>
+      <th>PVH</th>
+      <th>mfb</th>
+      <th>ACB</th>
+      <th>MT</th>
+      <th>...</th>
+      <th>IntG</th>
+      <th>VMPO</th>
+      <th>PeF</th>
+      <th>HATA</th>
+      <th>MMl</th>
+      <th>MMm</th>
+      <th>MMp</th>
+      <th>MMd</th>
+      <th>IPR</th>
+      <th>IPRL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Gb1-2 GABA</th>
+      <td>0.001158</td>
+      <td>0.011932</td>
+      <td>0.000149</td>
+      <td>0.000667</td>
+      <td>0.008481</td>
+      <td>0.001318</td>
+      <td>0.001102</td>
+      <td>0.000140</td>
+      <td>0.060741</td>
+      <td>0.000325</td>
+      <td>...</td>
+      <td>0.000151</td>
+      <td>0.000884</td>
+      <td>0.002197</td>
+      <td>0.001060</td>
+      <td>0.000125</td>
+      <td>0.000066</td>
+      <td>0.000014</td>
+      <td>0.000133</td>
+      <td>0.000379</td>
+      <td>0.000097</td>
+    </tr>
+    <tr>
+      <th>Gl1-1 Glut</th>
+      <td>0.001091</td>
+      <td>0.010453</td>
+      <td>0.001110</td>
+      <td>0.006593</td>
+      <td>0.005730</td>
+      <td>0.000742</td>
+      <td>0.007361</td>
+      <td>0.001134</td>
+      <td>0.003016</td>
+      <td>0.000441</td>
+      <td>...</td>
+      <td>0.000338</td>
+      <td>0.000723</td>
+      <td>0.002503</td>
+      <td>0.002206</td>
+      <td>0.009730</td>
+      <td>0.007730</td>
+      <td>0.002014</td>
+      <td>0.002878</td>
+      <td>0.001195</td>
+      <td>0.000397</td>
+    </tr>
+    <tr>
+      <th>NN1-1 OPC-Oligo</th>
+      <td>0.000724</td>
+      <td>0.061816</td>
+      <td>0.000808</td>
+      <td>0.002883</td>
+      <td>0.004501</td>
+      <td>0.000345</td>
+      <td>0.001271</td>
+      <td>0.000908</td>
+      <td>0.009491</td>
+      <td>0.000881</td>
+      <td>...</td>
+      <td>0.000347</td>
+      <td>0.000633</td>
+      <td>0.004861</td>
+      <td>0.000510</td>
+      <td>0.001915</td>
+      <td>0.001060</td>
+      <td>0.000258</td>
+      <td>0.000632</td>
+      <td>0.001197</td>
+      <td>0.000333</td>
+    </tr>
+    <tr>
+      <th>NN1-2 Immune</th>
+      <td>0.000741</td>
+      <td>0.018360</td>
+      <td>0.000457</td>
+      <td>0.002629</td>
+      <td>0.007514</td>
+      <td>0.001057</td>
+      <td>0.005492</td>
+      <td>0.000695</td>
+      <td>0.015947</td>
+      <td>0.000742</td>
+      <td>...</td>
+      <td>0.000209</td>
+      <td>0.000871</td>
+      <td>0.004023</td>
+      <td>0.000959</td>
+      <td>0.001137</td>
+      <td>0.000758</td>
+      <td>0.000461</td>
+      <td>0.000591</td>
+      <td>0.001549</td>
+      <td>0.000225</td>
+    </tr>
+    <tr>
+      <th>NN1-3 Vascular</th>
+      <td>0.004224</td>
+      <td>0.013215</td>
+      <td>0.000793</td>
+      <td>0.004458</td>
+      <td>0.010220</td>
+      <td>0.000540</td>
+      <td>0.003725</td>
+      <td>0.000744</td>
+      <td>0.013152</td>
+      <td>0.000923</td>
+      <td>...</td>
+      <td>0.000431</td>
+      <td>0.000429</td>
+      <td>0.002435</td>
+      <td>0.001825</td>
+      <td>0.004143</td>
+      <td>0.002152</td>
+      <td>0.001050</td>
+      <td>0.003325</td>
+      <td>0.001822</td>
+      <td>0.000440</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 176 columns</p>
+</div></div>
+</div>
+<p>What subclasses have their highest relative mass in the ARH?</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rm_complete</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;ARH&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Gl2-28 ARH-PVp Tbx3.Kiss1       0.383984
+Gb2-63 TU-ARH Otp.Six6.Npy2r    0.354879
+Gl2-32 ARH-PVp Tbx3.Isl1        0.252659
+Gb2-60 ARH-PVp Tbx3             0.222384
+Gb2-67 SBPV-PVa Six6.Satb2      0.148098
+Name: ARH, dtype: float32
+</pre></div></div>
+</div>
+<p>Let’s save!</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rm_complete</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUTDIR</span> <span class="o">/</span> <span class="s2">&quot;region_wise_relative_masses.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Let's-get-metrics-describing-the-3D-pattern-of-spatial-predictions">
+<h3>Let’s get metrics describing the 3D pattern of spatial predictions<a class="headerlink" href="#Let's-get-metrics-describing-the-3D-pattern-of-spatial-predictions" title="Link to this heading">#</a></h3>
+<p>For this matter, voxel-wise probabilities are binarized using the Otsu algorithm as to distinguish foreground vs background voxels, where foreground voxels indicate the regions in which a cell type is likely to be located.</p>
+<p>Afterwards, the DBSCAN clustering algorithm is applied to the x, y, z coordinates of the foreground voxels as to estimate in how many hot spots a cluster is located, how voluminous those hot spots are and how much spatial scatter is in the predictions as evidenced by high counts of DBSCAN clusters as well as outlier points.</p>
+<p>By using an epsilon of 0.1, new spatial DBSCAN clusters form if they are at least 100 micrometer away from other hot spots.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_DBSCAN_clusters</span><span class="p">(</span><span class="n">voxel_store</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">lvl</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">min_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run DBSCAN clustering on voxel probabilities for each celltype at a given hierarchy level.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        voxel_store:  zarr/h5 store containing relative mass arrays of shape (n_celltypes, nx, ny, nz)</span>
+<span class="sd">        coords:       voxel coordinates of shape (nx*ny*nz, 3)</span>
+<span class="sd">        lvl:          hierarchy level to process</span>
+<span class="sd">        eps:          DBSCAN epsilon (neighborhood radius)</span>
+<span class="sd">        min_samples:  DBSCAN minimum samples per cluster</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame with columns: cluster_name, otsu_thr, dbscan_label,</span>
+<span class="sd">                                   num_vox, percent_vox, center_coords, rel_mass</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># init lists to collect data for a long df</span>
+    <span class="n">cluster_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">thr_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">label_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">label_count_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">label_count_relative_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">center_coords_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rm_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">group</span> <span class="o">=</span> <span class="n">voxel_store</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;L</span><span class="si">{</span><span class="n">lvl</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+    <span class="n">celltypes</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;ids&quot;</span><span class="p">][:]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">celltype</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">celltypes</span><span class="p">):</span>
+
+        <span class="n">probs</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;prob&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">nan</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">relmass</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;rel_mass&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">relmass</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">relmass</span><span class="p">,</span> <span class="n">nan</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">thr</span> <span class="o">=</span> <span class="n">threshold_otsu</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">probs</span> <span class="o">&gt;</span> <span class="n">thr</span>
+
+            <span class="n">dat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">coords</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="p">:],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">])</span>
+            <span class="n">dat</span><span class="p">[</span><span class="s2">&quot;rel_mass&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">relmass</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">total_vox</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dat</span><span class="p">)</span>
+
+            <span class="n">db</span> <span class="o">=</span> <span class="n">DBSCAN</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="n">min_samples</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dat</span><span class="p">[[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span>
+            <span class="n">dat</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span>
+
+            <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">dat</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                <span class="n">label_mask</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">label</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+                <span class="n">center</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="n">label_mask</span><span class="p">][[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+
+                <span class="n">cluster_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">celltype</span><span class="p">)</span>
+                <span class="n">thr_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thr</span><span class="p">)</span>
+                <span class="n">label_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+                <span class="n">label_count_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+                <span class="n">label_count_relative_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="n">total_vox</span><span class="p">)</span>
+                <span class="n">center_coords_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+                <span class="n">rm_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="n">label_mask</span><span class="p">][</span><span class="s2">&quot;rel_mass&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping celltype &#39;</span><span class="si">{</span><span class="n">celltype</span><span class="si">}</span><span class="s2">&#39; at level </span><span class="si">{</span><span class="n">lvl</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">cluster_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">celltype</span><span class="p">)</span>
+            <span class="n">thr_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="n">label_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="n">label_count_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="n">label_count_relative_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="n">center_coords_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">])</span>
+            <span class="n">rm_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span>
+        <span class="s2">&quot;cluster&quot;</span><span class="p">:</span> <span class="n">cluster_list</span><span class="p">,</span>
+        <span class="s2">&quot;otsu_thr&quot;</span><span class="p">:</span> <span class="n">thr_list</span><span class="p">,</span>
+        <span class="s2">&quot;dbscan_label&quot;</span><span class="p">:</span> <span class="n">label_list</span><span class="p">,</span>
+        <span class="s2">&quot;num_vox&quot;</span><span class="p">:</span> <span class="n">label_count_list</span><span class="p">,</span>
+        <span class="s2">&quot;percent_vox&quot;</span><span class="p">:</span> <span class="n">label_count_relative_list</span><span class="p">,</span>
+        <span class="s2">&quot;center_coords&quot;</span><span class="p">:</span> <span class="n">center_coords_list</span><span class="p">,</span>
+        <span class="s2">&quot;rel_mass&quot;</span><span class="p">:</span> <span class="n">rm_list</span>
+    <span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">EPS</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">MIN_SAMPLES</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+</div>
+<p>First, let us precompute a coordinate grid which we will use to additionally derive center CCF [mm] coordinates for the hotspots.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_min</span><span class="p">,</span> <span class="n">y_min</span><span class="p">,</span> <span class="n">z_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span>
+    <span class="n">voxel_store</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">][</span><span class="s2">&quot;ccf_mm&quot;</span><span class="p">][</span><span class="s2">&quot;min&quot;</span><span class="p">][:],</span> <span class="mi">3</span>
+<span class="p">)</span>
+<span class="n">x_max</span><span class="p">,</span> <span class="n">y_max</span><span class="p">,</span> <span class="n">z_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span>
+    <span class="n">voxel_store</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">][</span><span class="s2">&quot;ccf_mm&quot;</span><span class="p">][</span><span class="s2">&quot;max&quot;</span><span class="p">][:],</span> <span class="mi">3</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;x: </span><span class="si">{</span><span class="n">x_min</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> &lt;-&gt; </span><span class="si">{</span><span class="n">x_max</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y: </span><span class="si">{</span><span class="n">y_min</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> &lt;-&gt; </span><span class="si">{</span><span class="n">y_max</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;z: </span><span class="si">{</span><span class="n">z_min</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> &lt;-&gt; </span><span class="si">{</span><span class="n">z_max</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">step</span> <span class="o">=</span> <span class="mf">0.025</span> <span class="c1"># 25 um steps</span>
+
+<span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="n">step</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="n">step</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">zz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">z_min</span><span class="p">,</span> <span class="n">z_max</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="n">step</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xx</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">yy</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">zz</span><span class="p">))</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">&quot;ij&quot;</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">coords</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">coords</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+x: 4.375 &lt;-&gt; 8.550
+y: 3.950 &lt;-&gt; 7.525
+z: 3.050 &lt;-&gt; 5.700
+168 144 107
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([[4.375, 3.95 , 3.05 ],
+       [4.375, 3.95 , 3.075],
+       [4.375, 3.95 , 3.1  ],
+       ...,
+       [8.55 , 7.525, 5.65 ],
+       [8.55 , 7.525, 5.675],
+       [8.55 , 7.525, 5.7  ]], shape=(2588544, 3))
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dfs</span><span class="o">=</span><span class="p">[]</span> <span class="c1"># this will run for hours</span>
+<span class="k">for</span> <span class="n">lvl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">MAX_LEVEL_TO_ANALYZE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">get_DBSCAN_clusters</span><span class="p">(</span><span class="n">voxel_store</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">lvl</span> <span class="o">=</span> <span class="n">lvl</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="n">EPS</span><span class="p">,</span> <span class="n">min_samples</span> <span class="o">=</span> <span class="n">MIN_SAMPLES</span><span class="p">)</span>
+    <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">db_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">db_metrics</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cluster</th>
+      <th>otsu_thr</th>
+      <th>dbscan_label</th>
+      <th>num_vox</th>
+      <th>percent_vox</th>
+      <th>center_coords</th>
+      <th>rel_mass</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Gb1-2</td>
+      <td>0.36083</td>
+      <td>0</td>
+      <td>655478</td>
+      <td>0.960281</td>
+      <td>[5.1485277156525076, 5.528380815222316, 4.1422...</td>
+      <td>0.618054</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Gb1-2</td>
+      <td>0.36083</td>
+      <td>-1</td>
+      <td>14</td>
+      <td>0.000021</td>
+      <td>[6.7, 5.789285714285714, 4.269642857142856]</td>
+      <td>0.000008</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Gb1-2</td>
+      <td>0.36083</td>
+      <td>1</td>
+      <td>28</td>
+      <td>0.000041</td>
+      <td>[5.336607142857141, 6.912500000000001, 5.06785...</td>
+      <td>0.000016</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[80]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">db_metrics</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUTDIR</span> <span class="o">/</span> <span class="s2">&quot;dbscan_metrics.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Let's-get-signal-metrics">
+<h3>Let’s get signal metrics<a class="headerlink" href="#Let's-get-signal-metrics" title="Link to this heading">#</a></h3>
+<p>To estimate how much “signal” there is the ST dataset that was smoothed we count the number of high confidence cells per cluster.</p>
+<p>Here, “high confidence” is defined by a membership probability &gt; 0.5.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HI_CONF_THR</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># high confidence threshold</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">ST_ADATA_FP</span><span class="p">,</span> <span class="n">backed</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>To obtain the number of high confidence cells we use the previously stored pathmat which containsthe paths through our clustering tree from L1 to L5 as well as adata.obsm[“P_L5”] which stores path probablities for all L5 clusters, shape (n_cells, n leaf (ie L5) clusters).</p>
+<p>Hence, in the loop below, path probabilities are summed up for all parent clusters of L5 clusters when assessing L4 clusters for instance.</p>
+<p>Afterwards, it is checked whether the resulting probabilities exceed the above high confidence threshold.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pathmat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;pathmat&quot;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;L</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pathmat</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>L1</th>
+      <th>L2</th>
+      <th>L3</th>
+      <th>L4</th>
+      <th>L5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Gb1-2</td>
+      <td>Gb2-39</td>
+      <td>Gb3-124</td>
+      <td>Gb4-319</td>
+      <td>Gb5-428</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Gb1-2</td>
+      <td>Gb2-39</td>
+      <td>Gb3-124</td>
+      <td>Gb4-320</td>
+      <td>Gb5-429</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Gb1-2</td>
+      <td>Gb2-39</td>
+      <td>Gb3-124</td>
+      <td>Gb4-321</td>
+      <td>Gb5-430</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Gb1-2</td>
+      <td>Gb2-39</td>
+      <td>Gb3-124</td>
+      <td>Gb4-321</td>
+      <td>Gb5-431</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Gb1-2</td>
+      <td>Gb2-39</td>
+      <td>Gb3-124</td>
+      <td>Gb4-322</td>
+      <td>Gb5-432</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ensure P_path is CSC format for efficient column slicing</span>
+<span class="n">P_path</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;P_L5&quot;</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">sparse</span><span class="o">.</span><span class="n">issparse</span><span class="p">(</span><span class="n">P_path</span><span class="p">):</span>
+    <span class="n">P_path</span> <span class="o">=</span> <span class="n">P_path</span><span class="o">.</span><span class="n">tocsc</span><span class="p">()</span>  <span class="c1"># CSC is efficient for column indexing</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">P_path</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">(</span><span class="n">P_path</span><span class="p">)</span>
+
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;L</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">MAX_LEVEL_TO_ANALYZE</span><span class="o">+</span><span class="mi">1</span><span class="p">)]:</span>
+    <span class="n">clusters</span> <span class="o">=</span> <span class="n">pathmat</span><span class="p">[</span><span class="n">level</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span>
+        <span class="c1"># Find which path indices (columns) pass through this cluster</span>
+        <span class="n">path_indices</span> <span class="o">=</span> <span class="n">pathmat</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">pathmat</span><span class="p">[</span><span class="n">level</span><span class="p">]</span> <span class="o">==</span> <span class="n">cluster</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="c1"># Sum probabilities across relevant columns — stays sparse</span>
+        <span class="n">cluster_probs</span> <span class="o">=</span> <span class="n">P_path</span><span class="p">[:,</span> <span class="n">path_indices</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># shape: (n_cells, 1), np.matrix</span>
+
+        <span class="c1"># Count cells exceeding threshold — np.matrix.A1 flattens to 1D array</span>
+        <span class="n">n_hi_conf</span> <span class="o">=</span> <span class="p">(</span><span class="n">cluster_probs</span><span class="o">.</span><span class="n">A1</span> <span class="o">&gt;</span> <span class="n">HI_CONF_THR</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="n">level</span><span class="p">,</span> <span class="s2">&quot;cluster&quot;</span><span class="p">:</span> <span class="n">cluster</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;n_cells_presmooth_p_gt_</span><span class="si">{</span><span class="n">HI_CONF_THR</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">n_hi_conf</span><span class="p">})</span>
+
+<span class="n">results_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;level&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster&quot;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>level</th>
+      <th>cluster</th>
+      <th>n_cells_presmooth_p_gt_0.5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>L1</td>
+      <td>Gb1-2</td>
+      <td>433607</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>L1</td>
+      <td>Gl1-1</td>
+      <td>256902</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>L1</td>
+      <td>NN1-1</td>
+      <td>231723</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>L1</td>
+      <td>NN1-2</td>
+      <td>21381</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>L1</td>
+      <td>NN1-3</td>
+      <td>129944</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[83]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUTDIR</span> <span class="o">/</span> <span class="s2">&quot;high_confidence_cells.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Let's-assign-warning-flags-to-all-clusters">
+<h3>Let’s assign warning flags to all clusters<a class="headerlink" href="#Let's-assign-warning-flags-to-all-clusters" title="Link to this heading">#</a></h3>
+<p>The above data is wrangled a bit to extract some key features we are interested in.</p>
+<p>For “Signal”/”No Cells” flags, we use the number of high confidence cells.</p>
+<p>For “Shape” flags, we consider</p>
+<ul class="simple">
+<li><p>the number of DBSCAN clusters</p></li>
+<li><p>the percentage of hotspot voxels that are not in the top 2 biggest hotspots</p></li>
+<li><p>the volume of the biggest DBSCAN cluster</p></li>
+</ul>
+<p>These shape metrics thus quantify spatial patterns that may be unspecific to brain regions or may be very noisy/scattery.</p>
+<p>To flag spatial predictions for our clusters, we use thresholds for signal and shape metrics as derived from extensive EDA, c.f. below.</p>
+</section>
+</section>
+<section id="Data-wrangling">
+<h2>Data wrangling<a class="headerlink" href="#Data-wrangling" title="Link to this heading">#</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">restrict_dbscanmetrics_to_top_k</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    function to restrict the desired metric of the dbscan metrics to the top k dbscan labels.</span>
+<span class="sd">    all other labels will be set to the &quot;rest&quot; label for which the metric will be summed.</span>
+
+<span class="sd">    returns df</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">cluster_names_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">otsu_thr_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">label_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">num_vox_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">metric_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rank_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+
+        <span class="n">cluster_data</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">cluster</span> <span class="o">==</span> <span class="n">cluster</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># keep the top k</span>
+        <span class="n">top_k</span> <span class="o">=</span> <span class="n">cluster_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="n">k</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="c1"># create a column for the rank</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+            <span class="n">top_k</span><span class="p">[</span><span class="s2">&quot;size_rank&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">top_k</span><span class="p">))]</span>
+
+        <span class="n">cluster_names_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">top_k</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+        <span class="n">otsu_thr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">top_k</span><span class="o">.</span><span class="n">otsu_thr</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+        <span class="n">label_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">top_k</span><span class="o">.</span><span class="n">dbscan_label</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+        <span class="n">num_vox_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">top_k</span><span class="o">.</span><span class="n">num_vox</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+        <span class="n">metric_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">top_k</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+        <span class="n">rank_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">top_k</span><span class="o">.</span><span class="n">size_rank</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+        <span class="c1"># calculate rests</span>
+        <span class="n">rest</span> <span class="o">=</span> <span class="n">cluster_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">k</span><span class="p">:,</span> <span class="p">:]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rest</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">cluster_names_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+            <span class="n">otsu_thr_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rest</span><span class="o">.</span><span class="n">otsu_thr</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">label_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;rest&quot;</span><span class="p">)</span>
+            <span class="n">num_vox_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rest</span><span class="o">.</span><span class="n">num_vox</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+            <span class="n">metric_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rest</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+            <span class="n">rank_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;rest&quot;</span><span class="p">)</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span>
+
+        <span class="s2">&quot;cluster&quot;</span><span class="p">:</span> <span class="n">cluster_names_list</span><span class="p">,</span>
+        <span class="s2">&quot;otsu_thr&quot;</span><span class="p">:</span> <span class="n">otsu_thr_list</span><span class="p">,</span>
+        <span class="s2">&quot;dbscan_label&quot;</span><span class="p">:</span> <span class="n">label_list</span><span class="p">,</span>
+        <span class="s2">&quot;num_vox&quot;</span><span class="p">:</span> <span class="n">num_vox_list</span><span class="p">,</span>
+        <span class="n">metric</span><span class="p">:</span> <span class="n">metric_list</span><span class="p">,</span>
+        <span class="s2">&quot;size_rank&quot;</span><span class="p">:</span> <span class="n">rank_list</span>
+    <span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">wrangle_dbscan</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+
+    <span class="n">out</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># num clusters</span>
+    <span class="n">nums</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;cluster&quot;</span><span class="p">)[</span><span class="s2">&quot;dbscan_label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;num_postsmooth_dbscan_clusters&quot;</span><span class="p">)</span>
+
+    <span class="c1"># top 2 and &quot;rest&quot; clusters</span>
+    <span class="n">top_k</span> <span class="o">=</span> <span class="n">obtain_wide_top_k_df</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">nums</span><span class="p">,</span> <span class="n">top_k</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">obtain_wide_top_k_df</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+
+    <span class="n">top_k</span> <span class="o">=</span> <span class="n">restrict_dbscanmetrics_to_top_k</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;percent_vox&quot;</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">clusters</span> <span class="o">=</span> <span class="n">top_k</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+
+    <span class="c1"># Use ThreadPoolExecutor to process clusters concurrently</span>
+    <span class="n">all_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+        <span class="c1"># Start the load opeartions by submitting tasks to the thread pool and collect the results</span>
+        <span class="n">future_to_cluster</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">get_wide_top_k_for_cluster</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">cluster</span><span class="p">):</span> <span class="n">cluster</span>
+            <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">clusters</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Retrieve the results as they complete</span>
+        <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">future_to_cluster</span><span class="p">):</span>
+            <span class="n">cluster_metrics</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="n">all_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster_metrics</span><span class="p">)</span>
+
+    <span class="c1"># Create a DataFrame from the list of dictionaries</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_metrics</span><span class="p">)</span>
+
+    <span class="c1"># extract values from lists</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;num_vox_biggest_dbscan_cluster&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;percent_vox_biggest_dbscan_cluster&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;num_vox_second_biggest_dbscan_cluster&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;percent_vox_second_biggest_dbscan_cluster&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;num_vox_rest_dbscan_cluster&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;percent_vox_rest_dbscan_cluster&quot;</span><span class="p">]:</span>
+
+        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;cluster&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_wide_top_k_for_cluster</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cluster</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">cluster</span> <span class="o">==</span> <span class="n">cluster</span><span class="p">,:]</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;cluster&quot;</span><span class="p">:</span> <span class="n">cluster</span><span class="p">,</span>
+        <span class="s2">&quot;num_vox_biggest_dbscan_cluster&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">size_rank</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;num_vox&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+        <span class="s2">&quot;percent_vox_biggest_dbscan_cluster&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">size_rank</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;percent_vox&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+        <span class="s2">&quot;num_vox_second_biggest_dbscan_cluster&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">size_rank</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;num_vox&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+        <span class="s2">&quot;percent_vox_second_biggest_dbscan_cluster&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">size_rank</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;percent_vox&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+        <span class="s2">&quot;num_vox_rest_dbscan_cluster&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">size_rank</span> <span class="o">==</span> <span class="s2">&quot;rest&quot;</span><span class="p">,</span> <span class="s2">&quot;num_vox&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+        <span class="s2">&quot;percent_vox_rest_dbscan_cluster&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">size_rank</span> <span class="o">==</span> <span class="s2">&quot;rest&quot;</span><span class="p">,</span> <span class="s2">&quot;percent_vox&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">res</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for all clusters and DBSCAN metrics, extract top 2 DBSCAN clusters, label the rest of them as &quot;rest&quot;</span>
+<span class="n">shape_df</span> <span class="o">=</span> <span class="n">wrangle_dbscan</span><span class="p">(</span><span class="n">db_metrics</span><span class="p">)</span>
+<span class="n">signal_df</span> <span class="o">=</span> <span class="n">results_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;cluster&quot;</span><span class="p">)</span>
+<span class="n">joined</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">signal_df</span><span class="p">,</span> <span class="n">shape_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;cluster&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;clustering&quot;</span>
+<span class="p">})</span>
+
+<span class="n">joined</span> <span class="o">=</span> <span class="n">joined</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">otsu_mapper</span> <span class="o">=</span> <span class="n">db_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">,</span> <span class="s2">&quot;otsu_thr&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;cluster&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()[</span><span class="s2">&quot;otsu_thr&quot;</span><span class="p">]</span>
+<span class="n">joined</span><span class="p">[</span><span class="s2">&quot;otsu_thr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">joined</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">otsu_mapper</span><span class="p">)</span>
+
+<span class="n">joined</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cluster</th>
+      <th>clustering</th>
+      <th>n_cells_presmooth_p_gt_0.5</th>
+      <th>num_postsmooth_dbscan_clusters</th>
+      <th>num_vox_biggest_dbscan_cluster</th>
+      <th>percent_vox_biggest_dbscan_cluster</th>
+      <th>num_vox_second_biggest_dbscan_cluster</th>
+      <th>percent_vox_second_biggest_dbscan_cluster</th>
+      <th>num_vox_rest_dbscan_cluster</th>
+      <th>percent_vox_rest_dbscan_cluster</th>
+      <th>otsu_thr</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Gb1-2</td>
+      <td>L1</td>
+      <td>433607</td>
+      <td>23</td>
+      <td>655478</td>
+      <td>0.960281</td>
+      <td>13981.0</td>
+      <td>0.020482</td>
+      <td>13131.0</td>
+      <td>0.019237</td>
+      <td>0.36083</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Gl1-1</td>
+      <td>L1</td>
+      <td>256902</td>
+      <td>32</td>
+      <td>809905</td>
+      <td>0.994593</td>
+      <td>2793.0</td>
+      <td>0.003430</td>
+      <td>1610.0</td>
+      <td>0.001977</td>
+      <td>0.21526</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="Let's-set-our-thresholds">
+<h2>Let’s set our thresholds<a class="headerlink" href="#Let's-set-our-thresholds" title="Link to this heading">#</a></h2>
+<p>Thresholds were adapted to the specific levels, becoming more stringent with higher clustering granularity as predictions for cell types at coarser clustering resolutions are expected to include ST cells from multiple brain regions that could possibly be far away from one another.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MIN_NUM_CELLS_WARNING</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">NUM_VOX_BIGGEST_MAX</span> <span class="o">=</span> <span class="mi">60_000</span> <span class="c1"># starting at L3</span>
+
+<span class="n">DBSCAN_CLUSTER_MAX_L2</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">DBSCAN_CLUSTER_MAX_L3</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">DBSCAN_CLUSTER_MAX_L4_L5</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="n">DBSCAN_REST_VOX_MAX_L2_L3</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="n">DBSCAN_REST_VOX_MAX_L4_L5</span> <span class="o">=</span> <span class="mf">0.3</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Let's-add-our-flags">
+<h2>Let’s add our flags<a class="headerlink" href="#Let's-add-our-flags" title="Link to this heading">#</a></h2>
+<p>Importantly, neuronal and non-neuronal cells are treated differently: Non-neuronal cells will not receive shape warnings as their shape in 3D is expected to be all over the place (consider astrocytes).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Signal warnings are identical for all levels and cell types</span>
+
+<span class="n">joined</span><span class="p">[</span><span class="s2">&quot;signal_warning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">joined</span><span class="p">[</span><span class="s2">&quot;n_cells_presmooth_p_gt_0.5&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">MIN_NUM_CELLS_WARNING</span>
+
+<span class="n">joined</span><span class="p">[</span><span class="s2">&quot;no_cells_warning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">joined</span><span class="p">[</span><span class="s2">&quot;n_cells_presmooth_p_gt_0.5&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># shape: only neurons</span>
+<span class="n">joined</span><span class="p">[</span><span class="s2">&quot;shape_warning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># init shape</span>
+<span class="n">neuron_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">joined</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;NN&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">level</span> <span class="o">=</span> <span class="s2">&quot;L2&quot;</span>
+
+<span class="n">joined</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+    <span class="p">(</span><span class="n">neuron_mask</span><span class="p">)</span> <span class="o">&amp;</span>
+    <span class="p">(</span><span class="n">joined</span><span class="o">.</span><span class="n">clustering</span> <span class="o">==</span> <span class="n">level</span><span class="p">)</span> <span class="o">&amp;</span>
+    <span class="p">((</span><span class="n">joined</span><span class="o">.</span><span class="n">num_postsmooth_dbscan_clusters</span> <span class="o">&gt;</span> <span class="n">DBSCAN_CLUSTER_MAX_L2</span><span class="p">)</span> <span class="o">|</span>
+    <span class="p">(</span><span class="n">joined</span><span class="o">.</span><span class="n">percent_vox_rest_dbscan_cluster</span> <span class="o">&gt;</span> <span class="n">DBSCAN_REST_VOX_MAX_L2_L3</span><span class="p">)),</span>
+    <span class="s2">&quot;shape_warning&quot;</span>
+<span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">level</span> <span class="o">=</span> <span class="s2">&quot;L3&quot;</span>
+
+<span class="n">joined</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+    <span class="p">(</span><span class="n">neuron_mask</span><span class="p">)</span> <span class="o">&amp;</span>
+    <span class="p">(</span><span class="n">joined</span><span class="o">.</span><span class="n">clustering</span> <span class="o">==</span> <span class="n">level</span><span class="p">)</span> <span class="o">&amp;</span>
+    <span class="p">((</span><span class="n">joined</span><span class="o">.</span><span class="n">num_postsmooth_dbscan_clusters</span> <span class="o">&gt;</span> <span class="n">DBSCAN_CLUSTER_MAX_L3</span><span class="p">)</span> <span class="o">|</span>
+    <span class="p">(</span><span class="n">joined</span><span class="o">.</span><span class="n">percent_vox_rest_dbscan_cluster</span> <span class="o">&gt;</span> <span class="n">DBSCAN_REST_VOX_MAX_L2_L3</span><span class="p">)),</span>
+    <span class="s2">&quot;shape_warning&quot;</span>
+<span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">joined</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">neuron_mask</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">joined</span><span class="o">.</span><span class="n">clustering</span> <span class="o">==</span> <span class="n">level</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">joined</span><span class="o">.</span><span class="n">num_vox_biggest_dbscan_cluster</span> <span class="o">&gt;</span> <span class="n">NUM_VOX_BIGGEST_MAX</span><span class="p">),</span>
+        <span class="s2">&quot;shape_warning&quot;</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;L4&quot;</span><span class="p">,</span> <span class="s2">&quot;L5&quot;</span><span class="p">]:</span>
+
+    <span class="n">joined</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">neuron_mask</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">joined</span><span class="o">.</span><span class="n">clustering</span> <span class="o">==</span> <span class="n">level</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">((</span><span class="n">joined</span><span class="o">.</span><span class="n">num_postsmooth_dbscan_clusters</span> <span class="o">&gt;</span> <span class="n">DBSCAN_CLUSTER_MAX_L4_L5</span><span class="p">)</span> <span class="o">|</span>
+        <span class="p">(</span><span class="n">joined</span><span class="o">.</span><span class="n">percent_vox_rest_dbscan_cluster</span> <span class="o">&gt;</span> <span class="n">DBSCAN_REST_VOX_MAX_L4_L5</span><span class="p">)),</span>
+        <span class="s2">&quot;shape_warning&quot;</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">joined</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">neuron_mask</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">joined</span><span class="o">.</span><span class="n">clustering</span> <span class="o">==</span> <span class="n">level</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">joined</span><span class="o">.</span><span class="n">num_vox_biggest_dbscan_cluster</span> <span class="o">&gt;</span> <span class="n">NUM_VOX_BIGGEST_MAX</span><span class="p">),</span>
+        <span class="s2">&quot;shape_warning&quot;</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">joined</span><span class="p">[</span><span class="s2">&quot;warning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+<span class="n">joined</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">joined</span><span class="o">.</span><span class="n">shape_warning</span><span class="p">,</span> <span class="s2">&quot;warning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Shape&quot;</span>
+<span class="n">joined</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">joined</span><span class="o">.</span><span class="n">signal_warning</span><span class="p">,</span> <span class="s2">&quot;warning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Signal&quot;</span>
+<span class="n">joined</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">joined</span><span class="o">.</span><span class="n">signal_warning</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">joined</span><span class="o">.</span><span class="n">shape_warning</span><span class="p">),</span> <span class="s2">&quot;warning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Signal and shape&quot;</span>
+<span class="n">joined</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">joined</span><span class="o">.</span><span class="n">no_cells_warning</span><span class="p">,</span> <span class="s2">&quot;warning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;No cells&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">joined</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cluster</th>
+      <th>clustering</th>
+      <th>n_cells_presmooth_p_gt_0.5</th>
+      <th>num_postsmooth_dbscan_clusters</th>
+      <th>num_vox_biggest_dbscan_cluster</th>
+      <th>percent_vox_biggest_dbscan_cluster</th>
+      <th>num_vox_second_biggest_dbscan_cluster</th>
+      <th>percent_vox_second_biggest_dbscan_cluster</th>
+      <th>num_vox_rest_dbscan_cluster</th>
+      <th>percent_vox_rest_dbscan_cluster</th>
+      <th>otsu_thr</th>
+      <th>signal_warning</th>
+      <th>no_cells_warning</th>
+      <th>shape_warning</th>
+      <th>warning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Gb1-2</td>
+      <td>L1</td>
+      <td>433607</td>
+      <td>23</td>
+      <td>655478</td>
+      <td>0.960281</td>
+      <td>13981.0</td>
+      <td>0.020482</td>
+      <td>13131.0</td>
+      <td>0.019237</td>
+      <td>0.360830</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Gl1-1</td>
+      <td>L1</td>
+      <td>256902</td>
+      <td>32</td>
+      <td>809905</td>
+      <td>0.994593</td>
+      <td>2793.0</td>
+      <td>0.003430</td>
+      <td>1610.0</td>
+      <td>0.001977</td>
+      <td>0.215260</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NN1-1</td>
+      <td>L1</td>
+      <td>231723</td>
+      <td>57</td>
+      <td>808234</td>
+      <td>0.992932</td>
+      <td>1782.0</td>
+      <td>0.002189</td>
+      <td>3971.0</td>
+      <td>0.004878</td>
+      <td>0.200112</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>NN1-2</td>
+      <td>L1</td>
+      <td>21381</td>
+      <td>180</td>
+      <td>791536</td>
+      <td>0.983928</td>
+      <td>1960.0</td>
+      <td>0.002436</td>
+      <td>10969.0</td>
+      <td>0.013635</td>
+      <td>0.018917</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>NN1-3</td>
+      <td>L1</td>
+      <td>129944</td>
+      <td>181</td>
+      <td>105660</td>
+      <td>0.802418</td>
+      <td>10473.0</td>
+      <td>0.079536</td>
+      <td>15544.0</td>
+      <td>0.118046</td>
+      <td>0.206346</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>None</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="Let's-save-the-flags">
+<h2>Let’s save the flags<a class="headerlink" href="#Let's-save-the-flags" title="Link to this heading">#</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># whole data</span>
+<span class="n">joined</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUTDIR</span> <span class="o">/</span> <span class="s2">&quot;spatial_flags_metrics.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># flags only</span>
+<span class="n">joined</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;cluster&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">warning</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUTDIR</span> <span class="o">/</span> <span class="s2">&quot;spatial_flags.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="Plotting-flag-distributions">
+<h3>Plotting flag distributions<a class="headerlink" href="#Plotting-flag-distributions" title="Link to this heading">#</a></h3>
+<p>Naturally, levels for which we did not generate metrics and flags will not be displayed in the below plots.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="c1"># --- SETTINGS ---</span>
+<span class="c1"># Define warning order and color mapping</span>
+<span class="n">warning_order</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;Shape&quot;</span><span class="p">,</span> <span class="s2">&quot;Signal&quot;</span><span class="p">,</span> <span class="s2">&quot;Signal and shape&quot;</span><span class="p">,</span> <span class="s2">&quot;No cells&quot;</span><span class="p">,]</span>
+<span class="n">warning_colors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;None&quot;</span><span class="p">:</span> <span class="s2">&quot;#155b0c&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Shape&quot;</span><span class="p">:</span> <span class="s2">&quot;#C3C400&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Signal&quot;</span><span class="p">:</span> <span class="s2">&quot;#EFC400&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Signal and shape&quot;</span><span class="p">:</span> <span class="s2">&quot;#FF9E00&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;No cells&quot;</span><span class="p">:</span> <span class="s2">&quot;#FF4100&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># --- DATA PREP ---</span>
+<span class="c1"># Filter for is_NN == False and desired clustering levels</span>
+<span class="n">filtered</span> <span class="o">=</span> <span class="n">joined</span><span class="p">[</span>
+    <span class="p">(</span><span class="n">neuron_mask</span><span class="p">)</span> <span class="o">&amp;</span>
+    <span class="p">(</span><span class="n">joined</span><span class="p">[</span><span class="s1">&#39;clustering&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;L2&quot;</span><span class="p">,</span> <span class="s2">&quot;L3&quot;</span><span class="p">,</span> <span class="s2">&quot;L4&quot;</span><span class="p">,</span> <span class="s2">&quot;L5&quot;</span><span class="p">]))</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Ensure &#39;warning&#39; is a categorical column with defined order</span>
+<span class="n">filtered</span><span class="p">[</span><span class="s1">&#39;warning&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s1">&#39;warning&#39;</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="n">warning_order</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Compute count and percentage per clustering and warning</span>
+<span class="n">percentage_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">filtered</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;clustering&#39;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">size</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Compute total rows per clustering group for percentage calculation</span>
+<span class="n">totals</span> <span class="o">=</span> <span class="n">percentage_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;clustering&#39;</span><span class="p">)[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">)</span>
+<span class="n">percentage_df</span><span class="p">[</span><span class="s1">&#39;percentage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">percentage_df</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">totals</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="c1"># --- PLOTTING ---</span>
+<span class="c1"># Create a FacetGrid for the 4 clustering levels</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">percentage_df</span><span class="p">,</span>
+    <span class="n">col</span><span class="o">=</span><span class="s1">&#39;clustering&#39;</span><span class="p">,</span>
+    <span class="n">col_order</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;L2&#39;</span><span class="p">,</span> <span class="s1">&#39;L3&#39;</span><span class="p">,</span> <span class="s1">&#39;L4&#39;</span><span class="p">,</span> <span class="s1">&#39;L5&#39;</span><span class="p">],</span>
+    <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">aspect</span><span class="o">=</span><span class="mf">0.4</span>
+<span class="p">)</span>
+
+<span class="c1"># Plot the bar plots</span>
+<span class="n">g</span><span class="o">.</span><span class="n">map_dataframe</span><span class="p">(</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;warning&#39;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s1">&#39;percentage&#39;</span><span class="p">,</span>
+    <span class="n">order</span><span class="o">=</span><span class="n">warning_order</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="n">warning_colors</span><span class="p">,</span>
+    <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Annotate and style each subplot</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">clustering_level</span><span class="p">,</span> <span class="n">group_df</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">percentage_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;clustering&#39;</span><span class="p">)):</span>
+    <span class="c1"># Add count annotations</span>
+    <span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">warning_order</span><span class="p">:</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">group_df</span><span class="p">[</span><span class="n">group_df</span><span class="p">[</span><span class="s1">&#39;warning&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">warning</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">row</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">y_val</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;percentage&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">warning_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">warning</span><span class="p">),</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">y_val</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">s</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;n=</span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
+                <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>
+                <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+                <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Clean up x-axis and y-axis</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Percentage of clusters&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">clustering_level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">():</span>
+        <span class="n">label</span><span class="o">.</span><span class="n">set_fontweight</span><span class="p">(</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+
+    <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+
+<span class="c1"># Remove x-axis label globally</span>
+<span class="n">g</span><span class="o">.</span><span class="n">set_axis_labels</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Percentage of clusters&quot;</span><span class="p">)</span>
+
+<span class="c1"># --- SUPER TITLE ---</span>
+<span class="n">g</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span>
+    <span class="s2">&quot;Flag categories for spatial predictions of neuronal clusters&quot;</span><span class="p">,</span>
+    <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
+    <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Adjust layout to make room for legend and title</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="c1"># --- LEGEND ---</span>
+<span class="c1"># Create custom legend handles</span>
+<span class="n">legend_elements</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Patch</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="n">warning_colors</span><span class="p">[</span><span class="n">label</span><span class="p">],</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">warning_order</span>
+<span class="p">]</span>
+
+<span class="c1"># Add legend to the figure (centered below all subplots)</span>
+<span class="n">legend</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+    <span class="n">handles</span><span class="o">=</span><span class="n">legend_elements</span><span class="p">,</span>
+    <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">,</span>
+    <span class="n">ncol</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Flag category&#39;</span><span class="p">,</span>
+    <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+    <span class="n">title_fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Make legend title and text bold</span>
+<span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">legend</span><span class="o">.</span><span class="n">get_texts</span><span class="p">():</span>
+    <span class="n">text</span><span class="o">.</span><span class="n">set_fontweight</span><span class="p">(</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">legend</span><span class="o">.</span><span class="n">get_title</span><span class="p">()</span><span class="o">.</span><span class="n">set_fontweight</span><span class="p">(</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+
+<span class="c1"># --- OPTIONAL: Save to file ---</span>
+<span class="n">g</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">OUTDIR</span> <span class="o">/</span> <span class="s2">&quot;warning_categories_by_clustering_N.pdf&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+
+<span class="c1"># Show the plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../../_images/pages_tutorials_advanced_RegionAggAndSpatialFlags_65_0.png" class="no-scaled-link" height="540" src="../../../_images/pages_tutorials_advanced_RegionAggAndSpatialFlags_65_0.png" width="1020" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="c1"># --- SETTINGS ---</span>
+<span class="c1"># Define warning order and color mapping</span>
+<span class="n">warning_order</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="c1">#&quot;Shape&quot;,</span>
+<span class="s2">&quot;Signal&quot;</span><span class="p">,</span> <span class="s2">&quot;No cells&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">warning_colors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;None&quot;</span><span class="p">:</span> <span class="s2">&quot;#155b0c&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Shape&quot;</span><span class="p">:</span> <span class="s2">&quot;#C3C400&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Signal&quot;</span><span class="p">:</span> <span class="s2">&quot;#EFC400&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Signal and shape&quot;</span><span class="p">:</span> <span class="s2">&quot;#FF9E00&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;No cells&quot;</span><span class="p">:</span> <span class="s2">&quot;#FF4100&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># --- DATA PREP ---</span>
+<span class="c1"># Filter for is_NN == False and desired clustering levels</span>
+<span class="n">filtered</span> <span class="o">=</span> <span class="n">joined</span><span class="p">[</span>
+    <span class="p">(</span><span class="o">~</span><span class="n">neuron_mask</span><span class="p">)</span> <span class="o">&amp;</span>
+    <span class="p">(</span><span class="n">joined</span><span class="p">[</span><span class="s1">&#39;clustering&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;L2&quot;</span><span class="p">,</span> <span class="s2">&quot;L3&quot;</span><span class="p">,</span> <span class="s2">&quot;L4&quot;</span><span class="p">,</span> <span class="s2">&quot;L5&quot;</span><span class="p">]))</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Ensure &#39;warning&#39; is a categorical column with defined order</span>
+<span class="n">filtered</span><span class="p">[</span><span class="s1">&#39;warning&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s1">&#39;warning&#39;</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="n">warning_order</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Compute count and percentage per clustering and warning</span>
+<span class="n">percentage_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">filtered</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;clustering&#39;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">size</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Compute total rows per clustering group for percentage calculation</span>
+<span class="n">totals</span> <span class="o">=</span> <span class="n">percentage_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;clustering&#39;</span><span class="p">)[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">)</span>
+<span class="n">percentage_df</span><span class="p">[</span><span class="s1">&#39;percentage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">percentage_df</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">totals</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="c1"># --- PLOTTING ---</span>
+<span class="c1"># Create a FacetGrid for the 4 clustering levels</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">percentage_df</span><span class="p">,</span>
+    <span class="n">col</span><span class="o">=</span><span class="s1">&#39;clustering&#39;</span><span class="p">,</span>
+    <span class="n">col_order</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;L2&#39;</span><span class="p">,</span> <span class="s1">&#39;L3&#39;</span><span class="p">,</span> <span class="s1">&#39;L4&#39;</span><span class="p">,</span> <span class="s1">&#39;L5&#39;</span><span class="p">],</span>
+    <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">aspect</span><span class="o">=</span><span class="mf">0.4</span>
+<span class="p">)</span>
+
+<span class="c1"># Plot the bar plots</span>
+<span class="n">g</span><span class="o">.</span><span class="n">map_dataframe</span><span class="p">(</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;warning&#39;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s1">&#39;percentage&#39;</span><span class="p">,</span>
+    <span class="n">order</span><span class="o">=</span><span class="n">warning_order</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="n">warning_colors</span><span class="p">,</span>
+    <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Annotate and style each subplot</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">clustering_level</span><span class="p">,</span> <span class="n">group_df</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">percentage_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;clustering&#39;</span><span class="p">)):</span>
+    <span class="c1"># Add count annotations</span>
+    <span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">warning_order</span><span class="p">:</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">group_df</span><span class="p">[</span><span class="n">group_df</span><span class="p">[</span><span class="s1">&#39;warning&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">warning</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">row</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">y_val</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;percentage&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">warning_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">warning</span><span class="p">),</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">y_val</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">s</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;n=</span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
+                <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>
+                <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+                <span class="c1">#rotation=90</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Clean up x-axis and y-axis</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Percentage of clusters&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">clustering_level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">():</span>
+        <span class="n">label</span><span class="o">.</span><span class="n">set_fontweight</span><span class="p">(</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+
+    <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+
+<span class="c1"># Remove x-axis label globally</span>
+<span class="n">g</span><span class="o">.</span><span class="n">set_axis_labels</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Percentage of clusters&quot;</span><span class="p">)</span>
+
+<span class="c1"># --- SUPER TITLE ---</span>
+<span class="n">g</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span>
+    <span class="s2">&quot;Flag categories for spatial predictions of non-neuronal clusters&quot;</span><span class="p">,</span>
+    <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
+    <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Adjust layout to make room for legend and title</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="c1"># --- LEGEND ---</span>
+<span class="c1"># Create custom legend handles</span>
+<span class="n">legend_elements</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Patch</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="n">warning_colors</span><span class="p">[</span><span class="n">label</span><span class="p">],</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">warning_order</span>
+<span class="p">]</span>
+
+<span class="c1"># Add legend to the figure (centered below all subplots)</span>
+<span class="n">legend</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+    <span class="n">handles</span><span class="o">=</span><span class="n">legend_elements</span><span class="p">,</span>
+    <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">,</span>
+    <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Flag category&#39;</span><span class="p">,</span>
+    <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+    <span class="n">title_fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Make legend title and text bold</span>
+<span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">legend</span><span class="o">.</span><span class="n">get_texts</span><span class="p">():</span>
+    <span class="n">text</span><span class="o">.</span><span class="n">set_fontweight</span><span class="p">(</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">legend</span><span class="o">.</span><span class="n">get_title</span><span class="p">()</span><span class="o">.</span><span class="n">set_fontweight</span><span class="p">(</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+
+<span class="c1"># --- OPTIONAL: Save to file ---</span>
+<span class="n">g</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">OUTDIR</span> <span class="o">/</span> <span class="s2">&quot;warning_categories_by_clustering_NN.pdf&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+
+<span class="c1"># Show the plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../../_images/pages_tutorials_advanced_RegionAggAndSpatialFlags_66_0.png" class="no-scaled-link" height="540" src="../../../_images/pages_tutorials_advanced_RegionAggAndSpatialFlags_66_0.png" width="1096" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="SpatialSmoothing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Spatial smoothing</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#File-paths">File paths</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-loading">Data loading</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Notebook-settings">Notebook settings</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-aggregate-predictions-per-CCF-region">Let’s aggregate predictions per CCF region</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-get-metrics-describing-the-3D-pattern-of-spatial-predictions">Let’s get metrics describing the 3D pattern of spatial predictions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-get-signal-metrics">Let’s get signal metrics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-assign-warning-flags-to-all-clusters">Let’s assign warning flags to all clusters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-wrangling">Data wrangling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-set-our-thresholds">Let’s set our thresholds</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-add-our-flags">Let’s add our flags</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Let's-save-the-flags">Let’s save the flags</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Plotting-flag-distributions">Plotting flag distributions</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By MPI-SF | Neurogenomics
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Max Planck Institute for Metabolism Research.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

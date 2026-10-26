@@ -27,7 +27,7 @@ Scripts that are specific to a figure have their Figure in their name.
 
 Such scripts can be run with
 
-> python F1_2D_cell_count_heatmap.py 
+> python F1_and_ExtF3_2D_cell_count_heatmap.py 
 
 ### Running scripts unspecific to a figure
 

@@ -69,8 +69,8 @@ plot_ligand_receptor <- function(cluster_data, font_size_genes = 3, y_step = 0.1
   df_rec <- data.frame(x = 0.75, y = seq(y_top - 0.1, by = -y_step, length.out = length(receptors)), label = receptors)
   
   ggplot() +
-    annotate("rect", xmin = 0.02, xmax = 0.48, ymin = y_bot, ymax = y_top, fill = scales::alpha(cluster_data$color, 0.08), color = cluster_data$color, linewidth = 0.5) +
-    annotate("rect", xmin = 0.52, xmax = 0.98, ymin = y_bot, ymax = y_top, fill = scales::alpha(cluster_data$color, 0.08), color = cluster_data$color, linewidth = 0.5) +
+    annotate("rect", xmin = 0.02, xmax = 0.49, ymin = y_bot, ymax = y_top, fill = scales::alpha(cluster_data$color, 0.08), color = cluster_data$color, linewidth = 0.5) +
+    annotate("rect", xmin = 0.51, xmax = 0.98, ymin = y_bot, ymax = y_top, fill = scales::alpha(cluster_data$color, 0.08), color = cluster_data$color, linewidth = 0.5) +
     geom_text(data = df_lig, aes(x = x, y = y, label = label), size = font_size_genes, fontface = "bold", hjust = 0.5) +
     geom_text(data = df_rec, aes(x = x, y = y, label = label), size = font_size_genes, fontface = "bold", hjust = 0.5) +
     scale_x_continuous(limits = c(0, 1), expand = c(0, 0)) +

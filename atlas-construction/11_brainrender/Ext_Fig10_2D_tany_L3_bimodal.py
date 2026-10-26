@@ -26,14 +26,16 @@ ZARR_FP = SPATIALDIR / "hypomap3d_spatial_voxel_level.zarr"
 
 MODALITY = "rel_mass"
 FILENAME_OUT = f"tany_{MODALITY}_and_genes"
+RASTERIZE = True
+SCALE_FACTOR = 0.4
 
 slice_thickness = 300 #100
 play_for_cells = slice_thickness / 2 
 xlim = (-500, 500)
 ylim = (3200, 2000)
-scattersize_probs = 30
-scattersize_cells = 6
-linewidth = 0.6
+scattersize_probs = 30 * SCALE_FACTOR
+scattersize_cells = 6 * SCALE_FACTOR
+linewidth = 1 #* SCALE_FACTOR
 annotate_regions = False
 
 distances_start = 6500
@@ -133,7 +135,7 @@ for x in distances:
     scenes_by_x[closest_x] = scene
 
 # --- Plotting ---
-fig = plt.figure(figsize=(len(distances) * 4, len(clusters) * 4))
+fig = plt.figure(figsize=(len(distances) * 4 * SCALE_FACTOR, len(clusters) * 4 * SCALE_FACTOR))
 gs = GridSpec(len(clusters), len(distances) + 3, figure=fig, width_ratios=[1]*len(distances) + [0.05, 0.01, 0.05], wspace=0.3)
 
 for row, cluster in enumerate(clusters):
@@ -177,7 +179,7 @@ for row, cluster in enumerate(clusters):
             coords[:, 0] = -coords[:, 0]  # LEFT hemisphere flip
 
             #print(f"[{cluster}] LEFT @ x={closest_x}: {len(coords)} points")
-            ax.scatter(coords[:, 0], coords[:, 1], c=colors, s=scattersize_probs, alpha=1)
+            ax.scatter(coords[:, 0], coords[:, 1], c=colors, s=scattersize_probs * SCALE_FACTOR, alpha=1, rasterized=RASTERIZE)
 
         # --- RIGHT Hemisphere: Gene expression ---
         gene_slc = adata[(adata.obs.x_ccf > closest_x - play_for_cells) & (adata.obs.x_ccf < closest_x + play_for_cells)]
@@ -192,10 +194,10 @@ for row, cluster in enumerate(clusters):
             # RIGHT hemisphere: no flip
 
             #print(f"[{cluster}] RIGHT @ x={closest_x}: {len(coords)} points")
-            ax.scatter(coords[:, 0], coords[:, 1], c=colors, s=scattersize_cells, alpha=1)
+            ax.scatter(coords[:, 0], coords[:, 1], c=colors, s=scattersize_cells * SCALE_FACTOR, alpha=1, rasterized=RASTERIZE)
 
         for patch in ax.patches[:]:
-            new_patch = Polygon(patch.get_xy(), closed=False, edgecolor="grey", facecolor="none", linewidth=linewidth, zorder=patch.get_zorder() + 2)
+            new_patch = Polygon(patch.get_xy(), closed=False, edgecolor="grey", facecolor="none", linewidth=linewidth * SCALE_FACTOR, zorder=patch.get_zorder() + 2)
             ax.add_patch(new_patch)
             patch.remove()
 
@@ -203,7 +205,7 @@ for row, cluster in enumerate(clusters):
     # Probability colorbar
     cax_prob = fig.add_subplot(gs[row, -1])
     cb_prob = fig.colorbar(sm_prob, cax=cax_prob)
-    cb_prob.ax.tick_params(labelsize=20)  # Tick label fontsize
+    cb_prob.ax.tick_params(labelsize=20 * SCALE_FACTOR)  # Tick label fontsize
     cb_prob.ax.yaxis.set_tick_params(width=1.5)
     cb_prob.ax.set_yticklabels([t.get_text() for t in cb_prob.ax.get_yticklabels()],
                             fontweight='bold')
@@ -215,22 +217,24 @@ for row, cluster in enumerate(clusters):
         cb_prob.formatter = formatter
         cb_prob.update_ticks()
         cb_prob.ax.yaxis.get_offset_text().set_fontweight("bold")
-        cb_prob.ax.yaxis.get_offset_text().set_fontsize(20)  
+        cb_prob.ax.yaxis.get_offset_text().set_fontsize(20 * SCALE_FACTOR)  
         offset = cb_prob.ax.yaxis.get_offset_text()
         offset.set_x(5.0)  # increase to move further right
-        cax_prob.set_ylabel(f"rel. m {cluster.split("_")[-1]}", rotation=90, labelpad=15, fontsize=22, fontweight='bold')
+        cax_prob.set_ylabel(f"rel. m {cluster.split("_")[-1]}", rotation=90, labelpad=12 * SCALE_FACTOR, fontsize=22 * SCALE_FACTOR, fontweight='bold')
     else:
-        cax_prob.set_ylabel(f"p {cluster.split("_")[-1]}", rotation=90, labelpad=15, fontsize=22, fontweight='bold')
+        cax_prob.set_ylabel(f"p {cluster.split("_")[-1]}", rotation=90, labelpad=12 * SCALE_FACTOR, fontsize=22 * SCALE_FACTOR, fontweight='bold')
 
     # Gene colorbar
     cax_gene = fig.add_subplot(gs[row, -3])
     cb_gene = fig.colorbar(sm_gene, cax=cax_gene)
-    cb_gene.ax.tick_params(labelsize=20)
+    cb_gene.ax.tick_params(labelsize=20 * SCALE_FACTOR)
     cb_gene.ax.yaxis.set_tick_params(width=1.5)
     cb_gene.ax.set_yticklabels([t.get_text() for t in cb_gene.ax.get_yticklabels()],
                             fontweight='bold')
-    cax_gene.set_ylabel(gene, rotation=90, labelpad=15, fontsize=22, fontweight='bold')
+    cax_gene.set_ylabel(gene, rotation=90, labelpad=12 * SCALE_FACTOR, fontsize=22 * SCALE_FACTOR, fontweight='bold')
 
 plt.tight_layout()
+if RASTERIZE == True:
+    FILENAME_OUT += "_rasterized"
 plt.savefig(OUTDIR / f"{FILENAME_OUT}.pdf", dpi=300)
 plt.show()

@@ -64,6 +64,8 @@ PLOT_NUCLEI_BELOW = False
 ALPHA = 0.2 if PLOT_NUCLEI_BELOW else 1
 FACECOLOR = "white" if PLOT_NUCLEI_BELOW else "none"
 
+SCALE_FACTOR = params.get("SCALE_FACTOR", 0.4)
+
 # Helper for heatmap values
 def get_values_for_slice(slice_df):
     return {k: 0 for k in slice_df.allen_acronym.unique()}
@@ -139,7 +141,7 @@ for CLUSTER_TO_PLOT in CLUSTERS_TO_PLOT:
         print(f"Skipping {cluster_descr}. All probs are zero")
         continue
 
-    fig = plt.figure(figsize=(n_slices * 2, 3.5))  # One row per cluster plot
+    fig = plt.figure(figsize=(n_slices * 2 * SCALE_FACTOR, 3.5 * SCALE_FACTOR))  # One row per cluster plot
     height_ratios = [0.2, 1.0, 0.2]
     gs = GridSpec(3, n_slices, figure=fig, wspace=0.1, hspace=0.01, height_ratios=height_ratios)
 
@@ -157,7 +159,7 @@ for CLUSTER_TO_PLOT in CLUSTERS_TO_PLOT:
     titletext = f"{cluster_descr}"
     title_ax.text(
         0.5, 0.5, titletext,
-        fontsize=15, ha="center", va="center", weight="bold", transform=title_ax.transAxes
+        fontsize=15 * SCALE_FACTOR, ha="center", va="center", weight="bold", transform=title_ax.transAxes
     )
 
     closest_xs = []
@@ -225,7 +227,7 @@ for CLUSTER_TO_PLOT in CLUSTERS_TO_PLOT:
             sm = ScalarMappable(norm=norm, cmap=cmap)
             colors = [to_hex(cmap(norm(p))) for p in probs]
 
-            scatter = ax.scatter(coords_2D[:, 0], coords_2D[:, 1], c=colors, s=SCATTERSIZE, alpha=ALPHA)
+            scatter = ax.scatter(coords_2D[:, 0], coords_2D[:, 1], c=colors, s=SCATTERSIZE * SCALE_FACTOR, alpha=ALPHA)
             scatter.set_rasterized(True)
 
         if not PLOT_NUCLEI_BELOW:
@@ -235,7 +237,7 @@ for CLUSTER_TO_PLOT in CLUSTERS_TO_PLOT:
                     edgecolor="grey", 
                     #edgecolor="white", 
                     facecolor=FACECOLOR,
-                    linewidth=LINEWIDTH, zorder=patch.get_zorder() + 2
+                    linewidth=LINEWIDTH * SCALE_FACTOR, zorder=patch.get_zorder() + 2
                 )
                 ax.add_patch(new_patch)
                 patch.remove()
@@ -248,7 +250,7 @@ for CLUSTER_TO_PLOT in CLUSTERS_TO_PLOT:
 
         if j == n_slices - 1:
             cbar = fig.colorbar(sm, ax=ax, fraction=0.046, pad=0.04)
-            cbar.ax.tick_params(labelsize=15, labelcolor='black')
+            cbar.ax.tick_params(labelsize=15 * SCALE_FACTOR, labelcolor='black')
             for label in cbar.ax.get_yticklabels():
                 label.set_fontweight('bold') 
             if MODALITY == "rel_mass":
@@ -259,18 +261,18 @@ for CLUSTER_TO_PLOT in CLUSTERS_TO_PLOT:
                 cbar.formatter = formatter
                 cbar.update_ticks()
                 cbar.ax.yaxis.get_offset_text().set_fontweight("bold")
-                cbar.ax.yaxis.get_offset_text().set_fontsize(12)  
+                cbar.ax.yaxis.get_offset_text().set_fontsize(12 * SCALE_FACTOR)  
                 offset = cbar.ax.yaxis.get_offset_text()
                 offset.set_x(8.0)  # increase to move further right
                 cbar.ax.set_title(
                 "rel. m",
-                fontsize=15,
+                fontsize=15 * SCALE_FACTOR,
                 fontweight="bold",
                 pad=4,
                 x=5,   # shift to the right
             )
             else:
-                cbar.ax.set_title("p", fontsize=15, fontweight='bold', pad=4)
+                cbar.ax.set_title("p", fontsize=15 * SCALE_FACTOR, fontweight='bold', pad=4)
 
         del scene # debug
 
@@ -280,13 +282,13 @@ for CLUSTER_TO_PLOT in CLUSTERS_TO_PLOT:
         if not IS_BREGMA_COORDS:
             closest_x = df.x_ccf.unique()[np.abs(df.x_ccf.unique() - distance).argmin()]
             xlabel = f"CCF {closest_x / 1000:.2f} mm"
-            fontsize=12
+            fontsize=12 * SCALE_FACTOR
         else:
             idx = np.abs(bregma_coords - distance).argmin()
             ccf = ccf_coords[idx]
             closest_x = unique_x[np.abs(unique_x - ccf).argmin()]
             xlabel = f"CCF {closest_x / 1000:.2f} mm\nBregma ~ {distance / 1000:.2f}"
-            fontsize=10
+            fontsize=10 * SCALE_FACTOR
         label_ax = fig.add_subplot(gs[2, j])
         label_ax.axis("off")
         label_ax.text(

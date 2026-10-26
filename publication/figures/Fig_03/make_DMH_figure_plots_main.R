@@ -2,16 +2,16 @@
 ### load DMH seurat and overview
 ##########
 
-figure_outputpath = "/REDACTED-path/HypoMap3D_revision_figures/main_figure_dmh/figure_plots/"
+figure_outputpath = "/cephfs/scratch/bruening_scratch/lsteuernagel/projects/HypoMap3D/HypoMap3D_revision_figures/main_figure_dmh/figure_plots/"
 
 require(Seurat)
 require(dplyr)
 require(ggplot2)
 require(RColorBrewer)
 
-dmh_cluster_overview = data.table::fread("/REDACTED-path/HypoMap3D/revisions_data/dmh_cluster_overview.tsv",data.table = F)
+dmh_cluster_overview = data.table::fread("/cephfs/scratch/bruening_scratch/lsteuernagel/data/HypoMap3D/revisions_data/dmh_cluster_overview.tsv",data.table = F)
 
-DMH_seurat = readRDS("/REDACTED-path/HypoMap3D/revisions_data/dmh_seurat_object.rds")
+DMH_seurat = readRDS("/cephfs/scratch/bruening_scratch/lsteuernagel/data/HypoMap3D/revisions_data/dmh_seurat_object.rds")
 
 color_vector_L3 = dmh_cluster_overview$color_L3
 names(color_vector_L3) = dmh_cluster_overview$L3_descr
@@ -22,7 +22,7 @@ names(color_vector_L3id) = dmh_cluster_overview$L3_ID
 # color_vector_L3_plus = c(color_vector_L3,extra_col)
 
 ## load markers
-all_markers =  data.table::fread("/REDACTED-path/HypoMap3D_cell_type_marker_genes_all_levels.csv",data.table = F)
+all_markers =  data.table::fread("/REDACTED-path/HypoMap3D-data/v0.9/9_objects/markers/hypomap3d_cell_type_marker_genes_all_levels.csv",data.table = F)
 all_markers_updated = all_markers %>%
   dplyr::filter(padj < 0.001 & specificity >= 0.25) %>%
   dplyr::mutate(pct_diff = pctA - pctB) %>%
@@ -82,7 +82,7 @@ ggsave(filename = paste0(figure_outputpath,"umap_DMH_L3_subset",".png"),
        height = 300,
        device = png,
        units="mm"
-       
+
 )
 ggsave(filename = paste0(figure_outputpath,"umap_DMH_L3_subset",".pdf"),
        plot = umap_DMH_L3_subset,
@@ -106,7 +106,7 @@ ggsave(filename = paste0(figure_outputpath,"umap_DMH_L2_subset",".png"),
        height = 300,
        device = png,
        units="mm"
-       
+
 )
 ggsave(filename = paste0(figure_outputpath,"umap_DMH_L2_subset",".pdf"),
        plot = umap_DMH_L2_subset,
@@ -129,24 +129,24 @@ gene_metadata = data.table::fread("/REDACTED-path/HypoMap3D/gene_metadata.csv",d
 
 
 # get more
-### Creating a list of GPCR genes for looking at in the human datasets. 
-gpcrs_mouse = "https://rest.uniprot.org/uniprotkb/stream?compressed=true&fields=accession%2Creviewed%2Cid%2Cprotein_name%2Cgene_names%2Corganism_name&format=tsv&query=%28G-protein%20coupled%20receptor%29%20AND%20(cc_scl_term%3ASL-0039)%20AND%20(organism_id%3A10090)%20NOT%20(cc_scl_term%3ASL-0191)%20AND%20(ft_transmem:*)" %>%   
-  url() %>%   
-  gzcon() %>%   
-  readr::read_tsv() %>%   
-  dplyr::filter(Reviewed == "reviewed")  
-gpcrs_human = "https://rest.uniprot.org/uniprotkb/stream?compressed=true&fields=accession%2Creviewed%2Cid%2Cprotein_name%2Cgene_names%2Corganism_name&format=tsv&query=%28G-protein%20coupled%20receptor%29%20AND%20(cc_scl_term%3ASL-0039)%20AND%20(organism_id%3A9606)%20NOT%20(cc_scl_term%3ASL-0191)%20AND%20(ft_transmem:*)" %>%   
-  url() %>%   
-  gzcon() %>%   
-  readr::read_tsv() %>%   
-  dplyr::filter(Reviewed == "reviewed")  
-gpcrs_human_vector = unlist(sapply(gpcrs_human$`Gene Names`,function(x){strsplit(x,split=" ")[[1]]})) 
+### Creating a list of GPCR genes for looking at in the human datasets.
+gpcrs_mouse = "https://rest.uniprot.org/uniprotkb/stream?compressed=true&fields=accession%2Creviewed%2Cid%2Cprotein_name%2Cgene_names%2Corganism_name&format=tsv&query=%28G-protein%20coupled%20receptor%29%20AND%20(cc_scl_term%3ASL-0039)%20AND%20(organism_id%3A10090)%20NOT%20(cc_scl_term%3ASL-0191)%20AND%20(ft_transmem:*)" %>%
+  url() %>%
+  gzcon() %>%
+  readr::read_tsv() %>%
+  dplyr::filter(Reviewed == "reviewed")
+gpcrs_human = "https://rest.uniprot.org/uniprotkb/stream?compressed=true&fields=accession%2Creviewed%2Cid%2Cprotein_name%2Cgene_names%2Corganism_name&format=tsv&query=%28G-protein%20coupled%20receptor%29%20AND%20(cc_scl_term%3ASL-0039)%20AND%20(organism_id%3A9606)%20NOT%20(cc_scl_term%3ASL-0191)%20AND%20(ft_transmem:*)" %>%
+  url() %>%
+  gzcon() %>%
+  readr::read_tsv() %>%
+  dplyr::filter(Reviewed == "reviewed")
+gpcrs_human_vector = unlist(sapply(gpcrs_human$`Gene Names`,function(x){strsplit(x,split=" ")[[1]]}))
 gpcrs_mouse_vector = unlist(sapply(gpcrs_mouse$`Gene Names`,function(x){strsplit(x,split=" ")[[1]]}))
 
 gpcrs_mouse_vector_curated = gpcrs_mouse_vector[! (grepl("Olfr|Adcy|Vmn1r|V1r|Mor|Kiaa|Sele|MOR|D3Bwg|Fbxw7",gpcrs_mouse_vector) | grepl("Or[0-9]|Gm[0-9]",gpcrs_mouse_vector)) ]
 
 # load the latest gene anno
-gene_annotations_hypomap3d = data.table::fread("/REDACTED-path/HypoMap3D/resources/gene_annotations.txt",data.table = F)
+gene_annotations_hypomap3d = data.table::fread("/cephfs/scratch/bruening_scratch/lsteuernagel/neurogenomics_projects/HypoMap3D/resources/gene_annotations.txt",data.table = F)
 ligand_genes = unique(gene_annotations_hypomap3d$gene[gene_annotations_hypomap3d$type=="ligand/source"])
 ligand_genes = c(ligand_genes,"Npvf","Th")
 ligand_genes = ligand_genes[ligand_genes != "Vcam1"]
@@ -164,7 +164,7 @@ tf_genes = unique(gene_metadata$`Gene symbol`[gene_metadata$is_TF])
 ### Clusters to focus on
 ##########
 
-# Gl3-259 , top markers are all secrted genes with bin UCMA, Stc1, Calca and has interesting set of receptors with all the acetylcholine receptors expressed 
+# Gl3-259 , top markers are all secrted genes with bin UCMA, Stc1, Calca and has interesting set of receptors with all the acetylcholine receptors expressed
 # which and how many L4_ID cell types
 
 
@@ -206,7 +206,6 @@ all_markers_updated_used$specificity = all_markers_updated_used$specificity * (1
 markers_dmh_used = dmh_markers
 markers_dmh_used$specificity = markers_dmh_used$specificity * (1+markers_dmh_used$pctA)
 
-
 cluster_interest = cluster_vector[1]
 min_specificity_signaling = 1.5
 min_specificity_markers = 0.5
@@ -217,7 +216,7 @@ dir.create(outputpath)
 # assemble data
 all_cluster_data_list = list()
 for(cluster_interest in cluster_vector){
-  
+
   markers_subclass = all_markers_updated_used %>%
     dplyr::filter(padj < 0.0001 & specificity >= min_specificity_markers & cluster == cluster_interest & comparison == "OneVsSisters") %>%
     dplyr::select(gene,specificity) %>%
@@ -230,15 +229,15 @@ for(cluster_interest in cluster_vector){
     dplyr::filter(!grepl("Gm|Rik|Rps|Rpl|BC|-os",gene)) %>%
     dplyr::slice_max(specificity,n=10)  %>%
     dplyr::mutate(purpose = "HY", type ="marker")
-  
-  # dmh_markers = 
+
+  # dmh_markers =
   markers_dmh = markers_dmh_used %>%
     dplyr::filter(padj < 0.0001 & specificity >= min_specificity_markers & cluster == cluster_interest ) %>%
     dplyr::select(gene,specificity) %>%
     dplyr::filter(!grepl("Gm|Rik|Rps|Rpl|BC|-os",gene)) %>%
     dplyr::slice_max(specificity,n=10)  %>%
     dplyr::mutate(purpose = "DMH", type ="marker")
-  
+
   ligands_of_interest = all_markers_updated_used %>% dplyr::filter( cluster == cluster_interest & comparison == "OneVsAll" ) %>%
     dplyr::filter(gene %in% ligand_genes  & padj < 0.001 & specificity >= min_specificity_signaling) %>%
     dplyr::select(gene,specificity) %>%
@@ -254,20 +253,20 @@ for(cluster_interest in cluster_vector){
   }else{
     ligands_of_interest = nt_row
   }
-  
+
   receptors_of_interest = all_markers_updated_used %>% dplyr::filter( cluster == cluster_interest & comparison == "OneVsAll" ) %>%
     dplyr::filter(gene %in% receptor_genes  & padj < 0.001 & specificity >= min_specificity_signaling) %>%
     dplyr::select(gene,specificity) %>%
     dplyr::slice_max(specificity,n=10) %>%
     dplyr::mutate( type ="receptors")
-  
+
   # add all
   this_cluster = dplyr::bind_rows(markers_hy,markers_dmh) %>%
     dplyr::bind_rows(markers_subclass) %>%
     dplyr::bind_rows(ligands_of_interest) %>%
     dplyr::bind_rows(receptors_of_interest)
   this_cluster$cluster = cluster_interest
-  
+
   all_cluster_data_list[[cluster_interest]] = this_cluster
 }
 
@@ -276,43 +275,46 @@ all_cluster_data = do.call(rbind,all_cluster_data_list) %>% as.data.frame()
 #make it into list
 clustercard_input_list = list()
 for(cluster_interest in cluster_vector){
-  
+
   # TODO: decide order, handle duplicates (take 2nd best)
   # unique(as.character(cluster_annos$L3_descr[cluster_annos$L3_ID==cluster_interest]))
-  
+
   this_cluster = all_cluster_data[all_cluster_data$cluster == cluster_interest,]
   this_cluster_markers = this_cluster %>%
     dplyr::filter(type == "marker") #%>%
     #dplyr::mutate(star_rating = specificity_to_dots(specificity))
-  
+
   # split into per-purpose ranked candidate lists
   purposes   <- c("HY", "DMH", "L2_ID")
   candidates <- purrr::map(purposes, ~ this_cluster_markers %>% dplyr::filter(purpose == .x)) %>% purrr::set_names(purposes)
-  
+  candidates$L2_ID$purpose = "L2"
   # greedy selection: pick best unused gene per purpose
   # immediately resolve shared purpose label from this_cluster_markers
   selected   <- list()
   used_genes <- character(0)
-  
+
   for (purp in purposes) {
     chosen     <- candidates[[purp]] %>% dplyr::filter(!gene %in% used_genes) %>% dplyr::slice(1)
     shared     <- this_cluster_markers %>% dplyr::filter(gene == chosen$gene) %>% dplyr::pull(purpose) %>% unique() %>% sort() %>% paste(collapse = "/")
     selected[[purp]] <- chosen %>% dplyr::mutate(purpose_label = shared)
     used_genes <- c(used_genes, chosen$gene)
   }
-  
+
   marker_genes_final = dplyr::bind_rows(selected) %>%
     dplyr::select(gene, specificity, purpose_label) %>%
     dplyr::rename(purpose = purpose_label)
+
+  #marker_genes_final$purpose[marker_genes_final$purpose == "L2_ID"] = "L2"
+  marker_genes_final$purpose = stringr::str_replace(marker_genes_final$purpose,pattern = "L2_ID",replacement = "L2")
   marker_genes_final$gene = factor(marker_genes_final$gene,levels = as.character(used_genes))
-  
+
   ligands_final = this_cluster %>%
     dplyr::filter(type == "ligands") %>%
     dplyr::slice_max(specificity,n=n_signaling )
   receptors_final = this_cluster %>%
     dplyr::filter(type == "receptors") %>%
     dplyr::slice_max(specificity,n=n_signaling )
-  
+
   clustercard_input_list[[cluster_interest]] = list(
     name  =   dmh_cluster_overview$L3_descr[dmh_cluster_overview$L3_ID == cluster_interest],
     color = color_vector_L3id[cluster_interest],
@@ -328,25 +330,30 @@ dmh_markers_based_on_cards = unique(as.character(unlist(sapply(clustercard_input
 
 # make cards
 for(cluster_interest in target_cluster_vector){
+  print(cluster_interest)
   cluster_data = clustercard_input_list[[cluster_interest]]
   # cluster_data
+  # clustercard_plot = build_clustercard(cluster_data,
+  #                                      font_size_header  = 6,
+  #                                      font_size_gene    = 5,
+  #                                      font_size_purpose = 3.5,
+  #                                      font_size_genes   = 5)
   clustercard_plot = build_clustercard(cluster_data,
-                                       font_size_header  = 6,
-                                       font_size_gene    = 5,
-                                       font_size_purpose = 3.5,
-                                       font_size_genes   = 5)
-  
-  
-  
+                                       font_size_header  = 3,
+                                       font_size_gene    = 2.3,
+                                       font_size_purpose = 1.8,
+                                       font_size_genes   = 2.3)
+
+
   #print( clustercard_plot)
-  ggsave(filename = paste0(outputpath,"clustercard_",cluster_interest,".pdf"),
+  ggsave(filename = paste0(outputpath,"clustercard_",cluster_interest,"_small.pdf"),
          plot = clustercard_plot,
          dpi=300,
-         width = 100,
-         height = 80+10*max( nrow( cluster_data$ligands),nrow( cluster_data$receptors)),
+         width = 36, # 100
+         height = 36,#80+10*max( nrow( cluster_data$ligands),nrow( cluster_data$receptors)),
          device = "pdf",
          units="mm"
-         
+
   )
 }
 
@@ -383,7 +390,7 @@ ggsave(filename = paste0(figure_outputpath,"dotplot_card_markers",".png"),
        height = 300,
        device = png,
        units="mm"
-       
+
 )
 
 ggsave(filename = paste0(figure_outputpath,"dotplot_card_markers",".pdf"),
@@ -510,7 +517,7 @@ combined_signaling_dotplot = ggplot(d_combined, aes(x = features.plot, y = id)) 
   # dot.scale
   scale_size(range = c(0, dot_scale), name = "% Expressed") +
   # cosmetics
-  theme_bw() + 
+  theme_bw() +
   theme(axis.text.x = element_text(size = 15, angle = 90))+
   xlab(NULL)+ylab(NULL)+
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 14),axis.text.y = element_text(size=18))
@@ -524,17 +531,17 @@ combined_signaling_dotplot
 ggsave(filename = paste0(figure_outputpath,"combined_signaling_dotplot",".png"),
        plot = combined_signaling_dotplot,
        dpi=300,
-       width = 600,
+       width = 640,
        height = 300,
        device = png,
        units="mm"
-       
+
 )
 
 ggsave(filename = paste0(figure_outputpath,"combined_signaling_dotplot",".pdf"),
        plot = combined_signaling_dotplot,
        dpi=300,
-       width = 600,
+       width = 630,
        height = 300,
        device = pdf,
        units="mm"
@@ -545,7 +552,3 @@ ggsave(filename = paste0(figure_outputpath,"combined_signaling_dotplot",".pdf"),
 ##########
 ### Other
 ##########
-
-
-
-

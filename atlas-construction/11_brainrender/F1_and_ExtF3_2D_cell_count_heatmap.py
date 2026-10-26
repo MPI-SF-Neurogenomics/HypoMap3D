@@ -15,18 +15,21 @@ brainrender.settings.SHADER_STYLE = "cartoon"
 #################################
 
 ANNOTATE_REGIONS = False
-SLICE_THICKNESS = 250
+SLICE_THICKNESS = 175
 PLAY = int(SLICE_THICKNESS / 2)
-distances = list(range(4750, 8500, SLICE_THICKNESS))
+distances = list(range(4675, 8350, SLICE_THICKNESS))
 print(distances)
 # Define desired x/y limits
 XLIM = (-100, 2600)  # only right
 YLIM = (3200, -500)
 
 params = {
-# SCH surpasses vmax at 6000 with 1.9893048128342246
-# ARH surpasses vmax at 6500 with 1.8106701366297984
-# MMme surpasses vmax at 8250 with 2.0252100840336134
+# SCH surpasses vmax at 5550 with 1.9565217391304348
+# PVH surpasses vmax at 6075 with 2.1126943005181347
+# ASO surpasses vmax at 6075 with 2.0961538461538463
+# SCH surpasses vmax at 6075 with 1.8618881118881119
+# PH surpasses vmax at 6950 with 1.8344155844155845
+# TMd surpasses vmax at 7825 with 2.263888888888889
     "st": {
         "cell_counts_column": "ST_cell_counts",
         "cmap": "viridis",
@@ -36,7 +39,8 @@ params = {
 
     },
 
-# SCH surpasses vmax at 6000 with 6.483515559632937
+# SCH surpasses vmax at 5900 with 6.817159521151012
+# SCH surpasses vmax at 6075 with 5.143585037544946
     "sc": {
         "cell_counts_column": "estimated_sc_cell_counts",
         "cmap": "plasma",

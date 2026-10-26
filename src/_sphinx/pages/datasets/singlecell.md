@@ -1,20 +1,27 @@
 # Single Cell Objects
 
-The HypoMap3D consists of *1,564,064* cells of which *896,959* are steady-state and *667,105* are under experimental treatment conditions. We have divided these groups into two separate AnnData objects: control and non-control.
+The HypoMap3D consists of *1,564,064* cells of which *896,959* are steady-state and *667,105* are under experimental treatment conditions. These groups are referred to as the "control" and "non-control" respectively.
 
 <!-- ======================================================================= -->
-<!--                                 Control                                 -->
+<!--                              Full AnnData                               -->
 <!-- ======================================================================= -->
 
-## Control AnnData
+## Full Single Cell AnnData
 
-This part of the HypoMap3D dataset conists of ~897k cells classified as 'steady-state'. These cells were utilized for the definition of the cell-type taxonomy and can be utilized for exploring 'steady-state' gene dynamics and for label propagation onto new data.
+The full single cell dataset is available as an AnnData object and includes:
+
+* Raw Gene Expression
+* Hierarchical Cluster Annotations
+* Latent Space Representations
+* Experiment Metadata
+* Gene Annotations
+* UMAP Embeddings
 
 ### Structure
 
-```bash
-AnnData object with n_obs × n_vars = 896959 × 56939
-    X: raw count matrix
+```plaintext
+AnnData object with n_obs × n_vars = 1564064 × 56939
+    X: raw counts
     obs: 'CellID', 'Dataset', 'Sample', 'total_counts', 'n_genes', 'pct_mito', 'Author', 'Source', 'Data_source_link', 'GEO', 'Publication_Link', 'Suspension', 'Technology', 'Author_Sex_harmonized', 'sex_per_sample_inferred', 'Strain', 'Diet', 'Treatment', 'Age', 'Mean_age_in_weeks', 'IsControl', 'L1_ID', 'L2_ID', 'L3_ID', 'L4_ID', 'L5_ID', 'L1_descr', 'L2_descr', 'L3_descr', 'L4_descr', 'L5_descr', 'L1_abc_like', 'L2_abc_like', 'L3_abc_like', 'L4_abc_like', 'L5_abc_like'
     var: 'gene_ids', 'IsMouseTF', 'IsHumanTFOrtholog', 'IsSourceGene', 'IsTargetGene', 'IsHvgExcludedGene', 'IsAnnotationExcludedGene', 'IsPriorityGene', 'IsTopGene', 'IsHvg'
     obsm: 'X_embed', 'X_spatial_umap', 'X_umap'
@@ -23,96 +30,86 @@ AnnData object with n_obs × n_vars = 896959 × 56939
 ### Access
 
 ```{caution}
-Public data access is currently unavailable as dataset is not published. 
+Public data access to `hm3d_sc_all.h5ad` is currently unavailable as HypoMap3D is not yet published.
 ```
 
 ### Using/Loading
 
-The full anndata can be loaded using the `AnnData` python package or via the `ScanPy` wrapper
+To load the full single cell AnnData object, use the following code:
 
 ```python
-import anndata as ad # via AnnData
-scdata = ad.read_h5ad('sc_anndata_control.h5ad')
+import anndata as ad # or, import scanpy as sc, sc.read_h5ad()
+adata = ad.read_h5ad("hm3d_sc_all.h5ad")
+adata
+```
 
-import scanpy as sc # via ScanPy
-scdata = sc.read_h5ad('sc_anndata_control.h5ad')
+### Subsetting to Control and Non-Control Cells
+
+A boolean mask is provided in `.obs['IsControl']` to distinguish between control and non-control cells. `True` indicates a control cell, while `False` indicates a non-control cell.
+
+For example, to subset the AnnData object to only control cells:
+
+```python
+control_adata = adata[adata.obs['IsControl']].copy()
+```
+
+And to subset to only non-control cells:
+
+```python
+non_control_adata = adata[~adata.obs['IsControl']].copy()
 ```
 
 <!-- ======================================================================= -->
-<!--                               Non Control                               -->
+<!--                              Marker Genes                               -->
 <!-- ======================================================================= -->
 
-## Non-Control AnnData
+## Marker Genes Table
 
-This part of the HypoMap3D dataset conists of ~667k cells under various experimental treatments including high fat diet, influenza infection and other experiments. This provides a resource for checking potential perturbation effects from other experimental designs. Full experiment details can be found at the respective GEO and BioSampleIDs but a truncated and harmonized overview can also be found within the `anndata.obs`.
+The marker genes for each hierarchical cluster level are provided in a CSV file, which includes the gene names and their corresponding cluster annotations.
+
+Marker genes are computed using the Van Elteren test, a form of stratified Wilcoxon rank-sum test.
+
+Markers were computed with respect to three cluster sets across all 5 levels independently:
+
+1. against all other clusters of the same level (vsAll)
+2. against all sister clusters of the same level (vsSisters)
+3. against all cluster within the same brain region of the same level (vsRegion i.e. ZI)
 
 ### Structure
 
-```bash
-AnnData object with n_obs × n_vars = 667105 × 56939
-    X: raw count matrix
-    obs: 'CellID', 'Dataset', 'Sample', 'total_counts', 'n_genes', 'pct_mito', 'Author', 'Source', 'Data_source_link', 'GEO', 'Publication_Link', 'Suspension', 'Technology', 'Author_Sex_harmonized', 'sex_per_sample_inferred', 'Strain', 'Diet', 'Treatment', 'Age', 'Mean_age_in_weeks', 'IsControl', 'L1_ID', 'L2_ID', 'L3_ID', 'L4_ID', 'L5_ID', 'L1_descr', 'L2_descr', 'L3_descr', 'L4_descr', 'L5_descr', 'L1_abc_like', 'L2_abc_like', 'L3_abc_like', 'L4_abc_like', 'L5_abc_like'
-    var: 'gene_ids', 'IsMouseTF', 'IsHumanTFOrtholog', 'IsSourceGene', 'IsTargetGene', 'IsHvgExcludedGene', 'IsAnnotationExcludedGene', 'IsPriorityGene', 'IsTopGene', 'IsHvg'
-    obsm: 'X_embed', 'X_spatial_umap', 'X_umap'
-```
+Here is the first row of the marker genes CSV file:
+
+|clustering|celltype_id|celltype_descr|celltype_abc_like|comparison  |gene_name|specificity      |pctA              |pctB              |meanA    |meanB      |log2FC   |p  |padj|VE                |rank|
+|----------|-----------|--------------|-----------------|------------|---------|-----------------|------------------|------------------|---------|-----------|---------|---|----|------------------|----|
+|L1        |Gl1-1      |Gl1-1 Glut    |Gl1-1 Glut       |OneVsSisters|Foxb1    |6.236            |0.106             |0.003             |0.576    |0.005      |6.674    |0.0|0.0 |12.376            |22  |
 
 ### Access
 
 ```{caution}
-Public data access is currently unavailable as dataset is not published. 
-```
-
-### Using/Loading
-
-The full anndata can be loaded using the `AnnData` python package or via the `ScanPy` wrapper
-
-```python
-import anndata as ad # via AnnData
-scdata = ad.read_h5ad('sc_anndata_non_control.h5ad')
-
-import scanpy as sc # via ScanPy
-scdata = sc.read_h5ad('sc_anndata_non_control.h5ad')
+Public data access to `hm3d_marker_genes_all_levels.csv` is currently unavailable as HypoMap3D is not yet published.
 ```
 
 <!-- ======================================================================= -->
-<!--                                Metacell                                 -->
+<!--                               Projection                                -->
 <!-- ======================================================================= -->
 
-<!-- ## Metacell AnnData
+## Projection Objects
 
-The full HypoMap3D dataset is very large, as such a reduced representation was generated for quick search visualization and loading into R environments. Rather than dropping larges amount of data via subsampling, cells were grouped via KMeans to form metacells within each identified cell-type at L5. The expression of these metacells was taken as the average of the 4-80 cells they consist of.
+The projection of novel data onto the HypoMap3D reference space is carried out using `scArches`. This process requires the pre-trained scVI model weights.
 
-### Structure
-```bash
-AnnData object with n_obs × n_vars = 40000 × 56939
-    obs: 'n_cells', 'L1', 'L1_abc_like', 'L1_descr', 'L2', 'L2_abc_like', 'L2_descr', 'L3', 'L3_abc_like', 'L3_descr', 'L4', 'L4_abc_like', 'L4_descr', 'L5', 'L5_abc_like', 'L5_descr', 'pct_female', 'pct_is_nuclear'
-    obsm: 'X_embed', 'X_umap'
+The projection does not require the full gene expression profiles of the reference cells. As such, we provide significantly reduced versions of the full AnnData objects, with the count matrices `.X` removed, for convenience.
 
-```
-```bash
-[R TO BE MADE]
-```
+### scVI Model Weights
+The individual scVI model weights are required for projecting new data onto the HypoMap3D reference space using `scArches`.
 
-### Access
-```{caution}
-Public data access is currently unavailable as dataset is not published. 
-```
+The weights can be downloaded here: [XXX]().
 
-### Using/Loading
-The metacell anndata can be loaded using the `AnnData` python package or via the `ScanPy` wrapper
-```python
-import anndata as ad # via AnnData
-scdata = ad.read_h5ad('sc_anndata_non_control.h5ad')
+### Reduced Full AnnData
+The reduced full AnnData object is a version of the full single cell dataset with the count matrix `.X` removed. This allows for efficient storage and faster loading times while retaining all other annotations and embeddings necessary for projection.
 
-import scanpy as sc # via ScanPy
-scdata = sc.read_h5ad('sc_anndata_non_control.h5ad')
-```
-The metacell anndata can be loaded in R via `Seurat`
-```R
-library(seurat)
+The reduced AnnData can be downloaded here: [XXX]().
 
-...
-``` -->
+### Reduced Control AnnData
+The reduced control AnnData object is a version of the control-only single cell dataset with the count matrix `.X` removed. This allows for efficient storage and faster loading times while retaining all other annotations and embeddings necessary for projection.
 
-
-
+The reduced control AnnData can be downloaded here: [XXX]().

@@ -21,9 +21,9 @@ def project_to_ref_umap(
     verbose: bool = False,
     seed: int = 0,
 ) -> np.ndarray:
-    
+
     a, b = find_ab_params(spread, min_dist)
-    
+
     # Distances to nearest reference neighbors per query obs
     D_nn = knn_graph(
         reference=ref_X_embed,
@@ -37,17 +37,17 @@ def project_to_ref_umap(
         D_nn,
         k=15
     )
-    
+
     # Create a COO matrix copy
     graph = C_nn.tocoo() # calling graph to match UMAP source code
 
     # Rowsum softmax from connectivity to probabilty
     csr_row_normalize(C_nn)
-    
+
     # Initial guess of query transformed embedding
     qry_X_umap_init = C_nn @ ref_X_umap
     qry_X_umap_opt = qry_X_umap_init.copy()
-    
+
     # Remove very weak connections
     graph.data[graph.data < (graph.data.max() / float(n_epochs))] = 0.0
     graph.eliminate_zeros()
@@ -56,9 +56,9 @@ def project_to_ref_umap(
     epochs_per_sample = make_epochs_per_sample(graph.data, n_epochs)
     head = graph.row
     tail = graph.col
-    
+
     qry_X_umap_opt = optimize_layout_euclidean(
-        qry_X_umap_opt,
+        qry_X_umap_opt.astype(np.float32, copy=True),
         ref_X_umap.astype(np.float32, copy=True),  # Fixes #179 & #217,
         head,
         tail,
@@ -74,5 +74,5 @@ def project_to_ref_umap(
         parallel=False,
         verbose=verbose,
     )
-    
+
     return qry_X_umap_opt, qry_X_umap_init

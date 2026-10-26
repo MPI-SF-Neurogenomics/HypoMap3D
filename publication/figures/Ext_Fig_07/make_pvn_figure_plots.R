@@ -8,14 +8,14 @@ library(dplyr)
 library(ggplot2)
 library(pals,lib.loc = "/cephfs/scratch/bruening_scratch/lsteuernagel/R/user_lib/x86_64-pc-linux-gnu-library/4.4")
 
-figure_outputpath = "/REDACTED-path/HypoMap3D_revision_figures/extended_figure_pvn/figure_plots/"
+figure_outputpath = "/REDACTED-path/HypoMap3D-data/v1.0/publication/Ext_Fig_7/"
 dir.create(figure_outputpath,recursive = TRUE)
 
 # MFISH_Sim1_seurat
-MFISH_Sim1_figures = readRDS("/REDACTED-path/HypoMap3D_figure_objects/MFISH_Sim1_figures.rds")
+MFISH_Sim1_figures = readRDS("/REDACTED-path/HypoMap3D-data/PVN_data_CellReports/hypomap3d_figure_objects/MFISH_Sim1_figures.rds")
 
 # Seq_Sim1_seurat
-Seq_Sim1_figures = readRDS("/REDACTED-path/HypoMap3D_figure_objects/Seq_Sim1_figures.rds")
+Seq_Sim1_figures = readRDS("/REDACTED-path/HypoMap3D-data/PVN_data_CellReports/hypomap3d_figure_objects/Seq_Sim1_figures.rds")
 
 get_tab20_colors <- function(n) {
   base_cols <- tableau20(20)
@@ -26,49 +26,75 @@ get_tab20_colors <- function(n) {
 ### sequencing Sim1 UMAP  plots
 ##########
 
-pt_size = 0.3
+pt_size = 4
 label_size = 5.5
+raster_dpi = 1536
+rasterize_check = TRUE
 
 p1 = DimPlot(Seq_Sim1_figures,group.by = "seurat_clusters",reduction = "umap.rpca",label = TRUE,repel = TRUE,pt.size = pt_size,label.size = label_size,
-             cols = get_tab20_colors(length(unique(Seq_Sim1_figures@meta.data$seurat_clusters)))) +NoLegend()+NoAxes()+ggtitle(NULL)
+             cols = get_tab20_colors(length(unique(Seq_Sim1_figures@meta.data$seurat_clusters))),raster = rasterize_check,raster.dpi = c(raster_dpi,raster_dpi)) +NoLegend()+NoAxes()+ggtitle(NULL)
 p2 = DimPlot(Seq_Sim1_figures,group.by = "L3_descr_filt",reduction = "umap.rpca",label = TRUE,repel = TRUE,pt.size = pt_size,label.size = label_size,
-             cols = get_tab20_colors(length(unique(Seq_Sim1_figures@meta.data$L3_descr_filt)))) +NoLegend()+NoAxes()+ggtitle(NULL)
+             cols = get_tab20_colors(length(unique(Seq_Sim1_figures@meta.data$L3_descr_filt))),raster = rasterize_check,raster.dpi = c(raster_dpi,raster_dpi)) +NoLegend()+NoAxes()+ggtitle(NULL)
 p3 = DimPlot(Seq_Sim1_figures,group.by = "L4_descr_filt",reduction = "umap.rpca",label = TRUE,repel = TRUE,pt.size = pt_size,label.size = label_size-1,
-             cols = get_tab20_colors(length(unique(Seq_Sim1_figures@meta.data$L4_descr_filt)))) +NoLegend()+NoAxes()+ggtitle(NULL)
+             cols = get_tab20_colors(length(unique(Seq_Sim1_figures@meta.data$L4_descr_filt))),raster = rasterize_check,raster.dpi = c(raster_dpi,raster_dpi)) +NoLegend()+NoAxes()+ggtitle(NULL)
 seq_umap_plot = cowplot::plot_grid(p1,p2,p3,nrow=1)
 
-ggsave(filename = paste0(figure_outputpath,"seq_sim1_umap_clusters",".png"),
+ggsave(filename = paste0(figure_outputpath,"seq_sim1_umap_clusters_raster",".png"),
        plot = seq_umap_plot,
-       dpi=600,
+       dpi=300,
        width = 750,
        height = 250,
        device = png,
        units="mm"
-       
+
+)
+
+
+ggsave(filename = paste0(figure_outputpath,"seq_sim1_umap_clusters_raster",".pdf"),
+       plot = seq_umap_plot,
+       dpi=300,
+       width = 750,
+       height = 250,
+       device = pdf,
+       units="mm"
+
 )
 
 ##########
 ### MERFISH Sim1 UMAP  plots
 ##########
 
-pt_size = 0.3
+pt_size = 4
 label_size = 5.5
+raster_dpi = 1536
+rasterize_check = TRUE
+
 p1 = DimPlot(MFISH_Sim1_figures,group.by = "seurat_clusters",reduction = "umap.rpca",label = TRUE,repel = TRUE,pt.size = pt_size,label.size = label_size,
-             cols = get_tab20_colors(length(unique(MFISH_Sim1_figures@meta.data$seurat_clusters)))) +NoLegend()+NoAxes()+ggtitle(NULL)
+             cols = get_tab20_colors(length(unique(MFISH_Sim1_figures@meta.data$seurat_clusters))),raster = rasterize_check,raster.dpi = c(raster_dpi,raster_dpi)) +NoLegend()+NoAxes()+ggtitle(NULL)
 p2 = DimPlot(MFISH_Sim1_figures,group.by = "L3_descr_filt",reduction = "umap.rpca",label = TRUE,repel = TRUE,pt.size = pt_size,label.size = label_size,
-             cols = get_tab20_colors(length(unique(MFISH_Sim1_figures@meta.data$L3_descr_filt)))) +NoLegend()+NoAxes()+ggtitle(NULL)
+             cols = get_tab20_colors(length(unique(MFISH_Sim1_figures@meta.data$L3_descr_filt))),raster = rasterize_check,raster.dpi = c(raster_dpi,raster_dpi)) +NoLegend()+NoAxes()+ggtitle(NULL)
 p3 = DimPlot(MFISH_Sim1_figures,group.by = "L4_descr_filt",reduction = "umap.rpca",label = TRUE,repel = TRUE,pt.size = pt_size,label.size = label_size-1,
-             cols = get_tab20_colors(length(unique(MFISH_Sim1_figures@meta.data$L4_descr_filt)))) +NoLegend()+NoAxes()+ggtitle(NULL)
+             cols = get_tab20_colors(length(unique(MFISH_Sim1_figures@meta.data$L4_descr_filt))),raster = rasterize_check,raster.dpi = c(raster_dpi,raster_dpi)) +NoLegend()+NoAxes()+ggtitle(NULL)
 merfish_umap_plot = cowplot::plot_grid(p1,p2,p3,nrow=1)
 
-ggsave(filename = paste0(figure_outputpath,"merfish_sim1_umap_clusters",".png"),
+ggsave(filename = paste0(figure_outputpath,"merfish_sim1_umap_clusters_raster",".png"),
        plot = merfish_umap_plot,
-       dpi=600,
+       dpi=300,
        width = 750,
        height = 250,
        device = png,
        units="mm"
-       
+
+)
+
+ggsave(filename = paste0(figure_outputpath,"merfish_sim1_umap_clusters_raster",".pdf"),
+       plot = merfish_umap_plot,
+       dpi=300,
+       width = 750,
+       height = 250,
+       device = pdf,
+       units="mm"
+
 )
 
 ##########
@@ -119,7 +145,7 @@ ggsave(filename = paste0(figure_outputpath,"seq_sim1_sankey_clusters_L3",".png")
        height = 300,
        device = png,
        units="mm"
-       
+
 )
 
 ggsave(filename = paste0(figure_outputpath,"seq_sim1_sankey_clusters_L4",".png"),
@@ -129,7 +155,7 @@ ggsave(filename = paste0(figure_outputpath,"seq_sim1_sankey_clusters_L4",".png")
        height = 300,
        device = png,
        units="mm"
-       
+
 )
 
 ##########
@@ -174,7 +200,7 @@ ggsave(filename = paste0(figure_outputpath,"merfish_sim1_sankey_clusters_L3",".p
        height = 300,
        device = png,
        units="mm"
-       
+
 )
 
 ggsave(filename = paste0(figure_outputpath,"merfish_sim1_sankey_clusters_L4",".png"),
@@ -184,7 +210,7 @@ ggsave(filename = paste0(figure_outputpath,"merfish_sim1_sankey_clusters_L4",".p
        height = 300,
        device = png,
        units="mm"
-       
+
 )
 
 
@@ -197,25 +223,26 @@ target_clusters = names(table(MFISH_Sim1_figures@meta.data$L3_descr_filt))[table
 target_clusters
 
 for(target_cluster in target_clusters){
-  
-  
+
+
   #target_cluster = "Gl3-2 PVH-SO Oxt"
   print(target_cluster)
-  
+
   spatial_plot_data = MFISH_Sim1_figures@meta.data %>% dplyr::select(Cell_ID,L2_descr,L3_descr,L4_descr,seurat_clusters,x_rot,y_rot,image,bregma_level,Sample,Slide_ID)
   #expr_data = FetchData(MFISH_Sim1_figures,top_genes_cluster)
   #spatial_plot_data = cbind(spatial_plot_data,expr_data)
   spatial_plot_data$plot_col = "other"
   spatial_plot_data$plot_col[spatial_plot_data$L3_descr %in% target_cluster ] = "target"
   spatial_plot_data = spatial_plot_data %>% dplyr::arrange((plot_col))
-  
+
   spatial_plot_data = spatial_plot_data %>%
     dplyr::filter(bregma_level %in% c("-0.5mm" , "-0.6mm" , "-0.7mm" , "-0.8mm",  "-0.9mm",  "-1.0mm" ,"-1.1mm"))
-  
+
   # --- plot cluster -----------------------------------------------------------
-  
+
   gene_plot = ggplot(spatial_plot_data, aes(x = x_rot, y = y_rot, color = plot_col)) +
-    geom_point(size = 0.9, alpha = 1) +
+    geom_point(size = 0.1, alpha = 1) +
+   # scattermore::geom_scattermore(pointsize = 5)+
     facet_wrap(~bregma_level,ncol = 7) +
     coord_equal() +                          # keeps spatial proportions correct
     scale_color_manual(values = c("other" = "#5A1178", "target" = "#D3E04E")) +  # "#3F0C56"
@@ -226,39 +253,31 @@ for(target_cluster in target_clusters){
       axis.text  = element_blank(),          # remove axis numbers (optional)
       axis.title = element_blank(),          # remove x/y labels (optional)
       panel.grid = element_blank(),
-      title = element_text(size=18),
+      title = element_blank(), #element_text(size=18),
       legend.position = "right",
-      strip.text = element_text(size=15),
+      strip.text = element_blank(), #element_text(size=15),
       panel.background = element_rect(fill = 'grey50')
     ) +
     guides(color = guide_legend(
       override.aes = list(size = 3)          # make legend points visible
-    ))+NoLegend()+ggtitle(target_cluster)
-  
+    ))+NoLegend()#+ggtitle(target_cluster)
+
   file_cluster_name = stringr::str_replace_all(make.names(target_cluster),"\\.","_")
-  ggsave(filename = paste0(figure_outputpath,"merfish_pattern_",file_cluster_name,".png"),
+  ggsave(filename = paste0(figure_outputpath,"merfish_pattern_",file_cluster_name,"_lowres.png"),
          plot = gene_plot,
-         dpi=600,
-         width = 700,
-         height = 150,
+         dpi=300,
+         width = 360,
+         height = 80,
          device = png,
          units="mm"
-         
+
   )
-  ggsave(filename = paste0(figure_outputpath,"merfish_pattern_",file_cluster_name,".pdf"),
+  ggsave(filename = paste0(figure_outputpath,"merfish_pattern_",file_cluster_name,"_lowres.pdf"),
          plot = gene_plot,
-         dpi=600,
-         width = 700,
-         height = 150,
+         dpi=300,
+         width = 360,
+         height = 80,
          device = pdf,
          units="mm"
   )
 }
-
-
-
-
-
-
-
-

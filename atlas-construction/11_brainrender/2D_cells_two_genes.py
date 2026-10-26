@@ -49,6 +49,7 @@ GENE_RIGHT = params["GENE_RIGHT"]
 GENE_RIGHT_CMAP = params["GENE_RIGHT_CMAP"]
 MIN_GE_TO_PLOT_LEFT = params["MIN_GE_TO_PLOT_LEFT"] # exclusive: cells must have GE greater than this
 MIN_GE_TO_PLOT_RIGHT = params["MIN_GE_TO_PLOT_RIGHT"] # exclusive: cells must have GE greater than this
+RASTERIZE = params.get("RASTERIZE", True)
 
 # derive settings
 distances = list(range(START_RANGE, STOP_RANGE, SLICE_THICKNESS))
@@ -171,7 +172,7 @@ for col, x in enumerate(distances):
 
         colors_left = cmap_gene_left(norm_gene_left(gene_values_left))
 
-        ax.scatter(coords_ge_left[:, 0], coords_ge_left[:, 1], c=colors_left, s=SCATTERSIZE, alpha=1)
+        ax.scatter(coords_ge_left[:, 0], coords_ge_left[:, 1], c=colors_left, s=SCATTERSIZE, alpha=1, rasterized=RASTERIZE)
 
         # --- LEFT Hemisphere: (right on the plot) Gene expression ---
         coords[:, 0] = -coords[:, 0]  # LEFT hemisphere flip
@@ -189,7 +190,7 @@ for col, x in enumerate(distances):
 
         colors_right = cmap_gene_right(norm_gene_right(gene_values_right))
 
-        ax.scatter(coords_ge_right[:, 0], coords_ge_right[:, 1], c=colors_right, s=SCATTERSIZE, alpha=1)
+        ax.scatter(coords_ge_right[:, 0], coords_ge_right[:, 1], c=colors_right, s=SCATTERSIZE, alpha=1, rasterized=RASTERIZE)
 
     for patch in ax.patches[:]:
         new_patch = Polygon(patch.get_xy(), closed=False, edgecolor="grey", facecolor="none", 
@@ -228,6 +229,8 @@ cax_gene_right.set_ylabel(GENE_RIGHT, rotation=90, labelpad=8, fontsize=14, font
 
 
 FILENAME_OUT = f"{START_RANGE}-{STOP_RANGE}_{GENE_LEFT}_{MIN_GE_TO_PLOT_LEFT}_and_{GENE_RIGHT}_{MIN_GE_TO_PLOT_RIGHT}_{PLAY_FOR_CELLS}um"
+if RASTERIZE == True:
+    FILENAME_OUT += "_rasterized"
 plt.tight_layout()
 plt.savefig(OUTDIR / f"{FILENAME_OUT}.pdf", dpi=300)
 plt.show()

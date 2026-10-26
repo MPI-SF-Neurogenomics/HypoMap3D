@@ -50,6 +50,7 @@ PROB_CMAP = params["PROB_CMAP"]
 MIN_CELL_P_TO_PLOT = params["MIN_CELL_P_TO_PLOT"] # exclusive: cells must have p greater than this
 CLUSTER_TO_PLOT = params["CLUSTER_TO_PLOT"]
 MODALITY_VOX = params["MODALITY_VOX"]
+RASTERIZE = params.get("RASTERIZE", True)
 
 # derive settings
 ID = CLUSTER_TO_PLOT.split(" ")[0] # failsafe for if descr is passed
@@ -176,7 +177,7 @@ for col, x in enumerate(distances):
         coords_p = coords_p[order]
 
         colors = cmap_prob_cell(norm_prob_cell(prob_values))
-        ax.scatter(coords_p[:, 0], coords_p[:, 1], c=colors, s=SCATTERSIZE_CELL, alpha=1)
+        ax.scatter(coords_p[:, 0], coords_p[:, 1], c=colors, s=SCATTERSIZE_CELL, alpha=1, rasterized=RASTERIZE)
 
         # --- LEFT Hemisphere: (right side of plot) Cluster MODALITY (voxels) ---
         slc = df[(df.x_ccf == closest_x)]
@@ -189,7 +190,7 @@ for col, x in enumerate(distances):
             coords[:, 0] = -coords[:, 0]  # LEFT hemisphere flip
 
             #print(f"[{cluster}] LEFT @ x={closest_x}: {len(coords)} points")
-            ax.scatter(coords[:, 0], coords[:, 1], c=colors, s=SCATTERSIZE_VOX, alpha=1)
+            ax.scatter(coords[:, 0], coords[:, 1], c=colors, s=SCATTERSIZE_VOX, alpha=1, rasterized=RASTERIZE)
 
     for patch in ax.patches[:]:
         new_patch = Polygon(patch.get_xy(), closed=False, edgecolor="grey", facecolor="none", 
@@ -246,6 +247,8 @@ cb_prob_cell.update_ticks()
 
 
 FILENAME_OUT = f"{'_'.join(cluster_descr.split(" "))}_cells_and_vox_{PLAY_FOR_CELLS}um_{MIN_CELL_P_TO_PLOT}p"
+if RASTERIZE == True:
+    FILENAME_OUT += "_rasterized"
 plt.tight_layout()
 plt.savefig(OUTDIR / f"{FILENAME_OUT}.pdf", dpi=300)
 plt.show()

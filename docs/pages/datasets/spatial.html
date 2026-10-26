@@ -47,7 +47,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'pages/datasets/spatial';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Single Cell Exploration" href="../tutorials/SingleCellExploration.html" />
+    <link rel="next" title="Taxonomy Objects" href="taxonomy.html" />
     <link rel="prev" title="Single Cell Objects" href="singlecell.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -148,6 +148,7 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="singlecell.html">Single Cell Objects</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Spatial Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="taxonomy.html">Taxonomy Objects</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
 <ul class="nav bd-sidenav">
@@ -160,10 +161,11 @@
 
 
 
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/SpatialSmoothing.html">Spatial smoothing</a></li>
-
-
-
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/advanced/index.html">Advanced Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/advanced/SpatialSmoothing.html">Spatial smoothing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/advanced/RegionAggAndSpatialFlags.html">CCF region aggregation and spatial warning flags</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -313,12 +315,18 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structure">Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#access">Access</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-loading">Using/Loading</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subsetting-to-the-hypothalamus">Subsetting to the Hypothalamus</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#voxel-grids-zarr">Voxel Grids Zarr</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Access</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Using/Loading</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-region-assignment">Cluster Region Assignment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Access</a></li>
 </ul>
 </li>
 </ul>
@@ -340,10 +348,10 @@
 <!-- ======================================================================= -->
 <section id="spatial-anndata">
 <h2>Spatial AnnData<a class="headerlink" href="#spatial-anndata" title="Link to this heading">#</a></h2>
-<p>Single cell resolution spatial transcriptomics from 4 major datasets were concatenated and harmonized. Cells within a defined bounding box around the hypothalamus were kept leaving ~1.4 mil cells of which ~800k reside within the hypothalamus itself. The label transfer probablities of cell-types <em>L1-5</em> are included as fuzzy sparse matrices in the <code class="docutils literal notranslate"><span class="pre">.obsm</span></code>.</p>
+<p>Single cell resolution spatial transcriptomics from 4 major datasets were concatenated and harmonized. Cells within a defined bounding box around the hypothalamus were kept leaving ~1.4 mil cells of which ~400k reside within the hypothalamus itself. The label transfer probablities of cell-types <em>L1-5</em> are included as fuzzy sparse matrices in the <code class="docutils literal notranslate"><span class="pre">.obsm</span></code>.</p>
 <section id="structure">
 <h3>Structure<a class="headerlink" href="#structure" title="Link to this heading">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>AnnData<span class="w"> </span>object<span class="w"> </span>with<span class="w"> </span>n_obs<span class="w"> </span>×<span class="w"> </span><span class="nv">n_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1401313</span><span class="w"> </span>×<span class="w"> </span><span class="m">56939</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>AnnData<span class="w"> </span>object<span class="w"> </span>with<span class="w"> </span>n_obs<span class="w"> </span>×<span class="w"> </span><span class="nv">n_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>,401,313<span class="w"> </span>×<span class="w"> </span><span class="m">56</span>,939
 <span class="w">    </span>X:<span class="w"> </span>raw<span class="w"> </span>count<span class="w"> </span>matrix
 <span class="w">    </span>obs:<span class="w"> </span><span class="s1">&#39;Dataset&#39;</span>,<span class="w"> </span><span class="s1">&#39;Sample&#39;</span>,<span class="w"> </span><span class="s1">&#39;Author&#39;</span>,<span class="w"> </span><span class="s1">&#39;Technology&#39;</span>,<span class="w"> </span><span class="s1">&#39;Donor&#39;</span>,<span class="w"> </span><span class="s1">&#39;Sex&#39;</span>,<span class="w"> </span><span class="s1">&#39;RegionID&#39;</span>,<span class="w"> </span><span class="s1">&#39;RegionAcronym&#39;</span>,<span class="w"> </span><span class="s1">&#39;RegionName&#39;</span>,<span class="w"> </span><span class="s1">&#39;total_counts&#39;</span>,<span class="w"> </span><span class="s1">&#39;total_hvg_counts&#39;</span>,<span class="w"> </span><span class="s1">&#39;total_genes&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsHY&#39;</span>,<span class="w"> </span><span class="s1">&#39;L1_descr_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L1_abc_like_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L1_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L2_descr_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L2_abc_like_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L2_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L3_descr_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L3_abc_like_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L3_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L4_descr_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L4_abc_like_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L4_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L5_descr_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L5_abc_like_max_p&#39;</span>,<span class="w"> </span><span class="s1">&#39;L5_max_p&#39;</span>
 <span class="w">    </span>var:<span class="w"> </span><span class="s1">&#39;gene_stable_ids&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsHVG&#39;</span>
@@ -357,17 +365,24 @@
 <h3>Access<a class="headerlink" href="#access" title="Link to this heading">#</a></h3>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
-<p>Public data access is currently unavailable as dataset is not published.</p>
+<p>Public data access to <code class="docutils literal notranslate"><span class="pre">hm3d_st_all.h5ad</span></code> is currently unavailable as HypoMap3D is not yet published.</p>
 </div>
 </section>
 <section id="using-loading">
 <h3>Using/Loading<a class="headerlink" href="#using-loading" title="Link to this heading">#</a></h3>
 <p>The full anndata can be loaded using the <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> python package or via the <code class="docutils literal notranslate"><span class="pre">ScanPy</span></code> wrapper</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span> <span class="c1"># via AnnData</span>
-<span class="n">scdata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s1">&#39;sp_anndata.h5ad&#39;</span><span class="p">)</span>
+<span class="n">scdata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s1">&#39;hm3d_st_all.h5ad&#39;</span><span class="p">)</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span> <span class="c1"># via ScanPy</span>
-<span class="n">scdata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s1">&#39;sp_anndata.h5ad&#39;</span><span class="p">)</span>
+<span class="n">scdata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s1">&#39;hm3d_st_all.h5ad&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="subsetting-to-the-hypothalamus">
+<h3>Subsetting to the Hypothalamus<a class="headerlink" href="#subsetting-to-the-hypothalamus" title="Link to this heading">#</a></h3>
+<p>You can subset to only hypothalamic cells using the <code class="docutils literal notranslate"><span class="pre">IsHY</span></code> mask in the <code class="docutils literal notranslate"><span class="pre">obs</span></code> dataframe.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scdata_hy</span> <span class="o">=</span> <span class="n">scdata</span><span class="p">[</span><span class="n">scdata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;IsHY&#39;</span><span class="p">],</span> <span class="p">:]</span>
 </pre></div>
 </div>
 <!-- ======================================================================= -->
@@ -444,7 +459,7 @@
 <h3>Access<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
-<p>Public data access is currently unavailable as dataset is not published.</p>
+<p>Public data access to <code class="docutils literal notranslate"><span class="pre">hm3d_st_voxelized.zarr</span></code> is currently unavailable as HypoMap3D is not yet published.</p>
 </div>
 </section>
 <section id="id3">
@@ -452,7 +467,7 @@
 <p>The voxel grids can be loaded using the <code class="docutils literal notranslate"><span class="pre">Zarr</span></code> python package with <strong>version &gt;3.1</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
 
-<span class="n">voxel_store</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;smoothed_voxel_grids.zarr&#39;</span><span class="p">)</span>
+<span class="n">voxel_store</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;hm3d_st_voxelized.zarr&#39;</span><span class="p">)</span>
 
 <span class="c1"># Reading slice 50 of L1 smoothed probabilities for cluster `Gb1-3 HY Gaba`</span>
 <span class="n">clusters</span> <span class="o">=</span> <span class="n">voxel_store</span><span class="p">[</span><span class="s1">&#39;L1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;descr&#39;</span><span class="p">]</span>
@@ -464,6 +479,376 @@
 <p class="admonition-title">See also</p>
 <p>For more information on handling the zarr voxel grids, please refer to
 the <a class="reference internal" href="../tutorials/SpatialSlicePlotting.html"><span class="doc">SpatialSlicePlotting Tutorial</span></a></p>
+</div>
+</section>
+</section>
+<section id="cluster-region-assignment">
+<h2>Cluster Region Assignment<a class="headerlink" href="#cluster-region-assignment" title="Link to this heading">#</a></h2>
+<p>The relative mass contribution of hypothalamic sub-nuclei to each cluster is provided as a CSV table.</p>
+<section id="id4">
+<h3>Structure<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>The first row of the table is as follows:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>celltype_id</p></th>
+<th class="head"><p>celltype_descr</p></th>
+<th class="head"><p>celltype_abc_like</p></th>
+<th class="head"><p>flag</p></th>
+<th class="head"><p>TMv</p></th>
+<th class="head"><p>IF</p></th>
+<th class="head"><p>PT</p></th>
+<th class="head"><p>AAA</p></th>
+<th class="head"><p>IGL</p></th>
+<th class="head"><p>PVa</p></th>
+<th class="head"><p>PVH</p></th>
+<th class="head"><p>ACB</p></th>
+<th class="head"><p>MT</p></th>
+<th class="head"><p>IMD</p></th>
+<th class="head"><p>PVHd</p></th>
+<th class="head"><p>AD</p></th>
+<th class="head"><p>LT</p></th>
+<th class="head"><p>INC</p></th>
+<th class="head"><p>ADP</p></th>
+<th class="head"><p>VL</p></th>
+<th class="head"><p>AHN</p></th>
+<th class="head"><p>SEZ</p></th>
+<th class="head"><p>PVi</p></th>
+<th class="head"><p>PVp</p></th>
+<th class="head"><p>MRN</p></th>
+<th class="head"><p>V3</p></th>
+<th class="head"><p>PVpo</p></th>
+<th class="head"><p>PVT</p></th>
+<th class="head"><p>RCH</p></th>
+<th class="head"><p>LGv</p></th>
+<th class="head"><p>RE</p></th>
+<th class="head"><p>RH</p></th>
+<th class="head"><p>LHA</p></th>
+<th class="head"><p>RL</p></th>
+<th class="head"><p>LM</p></th>
+<th class="head"><p>RN</p></th>
+<th class="head"><p>APN</p></th>
+<th class="head"><p>ARH</p></th>
+<th class="head"><p>LPO</p></th>
+<th class="head"><p>AV</p></th>
+<th class="head"><p>LSr</p></th>
+<th class="head"><p>NLOT1</p></th>
+<th class="head"><p>RT</p></th>
+<th class="head"><p>AVP</p></th>
+<th class="head"><p>LSv</p></th>
+<th class="head"><p>NLOT2</p></th>
+<th class="head"><p>AVPV</p></th>
+<th class="head"><p>SCH</p></th>
+<th class="head"><p>BAC</p></th>
+<th class="head"><p>BA</p></th>
+<th class="head"><p>MA</p></th>
+<th class="head"><p>SF</p></th>
+<th class="head"><p>MB</p></th>
+<th class="head"><p>SubG</p></th>
+<th class="head"><p>BMAa</p></th>
+<th class="head"><p>ASO</p></th>
+<th class="head"><p>SH</p></th>
+<th class="head"><p>BMAp</p></th>
+<th class="head"><p>SI</p></th>
+<th class="head"><p>SBPV</p></th>
+<th class="head"><p>BST</p></th>
+<th class="head"><p>PST</p></th>
+<th class="head"><p>MD</p></th>
+<th class="head"><p>PSTN</p></th>
+<th class="head"><p>SMT</p></th>
+<th class="head"><p>SNc</p></th>
+<th class="head"><p>SNr</p></th>
+<th class="head"><p>CA1</p></th>
+<th class="head"><p>SO</p></th>
+<th class="head"><p>MEA</p></th>
+<th class="head"><p>SPFm</p></th>
+<th class="head"><p>SPFp</p></th>
+<th class="head"><p>CA2</p></th>
+<th class="head"><p>MEPO</p></th>
+<th class="head"><p>CA3</p></th>
+<th class="head"><p>STN</p></th>
+<th class="head"><p>STR</p></th>
+<th class="head"><p>MPN</p></th>
+<th class="head"><p>MPO</p></th>
+<th class="head"><p>SUM</p></th>
+<th class="head"><p>CEAc</p></th>
+<th class="head"><p>TH</p></th>
+<th class="head"><p>CEAl</p></th>
+<th class="head"><p>CEAm</p></th>
+<th class="head"><p>MS</p></th>
+<th class="head"><p>CL</p></th>
+<th class="head"><p>TRS</p></th>
+<th class="head"><p>ND</p></th>
+<th class="head"><p>NDB</p></th>
+<th class="head"><p>CM</p></th>
+<th class="head"><p>SPA</p></th>
+<th class="head"><p>TU</p></th>
+<th class="head"><p>VAL</p></th>
+<th class="head"><p>DG-sg</p></th>
+<th class="head"><p>COAa</p></th>
+<th class="head"><p>COApl</p></th>
+<th class="head"><p>COApm</p></th>
+<th class="head"><p>CP</p></th>
+<th class="head"><p>VM</p></th>
+<th class="head"><p>VLPO</p></th>
+<th class="head"><p>VMH</p></th>
+<th class="head"><p>OLF</p></th>
+<th class="head"><p>CTXsp</p></th>
+<th class="head"><p>VPL</p></th>
+<th class="head"><p>VPLpc</p></th>
+<th class="head"><p>MMme</p></th>
+<th class="head"><p>VPM</p></th>
+<th class="head"><p>VPMpc</p></th>
+<th class="head"><p>VTA</p></th>
+<th class="head"><p>OT</p></th>
+<th class="head"><p>OV</p></th>
+<th class="head"><p>P</p></th>
+<th class="head"><p>PA</p></th>
+<th class="head"><p>PAA</p></th>
+<th class="head"><p>PAG</p></th>
+<th class="head"><p>ZI</p></th>
+<th class="head"><p>PAL</p></th>
+<th class="head"><p>FF</p></th>
+<th class="head"><p>DMH</p></th>
+<th class="head"><p>IIIn</p></th>
+<th class="head"><p>IIn</p></th>
+<th class="head"><p>PCN</p></th>
+<th class="head"><p>PD</p></th>
+<th class="head"><p>PF</p></th>
+<th class="head"><p>PH</p></th>
+<th class="head"><p>EPd</p></th>
+<th class="head"><p>PIR</p></th>
+<th class="head"><p>EW</p></th>
+<th class="head"><p>PMd</p></th>
+<th class="head"><p>FS</p></th>
+<th class="head"><p>PMv</p></th>
+<th class="head"><p>PO</p></th>
+<th class="head"><p>GPe</p></th>
+<th class="head"><p>POL</p></th>
+<th class="head"><p>GPi</p></th>
+<th class="head"><p>PP</p></th>
+<th class="head"><p>PR</p></th>
+<th class="head"><p>MGv</p></th>
+<th class="head"><p>MGm</p></th>
+<th class="head"><p>HPF</p></th>
+<th class="head"><p>AMd</p></th>
+<th class="head"><p>HY</p></th>
+<th class="head"><p>AMv</p></th>
+<th class="head"><p>IA</p></th>
+<th class="head"><p>PS</p></th>
+<th class="head"><p>IAD</p></th>
+<th class="head"><p>IAM</p></th>
+<th class="head"><p>TMd</p></th>
+<th class="head"><p>NLOT3</p></th>
+<th class="head"><p>ME</p></th>
+<th class="head"><p>DG-mo</p></th>
+<th class="head"><p>DG-po</p></th>
+<th class="head"><p>MA3</p></th>
+<th class="head"><p>Eth</p></th>
+<th class="head"><p>Xi</p></th>
+<th class="head"><p>PIL</p></th>
+<th class="head"><p>PoT</p></th>
+<th class="head"><p>IntG</p></th>
+<th class="head"><p>VMPO</p></th>
+<th class="head"><p>PeF</p></th>
+<th class="head"><p>HATA</p></th>
+<th class="head"><p>MMl</p></th>
+<th class="head"><p>MMm</p></th>
+<th class="head"><p>MMp</p></th>
+<th class="head"><p>MMd</p></th>
+<th class="head"><p>PN</p></th>
+<th class="head"><p>IPR</p></th>
+<th class="head"><p>IPC</p></th>
+<th class="head"><p>IPL</p></th>
+<th class="head"><p>IPI</p></th>
+<th class="head"><p>IPDM</p></th>
+<th class="head"><p>IPDL</p></th>
+<th class="head"><p>IPRL</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Gb1-2</p></td>
+<td><p>Gb1-2 GABA</p></td>
+<td><p>Gb1-2 GABA</p></td>
+<td><p>None</p></td>
+<td><p>0.0012162228</p></td>
+<td><p>0.00015655666</p></td>
+<td><p>0.0007011017</p></td>
+<td><p>0.008910024</p></td>
+<td><p>2.604616e-05</p></td>
+<td><p>0.0013842874</p></td>
+<td><p>0.0011577017</p></td>
+<td><p>0.06381319</p></td>
+<td><p>0.0003416799</p></td>
+<td><p>0.00043809053</p></td>
+<td><p>0.0017023097</p></td>
+<td><p>2.639922e-05</p></td>
+<td><p>0.00017739477</p></td>
+<td><p>0.00029747118</p></td>
+<td><p>0.0020205898</p></td>
+<td><p>0.002436088</p></td>
+<td><p>0.010450783</p></td>
+<td><p>1.6771797e-06</p></td>
+<td><p>0.001953325</p></td>
+<td><p>0.0019771748</p></td>
+<td><p>0.005507645</p></td>
+<td><p>0.0042126277</p></td>
+<td><p>0.0035268543</p></td>
+<td><p>0.0011763936</p></td>
+<td><p>0.0014934228</p></td>
+<td><p>0.0014862448</p></td>
+<td><p>0.0016202381</p></td>
+<td><p>0.00033783494</p></td>
+<td><p>0.0128647005</p></td>
+<td><p>0.00011733183</p></td>
+<td><p>0.00020410866</p></td>
+<td><p>0.0015136964</p></td>
+<td><p>0.00036336062</p></td>
+<td><p>0.008227488</p></td>
+<td><p>0.008641888</p></td>
+<td><p>0.0012168279</p></td>
+<td><p>0.024405263</p></td>
+<td><p>0.0006090624</p></td>
+<td><p>0.01752709</p></td>
+<td><p>0.0014401844</p></td>
+<td><p>0.017013999</p></td>
+<td><p>0.0012381236</p></td>
+<td><p>0.0027838773</p></td>
+<td><p>0.0035406314</p></td>
+<td><p>4.5887286e-05</p></td>
+<td><p>0.00012445106</p></td>
+<td><p>0.0071767657</p></td>
+<td><p>0.0019897874</p></td>
+<td><p>0.0097302785</p></td>
+<td><p>0.0004271934</p></td>
+<td><p>0.0048034517</p></td>
+<td><p>0.0001381562</p></td>
+<td><p>0.00022291896</p></td>
+<td><p>0.00034220653</p></td>
+<td><p>0.04667171</p></td>
+<td><p>0.00322487</p></td>
+<td><p>0.029999454</p></td>
+<td><p>8.977511e-05</p></td>
+<td><p>0.002004063</p></td>
+<td><p>0.0006713049</p></td>
+<td><p>0.001634424</p></td>
+<td><p>0.0012884187</p></td>
+<td><p>0.0066387546</p></td>
+<td><p>0.0015726861</p></td>
+<td><p>0.00028648277</p></td>
+<td><p>0.028014915</p></td>
+<td><p>0.0004048754</p></td>
+<td><p>0.0003920776</p></td>
+<td><p>0.00019321572</p></td>
+<td><p>0.00079886295</p></td>
+<td><p>0.009393225</p></td>
+<td><p>0.0009428808</p></td>
+<td><p>0.027355352</p></td>
+<td><p>0.009530359</p></td>
+<td><p>0.010141343</p></td>
+<td><p>0.0005618859</p></td>
+<td><p>0.00053159415</p></td>
+<td><p>0.0037294286</p></td>
+<td><p>0.00044019768</p></td>
+<td><p>0.012636062</p></td>
+<td><p>0.011418089</p></td>
+<td><p>0.00017641549</p></td>
+<td><p>0.000799447</p></td>
+<td><p>0.00032995237</p></td>
+<td><p>0.012780122</p></td>
+<td><p>0.00081895955</p></td>
+<td><p>0.0003811782</p></td>
+<td><p>0.0064510047</p></td>
+<td><p>0.0032412473</p></td>
+<td><p>0.00028182066</p></td>
+<td><p>0.004049578</p></td>
+<td><p>2.0678754e-06</p></td>
+<td><p>0.0047364566</p></td>
+<td><p>0.2594797</p></td>
+<td><p>0.0049051535</p></td>
+<td><p>0.0008632637</p></td>
+<td><p>0.0035660195</p></td>
+<td><p>0.0054662316</p></td>
+<td><p>0.0004969132</p></td>
+<td><p>0.0054825847</p></td>
+<td><p>0.0005060083</p></td>
+<td><p>4.7758833e-05</p></td>
+<td><p>0.0064058984</p></td>
+<td><p>0.0008465315</p></td>
+<td><p>0.0025367003</p></td>
+<td><p>0.067800835</p></td>
+<td><p>0.00014405268</p></td>
+<td><p>1.139286e-05</p></td>
+<td><p>0.008258109</p></td>
+<td><p>0.00046846634</p></td>
+<td><p>0.00083107647</p></td>
+<td><p>0.024232045</p></td>
+<td><p>0.012851092</p></td>
+<td><p>0.0018063982</p></td>
+<td><p>0.0057125525</p></td>
+<td><p>4.396907e-06</p></td>
+<td><p>0.00028940683</p></td>
+<td><p>0.0007546474</p></td>
+<td><p>0.00027128105</p></td>
+<td><p>0.00058339076</p></td>
+<td><p>0.0029196339</p></td>
+<td><p>0.0004083942</p></td>
+<td><p>0.0053130514</p></td>
+<td><p>6.668573e-05</p></td>
+<td><p>0.0001863813</p></td>
+<td><p>0.009039877</p></td>
+<td><p>0.001448437</p></td>
+<td><p>0.0026516842</p></td>
+<td><p>0.017183386</p></td>
+<td><p>8.395138e-05</p></td>
+<td><p>0.0025180348</p></td>
+<td><p>0.00022454833</p></td>
+<td><p>0.0012995326</p></td>
+<td><p>0.0004234898</p></td>
+<td><p>0.00069253385</p></td>
+<td><p>0.00074663066</p></td>
+<td><p>0.0013974423</p></td>
+<td><p>0.03398079</p></td>
+<td><p>0.0013081075</p></td>
+<td><p>0.00044675352</p></td>
+<td><p>0.0021949154</p></td>
+<td><p>0.0004709228</p></td>
+<td><p>0.00014847725</p></td>
+<td><p>0.00040034397</p></td>
+<td><p>0.0005949922</p></td>
+<td><p>0.00135979</p></td>
+<td><p>0.0009407896</p></td>
+<td><p>7.7904166e-05</p></td>
+<td><p>7.695236e-05</p></td>
+<td><p>5.366119e-05</p></td>
+<td><p>0.0003188306</p></td>
+<td><p>0.0004784335</p></td>
+<td><p>0.00046772635</p></td>
+<td><p>0.0001581345</p></td>
+<td><p>0.00092866743</p></td>
+<td><p>0.0023081445</p></td>
+<td><p>0.0011137992</p></td>
+<td><p>0.0001318106</p></td>
+<td><p>6.9092326e-05</p></td>
+<td><p>1.4297381e-05</p></td>
+<td><p>0.00013958917</p></td>
+<td><p>4.3109252e-05</p></td>
+<td><p>0.00039777902</p></td>
+<td><p>3.44212e-05</p></td>
+<td><p>5.3402524e-05</p></td>
+<td><p>4.3644093e-05</p></td>
+<td><p>4.4868156e-07</p></td>
+<td><p>4.3928667e-05</p></td>
+<td><p>0.00010212503</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id5">
+<h3>Access<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Public data access to <code class="docutils literal notranslate"><span class="pre">hm3d_regionwise_relative_mass_wo_fibers.csv</span></code> is currently unavailable as HypoMap3D is not yet published.</p>
 </div>
 </section>
 </section>
@@ -490,11 +875,11 @@ the <a class="reference internal" href="../tutorials/SpatialSlicePlotting.html">
       </div>
     </a>
     <a class="right-next"
-       href="../tutorials/SingleCellExploration.html"
+       href="taxonomy.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Single Cell Exploration</p>
+        <p class="prev-next-title">Taxonomy Objects</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -520,12 +905,18 @@ the <a class="reference internal" href="../tutorials/SpatialSlicePlotting.html">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structure">Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#access">Access</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-loading">Using/Loading</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subsetting-to-the-hypothalamus">Subsetting to the Hypothalamus</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#voxel-grids-zarr">Voxel Grids Zarr</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Access</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Using/Loading</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-region-assignment">Cluster Region Assignment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Access</a></li>
 </ul>
 </li>
 </ul>

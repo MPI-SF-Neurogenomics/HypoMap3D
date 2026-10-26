@@ -51,6 +51,7 @@ MIN_P_TO_PLOT = params["MIN_P_TO_PLOT"] # exclusive: cells must have p greater t
 CLUSTER_TO_PLOT = params["CLUSTER_TO_PLOT"]
 MIN_CELL_LOAD_CONFIDENCE = params["MIN_CELL_LOAD_CONFIDENCE"] #float; inclusive ie cells with p greater or equal than this will be loaded
 #MIN_P_CELLS_TO_PLOT = params["MIN_P_CELLS_TO_PLOT"] #float; inclusive ie cells with p greater or equal than this will be plotted for cluster probs
+RASTERIZE = params.get("RASTERIZE", True)
 
 # derive settings
 ID = CLUSTER_TO_PLOT.split(" ")[0] # failsafe for if descr is passed
@@ -183,7 +184,7 @@ for col, x in enumerate(distances):
 
         colors = cmap_gene(norm_gene(gene_values))
 
-        ax.scatter(coords_ge[:, 0], coords_ge[:, 1], c=colors, s=SCATTERSIZE, alpha=1)
+        ax.scatter(coords_ge[:, 0], coords_ge[:, 1], c=colors, s=SCATTERSIZE, alpha=1, rasterized=RASTERIZE)
 
         # --- LEFT Hemisphere: Cluster probabilities ---
         coords[:, 0] = -coords[:, 0]  # LEFT hemisphere flip
@@ -200,7 +201,7 @@ for col, x in enumerate(distances):
         coords_p = coords_p[order]
 
         colors = cmap_prob(norm_prob(probs_slice))
-        ax.scatter(coords_p[:, 0], coords_p[:, 1], c=colors, s=SCATTERSIZE, alpha=1)
+        ax.scatter(coords_p[:, 0], coords_p[:, 1], c=colors, s=SCATTERSIZE, alpha=1, rasterized=RASTERIZE)
 
     for patch in ax.patches[:]:
         new_patch = Polygon(patch.get_xy(), closed=False, edgecolor="grey", facecolor="none", 
@@ -238,8 +239,9 @@ cb_gene.ax.set_yticklabels([t.get_text() for t in cb_gene.ax.get_yticklabels()],
                         fontweight='bold')
 cax_gene.set_ylabel(GENE, rotation=90, labelpad=8, fontsize=14, fontweight='bold')
 
-
 FILENAME_OUT = f"{'_'.join(cluster_descr.split(" "))}_and_{GENE}_{PLAY_FOR_CELLS}um_{MIN_P_TO_PLOT}p_{MIN_GE_TO_PLOT}ge"
+if RASTERIZE == True:
+    FILENAME_OUT += "_rasterized"
 plt.tight_layout()
 plt.savefig(OUTDIR / f"{FILENAME_OUT}.pdf", dpi=300)
 plt.show()

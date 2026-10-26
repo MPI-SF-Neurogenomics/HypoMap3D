@@ -1,37 +1,41 @@
-from os import PathLike 
-from typing import Literal, Mapping, Optional, Sequence 
-import matplotlib.axes 
-import numpy as np
-import zarr 
-import matplotlib.pyplot as plt
 import warnings
-from skimage import measure
-import matplotlib.colors as mcolors
-from matplotlib.ticker import ScalarFormatter, MaxNLocator
 
-def plot_clusters_collapsed( 
-    store: zarr.Group, 
-    cluster_id_list: Sequence[str], 
-    slice_range: tuple[int, int], 
-    regions: Sequence[str] = ("HY",), 
-    modality: Literal["rel_mass", "prob"] = "rel_mass", 
-    view: Literal["coronal", "sagittal"] = "coronal", 
-    thresholds: Sequence[float] = (0.70, 0.90), 
-    alphas: Sequence[float] = (0.3, 0.6), 
-    linestyles: Sequence[Optional[Literal["solid", "dashed", "dotted"]]] = ( "dashed", "solid", ), 
-    linewidths: Sequence[float] = (0.8, 0.8), 
-    axis0_range: Optional[tuple[float, float]] = None, 
-    axis1_range: Optional[tuple[float, float]] = None, 
-    figsize: tuple[float, float] = (8, 8), 
-    label_fontsize: float = 7, 
-    label_contour: Literal["inner", "outer"] = "inner", 
-    region_color: str = "darkgrey", 
-    region_labels: bool = True, 
-    region_label_fontsize: float = 7, 
-    title: Optional[str] = None, 
-    prefix: str = "All clusters", 
-    save_path: Optional[str | PathLike[str]] = None, 
-    ax: Optional[matplotlib.axes.Axes] = None, 
+from os import PathLike
+from typing import Literal, Mapping, Optional, Sequence
+
+import matplotlib.axes
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
+import numpy as np
+import zarr
+
+from matplotlib.ticker import ScalarFormatter, MaxNLocator
+from scipy.ndimage import gaussian_filter
+from skimage import measure
+
+def plot_clusters_collapsed(
+    store: zarr.Group,
+    cluster_id_list: Sequence[str],
+    slice_range: tuple[int, int],
+    regions: Sequence[str] = ("HY",),
+    modality: Literal["rel_mass", "prob"] = "rel_mass",
+    view: Literal["coronal", "sagittal"] = "coronal",
+    thresholds: Sequence[float] = (0.70, 0.90),
+    alphas: Sequence[float] = (0.3, 0.6),
+    linestyles: Sequence[Optional[Literal["solid", "dashed", "dotted"]]] = ( "dashed", "solid", ),
+    linewidths: Sequence[float] = (0.8, 0.8),
+    axis0_range: Optional[tuple[float, float]] = None,
+    axis1_range: Optional[tuple[float, float]] = None,
+    figsize: tuple[float, float] = (8, 8),
+    label_fontsize: float = 7,
+    label_contour: Literal["inner", "outer"] = "inner",
+    region_color: str = "darkgrey",
+    region_labels: bool = True,
+    region_label_fontsize: float = 7,
+    title: Optional[str] = None,
+    prefix: str = "All clusters",
+    save_path: Optional[str | PathLike[str]] = None,
+    ax: Optional[matplotlib.axes.Axes] = None,
     color_mapping: Optional[ Mapping[str, str | tuple[float, float, float] | tuple[float, float, float, float]] ] = None, ) -> None:
     """
     Plot cumulative-mass contours for one or more clusters collapsed across an
@@ -285,26 +289,43 @@ def plot_clusters_collapsed(
     # Plot regions
     # ------------------------------------------------------------------
 
+    SCALE_FACTOR = 3 # x3 scale for smoother region outlines
+
     for region in regions:
 
-        region_idx = list(store["region"]["acronyms"][:]).index(region)
-        mask = region_slices[view](region_idx)
+        try:
+            region_idx = list(
+                store["region"]["acronyms"][:]
+            ).index(region)
 
-        ax.contour(
-            mask,
-            colors=region_color,
-            linewidths=0.8,
-        )
+        except ValueError:
+            warnings.warn(
+                f"Region '{region}' not found in region acronyms."
+            )
+            continue
+
+        structure_mask2d = region_slices[view](region_idx)
+
+        # Upscale mask by scale factor
+        structure_mask2d = np.kron(structure_mask2d, np.ones((SCALE_FACTOR, SCALE_FACTOR)))
+        structure_mask2d = structure_mask2d.astype(np.float32)
+
+        # Apply Gaussian smoothing
+        structure_mask2d = gaussian_filter(structure_mask2d, sigma=SCALE_FACTOR)
+
+        contours = measure.find_contours(structure_mask2d, 0.5)
+        for contour in contours:
+            ax.plot(contour[:, 1] / SCALE_FACTOR, contour[:, 0] / SCALE_FACTOR, linewidth=0.8, c=region_color)
 
         if region_labels:
 
-            ys, xs = np.where(mask > 0)
+            ys, xs = np.where(structure_mask2d > 0)
 
             if len(xs):
 
                 ax.text(
-                    np.mean(xs),
-                    np.mean(ys),
+                    np.mean(xs) / SCALE_FACTOR,
+                    np.mean(ys)/ SCALE_FACTOR,
                     region,
                     fontsize=region_label_fontsize,
                     color=region_color,
@@ -470,7 +491,7 @@ def plot_single_cluster(
         Adds colorbar.
 
     cbar_ax: matplotlib.axes.Axes | None
-        Existing axis to draw colorbar on. If ``None``, the cbar will be plotted on the one passed to x 
+        Existing axis to draw colorbar on. If ``None``, the cbar will be plotted on the one passed to x
             or the one created anew if ax=None.
 
     colorbar_label_fontsize: float = 12
@@ -478,7 +499,7 @@ def plot_single_cluster(
 
     colorbar_tick_fontsize: float = 10
         Fontsize for the ticks of the cbar.
-    
+
     make_colorbar_bold: bool = False.
         Makes all cbar labels bold.
 
@@ -680,6 +701,8 @@ def plot_single_cluster(
     # Region contours and labels
     # ------------------------------------------------------------------
 
+    SCALE_FACTOR = 3 # x3 upscale to smooth region outlines
+
     for region in regions:
 
         try:
@@ -693,23 +716,29 @@ def plot_single_cluster(
             )
             continue
 
-        slice_mask = region_slices[view](region_idx)
+        structure_mask2d = region_slices[view](region_idx)
 
-        ax.contour(
-            slice_mask,
-            colors=region_color,
-            linewidths=region_linewidth,
-        )
+        # Upscale mask by scale factor
+        structure_mask2d = np.kron(structure_mask2d, np.ones((SCALE_FACTOR, SCALE_FACTOR)))
+        structure_mask2d = structure_mask2d.astype(np.float32)
+
+        # Apply Gaussian smoothing
+        structure_mask2d = gaussian_filter(structure_mask2d, sigma=SCALE_FACTOR)
+
+        contours = measure.find_contours(structure_mask2d, 0.5)
+        for contour in contours:
+            ax.plot(contour[:, 1] / SCALE_FACTOR, contour[:, 0] / SCALE_FACTOR, linewidth=0.8, c=region_color)
+
 
         if region_labels:
 
-            ys, xs = np.where(slice_mask > 0)
+            ys, xs = np.where(structure_mask2d > 0)
 
             if len(xs) > 0:
 
                 ax.text(
-                    np.mean(xs),
-                    np.mean(ys),
+                    np.mean(xs) / SCALE_FACTOR,
+                    np.mean(ys) / SCALE_FACTOR,
                     region,
                     fontsize=region_label_fontsize,
                     color=region_color,
@@ -759,7 +788,7 @@ def plot_single_cluster(
                 im,
                 ax=ax,
                 fraction=0.046,
-                pad=0.04,    
+                pad=0.04,
             )
         else:
             cbar = ax.figure.colorbar(
@@ -788,14 +817,14 @@ def plot_single_cluster(
             cbar.locator = MaxNLocator(nbins=colorbar_n_ticks)
 
         cbar.update_ticks()
-        cbar.ax.yaxis.get_offset_text().set_fontsize(colorbar_tick_fontsize)  
+        cbar.ax.yaxis.get_offset_text().set_fontsize(colorbar_tick_fontsize)
         offset = cbar.ax.yaxis.get_offset_text()
-        offset.set_x(0.15*colorbar_tick_fontsize)  # increase to move further right
+        offset.set_x(0.4*colorbar_tick_fontsize)  # increase to move further right
         if make_colorbar_bold:
             for tick in cbar.ax.get_yticklabels():
                 tick.set_fontweight("bold")
                 cbar.ax.yaxis.get_offset_text().set_fontweight("bold")
-            
+
     # ------------------------------------------------------------------
     # Save / show
     # ------------------------------------------------------------------
@@ -824,12 +853,12 @@ def cumulative_mass_rank_map(A: np.ndarray) -> np.ndarray:
     """
     Compute mass-weighted cumulative distribution of a 3D array,
     ignoring NaN values. NaNs are preserved in the output.
-    
+
     Parameters
     ----------
     A : np.ndarray
         Input array, can contain NaNs.
-    
+
     Returns
     -------
     np.ndarray
@@ -837,20 +866,19 @@ def cumulative_mass_rank_map(A: np.ndarray) -> np.ndarray:
         NaNs in the input remain NaN in the output.
     """
     flat = A.ravel()
-    
+
     # Mask valid (non-NaN) values
     valid_mask = ~np.isnan(flat)
     mass = np.zeros_like(flat, dtype=float)
     mass[valid_mask] = flat[valid_mask] / np.nansum(flat)
-    
+
     # Sort valid values in descending order
     order = np.argsort(mass[valid_mask])[::-1]
     cdf_sorted = 1 - np.cumsum(mass[valid_mask][order])
-    
+
     # Scatter back to original positions
     cdf = np.full_like(flat, np.nan, dtype=float)
     cdf[valid_mask] = 0  # placeholder
     cdf[valid_mask] = cdf_sorted[np.argsort(order)]
-    
-    return cdf.reshape(A.shape)
 
+    return cdf.reshape(A.shape)

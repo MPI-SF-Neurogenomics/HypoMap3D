@@ -9,9 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Projection and Label Transfer &#8212; HypoMap3D</title>
-  
-  
-  
+
+
+
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
@@ -25,7 +25,7 @@
 
     </style>
   </noscript>
-  
+
   <!-- Loaded before other Sphinx assets -->
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
-  
+
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -50,28 +50,28 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'pages/tutorials/ProjectAndTransferLabels';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Spatial smoothing" href="SpatialSmoothing.html" />
+    <link rel="next" title="Advanced Tutorials" href="advanced/index.html" />
     <link rel="prev" title="Region-based Cell Type Selection" href="RegionCellTypeSelection.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
   </head>
-  
-  
+
+
   <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-  
-  
+
+
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
-  
+
   <div id="pst-scroll-pixel-helper"></div>
-  
+
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
-  
+
   <dialog id="pst-search-dialog">
-    
+
 <form class="bd-search d-flex align-items-center"
       action="../../search.html"
       method="get">
@@ -93,50 +93,50 @@
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
 
-  
+
     <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
     </header>
-  
+
 
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
-      
-      
-      
+
+
+
       <dialog id="pst-primary-sidebar-modal"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
-        
 
-  
+
+
   <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-    
-    
+
+
+
+
   </div>
-  
+
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 
-  
-    
-  
+
+
+
 
 <a class="navbar-brand logo" href="../../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
+
+
+
+
+
+
+
+
+
+
     <img src="../../_static/hm3d-logo.png" class="logo__image only-light" alt="HypoMap3D - Home"/>
     <img src="../../_static/hm3d-logo.png" class="logo__image only-dark pst-js-only" alt="HypoMap3D - Home"/>
-  
-  
+
+
 </a></div>
         <div class="sidebar-primary-item">
 
@@ -151,6 +151,7 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../datasets/singlecell.html">Single Cell Objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../datasets/spatial.html">Spatial Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/taxonomy.html">Taxonomy Objects</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
 <ul class="current nav bd-sidenav">
@@ -163,17 +164,18 @@
 
 
 
-<li class="toctree-l1"><a class="reference internal" href="SpatialSmoothing.html">Spatial smoothing</a></li>
-
-
-
+<li class="toctree-l1 has-children"><a class="reference internal" href="advanced/index.html">Advanced Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced/SpatialSmoothing.html">Spatial smoothing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/RegionAggAndSpatialFlags.html">CCF region aggregation and spatial warning flags</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
 </nav></div>
     </div>
-  
-  
+
+
   <div class="sidebar-primary-items__end sidebar-primary__section">
       <div class="sidebar-primary-item">
 <div id="ethical-ad-placement"
@@ -186,30 +188,30 @@
 
 
       </div>
-      
+
       <main id="main-content" class="bd-main" role="main">
-        
-        
+
+
 
 <div class="sbt-scroll-pixel-helper"></div>
 
           <div class="bd-content">
             <div class="bd-article-container">
-              
+
               <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
-  
+
     <div class="header-article-items__start">
-      
+
         <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
 </button></div>
-      
+
     </div>
-  
-  
+
+
     <div class="header-article-items__end">
-      
+
         <div class="header-article-item">
 
 <div class="article-header-buttons">
@@ -223,15 +225,15 @@
     <i class="fas fa-download"></i>
   </button>
   <ul class="dropdown-menu">
-      
-      
-      
+
+
+
       <li><a href="../../_sources/pages/tutorials/ProjectAndTransferLabels.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
 >
-  
+
 
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
@@ -239,17 +241,17 @@
 <span class="btn__text-container">.ipynb</span>
 </a>
 </li>
-      
-      
-      
-      
+
+
+
+
       <li>
 <button onclick="window.print()"
   class="btn btn-sm btn-download-pdf-button dropdown-item"
   title="Print to PDF"
   data-bs-placement="left" data-bs-toggle="tooltip"
 >
-  
+
 
 <span class="btn__icon-container">
   <i class="fas fa-file-pdf"></i>
@@ -257,7 +259,7 @@
 <span class="btn__text-container">.pdf</span>
 </button>
 </li>
-      
+
   </ul>
 </div>
 
@@ -269,7 +271,7 @@
   title="Fullscreen mode"
   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
-  
+
 
 <span class="btn__icon-container">
   <i class="fas fa-expand"></i>
@@ -293,20 +295,20 @@
     <span class="fa-solid fa-list"></span>
 </button>
 </div></div>
-      
+
     </div>
-  
+
 </div>
 </div>
-              
-              
+
+
 
 <div id="jb-print-docs-body" class="onlyprint">
     <h1>Projection and Label Transfer</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
-            
+
             <div>
                 <h2> Contents </h2>
             </div>
@@ -321,6 +323,7 @@
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#scArches-projection">scArches projection</a><ul class="nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Raw-counts-sanity-check">Raw counts sanity check</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Setting-batch-column">Setting batch column</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Removing-low-quality-cells">Removing low quality cells</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Copy-query-data-with-all-genes">Copy query data with all genes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Query-preparation-according-to-model">Query preparation according to model</a></li>
 </ul>
@@ -339,11 +342,11 @@
     </div>
 </div>
 
-              
-                
+
+
 <div id="searchbox"></div>
                 <article class="bd-article">
-                  
+
   <section id="Projection-and-Label-Transfer">
 <h1>Projection and Label Transfer<a class="headerlink" href="#Projection-and-Label-Transfer" title="Link to this heading">#</a></h1>
 <p>This tutorial demonstrates how to project other datasets into HypoMap3D’s single cell embedding space for label transfer.</p>
@@ -356,40 +359,40 @@
 <p>Requirements:</p>
 <ol class="arabic simple">
 <li><p>HypoMap3D’s code base and environment. For this, follow the instructions at the root of the Git repo.</p></li>
-<li><p>HypoMap3D single cell atlas. Download it and place it into DATADIR/9_objects/singlecell/hypomap3d_singlecell_all.h5ad</p></li>
+<li><p>HypoMap3D projection reference adata. Download it and place it into DATADIR/9_objects/singlecell/projection_anndatas/hypomap3d_sc_control_projection_only.h5ad</p></li>
 <li><p>HypoMap3D’s scVI model. Download it and place it into DATADIR/9_objects/scvi/model.pt</p></li>
-<li><p>Your own query dataset.</p></li>
+<li><p>Your own query dataset. If you do not bring your own dataset the notebook will run on a test case derived from the HypoMap3D single-cell atlas. For this, you would have to download the object and place it into DATADIR/9_objects/singlecell/hypomap3d_singlecell_all.h5ad.</p></li>
 </ol>
 <p>Of course, the above paths can be modified but then they have to be changed accordingly below as well.</p>
 <section id="Imports">
 <h2>Imports<a class="headerlink" href="#Imports" title="Link to this heading">#</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>from pathlib import Path
-import warnings
-import os
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-import numpy as np
-import pandas as pd
-import scanpy as sc
-import anndata as ad
-import scvi
-import matplotlib.pyplot as plt
-from dotenv import dotenv_values
-import torch
-import scipy.sparse as sp
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scvi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">dotenv_values</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
 
-from hm3d_utils.manifold import project_to_ref_umap
-from hm3d_utils.clustering import project_query
+<span class="kn">from</span><span class="w"> </span><span class="nn">hm3d_utils.manifold</span><span class="w"> </span><span class="kn">import</span> <span class="n">project_to_ref_umap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">hm3d_utils.clustering</span><span class="w"> </span><span class="kn">import</span> <span class="n">project_query</span>
 
-warnings.simplefilter(action=&#39;ignore&#39;, category=FutureWarning)
-sc.set_figure_params(frameon=False, figsize=(10,10), transparent=True)
-scvi.settings.seed = 12345
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">scvi</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">12345</span>
 
-use_gpu = torch.cuda.is_available()
-print(f&quot;GPU is available: {use_gpu}&quot;)
+<span class="n">use_gpu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GPU is available: </span><span class="si">{</span><span class="n">use_gpu</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -414,27 +417,27 @@ GPU is available: True
 <h2>File paths<a class="headerlink" href="#File-paths" title="Link to this heading">#</a></h2>
 <p>The following ones are automatic and only require a change if you downloaded the files somewhere else.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG = dotenv_values(&quot;config.env&quot;) # file at the root of your cloned repo
-DATADIR = Path(CONFIG[&#39;DATADIR&#39;]) # root of your DATADIR
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CONFIG</span> <span class="o">=</span> <span class="n">dotenv_values</span><span class="p">(</span><span class="s2">&quot;config.env&quot;</span><span class="p">)</span> <span class="c1"># file at the root of your cloned repo</span>
+<span class="n">DATADIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">CONFIG</span><span class="p">[</span><span class="s1">&#39;DATADIR&#39;</span><span class="p">])</span> <span class="c1"># root of your DATADIR</span>
 
-# Path to director of scVI model
-SCVI_DIR  = DATADIR / &quot;9_objects&quot; / &quot;scvi&quot;
+<span class="c1"># Path to director of scVI model</span>
+<span class="n">SCVI_DIR</span>  <span class="o">=</span> <span class="n">DATADIR</span> <span class="o">/</span> <span class="s2">&quot;9_objects&quot;</span> <span class="o">/</span> <span class="s2">&quot;scvi&quot;</span>
 
-# Path to reference object
-REF_FP = DATADIR / &quot;9_objects&quot; / &quot;singlecell&quot; / &quot;hypomap3d_singlecell_all.h5ad&quot;
+<span class="c1"># Path to reference object</span>
+<span class="n">REF_FP</span> <span class="o">=</span> <span class="n">DATADIR</span> <span class="o">/</span> <span class="s2">&quot;9_objects&quot;</span> <span class="o">/</span> <span class="s2">&quot;singlecell&quot;</span> <span class="o">/</span> <span class="s2">&quot;projection_anndatas&quot;</span> <span class="o">/</span>  <span class="s2">&quot;hypomap3d_sc_control_projection_only.h5ad&quot;</span>
 </pre></div>
 </div>
 </div>
 <p>The following cell contains the path to your data, so change the path accordingly, and remove the “#”.</p>
 <p>In this notebook, we will use the non-control cells from the Gutgesell dataset for demonstration if QUERY_FP remains undefined.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span># QUERY_FP = Path(&quot;path/to/your/data.h5ad&quot;) #change and uncomment me if you want to use your own data
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># QUERY_FP = Path(&quot;path/to/your/data.h5ad&quot;) #change and uncomment me if you want to use your own data</span>
 </pre></div>
 </div>
 </div>
@@ -444,24 +447,23 @@ REF_FP = DATADIR / &quot;9_objects&quot; / &quot;singlecell&quot; / &quot;hypoma
 <h1>Data loading<a class="headerlink" href="#Data-loading" title="Link to this heading">#</a></h1>
 <p>Let’s load the reference (HypoMap3D)</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>ref_adata = sc.read_h5ad(REF_FP, backed=&quot;r&quot;)
-ref_adata = ref_adata[ref_adata.obs.IsControl].to_memory() # projection and label transfer are performed on control cells only
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ref_adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">REF_FP</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>ref_adata
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ref_adata</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -470,49 +472,51 @@ AnnData object with n_obs × n_vars = 896959 × 56939
     obs: &#39;CellID&#39;, &#39;Dataset&#39;, &#39;Sample&#39;, &#39;total_counts&#39;, &#39;n_genes&#39;, &#39;pct_mito&#39;, &#39;Author&#39;, &#39;Source&#39;, &#39;Data_source_link&#39;, &#39;GEO&#39;, &#39;Publication_Link&#39;, &#39;Suspension&#39;, &#39;Technology&#39;, &#39;Author_Sex_harmonized&#39;, &#39;sex_per_sample_inferred&#39;, &#39;Strain&#39;, &#39;Diet&#39;, &#39;Treatment&#39;, &#39;Age&#39;, &#39;Mean_age_in_weeks&#39;, &#39;IsControl&#39;, &#39;L1_ID&#39;, &#39;L2_ID&#39;, &#39;L3_ID&#39;, &#39;L4_ID&#39;, &#39;L5_ID&#39;, &#39;L1_descr&#39;, &#39;L2_descr&#39;, &#39;L3_descr&#39;, &#39;L4_descr&#39;, &#39;L5_descr&#39;, &#39;L1_abc_like&#39;, &#39;L2_abc_like&#39;, &#39;L3_abc_like&#39;, &#39;L4_abc_like&#39;, &#39;L5_abc_like&#39;
     var: &#39;gene_ids&#39;, &#39;IsMouseTF&#39;, &#39;IsHumanTFOrtholog&#39;, &#39;IsSourceGene&#39;, &#39;IsTargetGene&#39;, &#39;IsHvgExcludedGene&#39;, &#39;IsAnnotationExcludedGene&#39;, &#39;IsPriorityGene&#39;, &#39;IsTopGene&#39;, &#39;IsHvg&#39;
     obsm: &#39;X_embed&#39;, &#39;X_spatial_umap&#39;, &#39;X_umap&#39;
+    obsp: &#39;50nn_adjacencies&#39;
 </pre></div></div>
 </div>
 <p>Let’s load the query adata.</p>
 <p>If you provided the path to your object above it will be used.</p>
 <p>Otherwise, a subset of HypoMap3D’s non-control data will be used, deleting some genes in the process as to simulate a dataset that might not cover all of HypoMap3D’s feature space.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>if &quot;QUERY_FP&quot; in globals():
-    query_adata = sc.read_h5ad(QUERY_FP) #load user dataset
-else:
-    import random
-    query_adata = sc.read_h5ad(REF_FP, backed=&quot;r&quot;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s2">&quot;QUERY_FP&quot;</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
+    <span class="n">query_adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">QUERY_FP</span><span class="p">)</span> <span class="c1">#load user dataset</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+    <span class="n">DUMMY_QUERY_FP</span> <span class="o">=</span> <span class="n">DATADIR</span> <span class="o">/</span> <span class="s2">&quot;9_objects&quot;</span> <span class="o">/</span> <span class="s2">&quot;singlecell&quot;</span> <span class="o">/</span> <span class="s2">&quot;hypomap3d_singlecell_all.h5ad&quot;</span>
+    <span class="n">query_adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">DUMMY_QUERY_FP</span><span class="p">,</span> <span class="n">backed</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
 
-    # Randomly remove 10% of HypoMap3D&#39;s HVGs
-    hvgs = ref_adata.var.loc[ref_adata.var.IsHvg].index.to_list()
-    genes_to_remove = set(random.sample(hvgs, k=len(hvgs) // 10))
+    <span class="c1"># Randomly remove 10% of HypoMap3D&#39;s HVGs</span>
+    <span class="n">hvgs</span> <span class="o">=</span> <span class="n">ref_adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">ref_adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">IsHvg</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+    <span class="n">genes_to_remove</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">hvgs</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">hvgs</span><span class="p">)</span> <span class="o">//</span> <span class="mi">10</span><span class="p">))</span>
 
-    gene_subset = [g for g in query_adata.var_names if g not in genes_to_remove]
+    <span class="n">gene_subset</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">query_adata</span><span class="o">.</span><span class="n">var_names</span> <span class="k">if</span> <span class="n">g</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">genes_to_remove</span><span class="p">]</span>
 
-    # Load non-control cells of Gutgesell dataset
-    query_adata = query_adata[
-        (query_adata.obs.Dataset == &quot;SC2-25&quot;) &amp; (~query_adata.obs.IsControl),
-        gene_subset
-    ].to_memory()
+    <span class="c1"># Load non-control cells of Gutgesell dataset</span>
+    <span class="n">query_adata</span> <span class="o">=</span> <span class="n">query_adata</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">query_adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">Dataset</span> <span class="o">==</span> <span class="s2">&quot;SC2-25&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">query_adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">IsControl</span><span class="p">),</span>
+        <span class="n">gene_subset</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">to_memory</span><span class="p">()</span>
 
-    # Remove information to get barebone query
-    query_adata.obs = query_adata.obs.loc[:, [&quot;CellID&quot;, &quot;Sample&quot;]]
-    del query_adata.obsm
+    <span class="c1"># Remove information to get barebone query</span>
+    <span class="n">query_adata</span><span class="o">.</span><span class="n">obs</span> <span class="o">=</span> <span class="n">query_adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;CellID&quot;</span><span class="p">,</span> <span class="s2">&quot;Sample&quot;</span><span class="p">]]</span>
+    <span class="k">del</span> <span class="n">query_adata</span><span class="o">.</span><span class="n">obsm</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_adata
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_adata</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -530,16 +534,16 @@ AnnData object with n_obs × n_vars = 121626 × 56489
 <p>scArches operates on raw counts, so you need to ensure that query_adata.X contains raw counts!</p>
 <p>Here, we just print the frequency distribution of some gene count values for simplicity.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>value_counts = pd.Series(query_adata[:100,:100].X.toarray().flatten()).value_counts().sort_index()
-value_counts.head(10)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">value_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">query_adata</span><span class="p">[:</span><span class="mi">100</span><span class="p">,:</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+<span class="n">value_counts</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -558,15 +562,15 @@ Name: count, dtype: int64
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>value_counts.tail(10)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">value_counts</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -590,15 +594,15 @@ Name: count, dtype: int64
 <h2>Setting batch column<a class="headerlink" href="#Setting-batch-column" title="Link to this heading">#</a></h2>
 <p>Next, we must set the batch column for scArches. This will be the .obs column specifying your sample for instance</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_adata.obs.head(2)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -640,10 +644,10 @@ Name: count, dtype: int64
 </div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>BATCH_COL = &quot;Sample&quot; # change me if your data uses a different name
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">BATCH_COL</span> <span class="o">=</span> <span class="s2">&quot;Sample&quot;</span> <span class="c1"># change me if your data uses a different name</span>
 </pre></div>
 </div>
 </div>
@@ -651,10 +655,58 @@ Name: count, dtype: int64
 <p>Hence, we use your provided BATCH_COL, replacing its column name with Sample in the query adata.</p>
 <p>DO not worry, the object that is being saved later is the object with all genes. Hence, your previous column name will be maintained.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_adata.obs = query_adata.obs.rename(columns={BATCH_COL: &quot;Sample&quot;})
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_adata</span><span class="o">.</span><span class="n">obs</span> <span class="o">=</span> <span class="n">query_adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">BATCH_COL</span><span class="p">:</span> <span class="s2">&quot;Sample&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Removing-low-quality-cells">
+<h2>Removing low quality cells<a class="headerlink" href="#Removing-low-quality-cells" title="Link to this heading">#</a></h2>
+<p>The cell type label transfer hinges on having sufficient gene expression counts in HypoMap3D’s highly variable genes (HVGs).</p>
+<p>Hence, we remove cells with less than 100 total counts in HypoMap3D’s HVGs.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hvgs</span> <span class="o">=</span> <span class="n">ref_adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">ref_adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;IsHvg&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span>
+
+<span class="n">hvgs_available</span> <span class="o">=</span> <span class="n">query_adata</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">hvgs</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hvgs_available</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No shared HVGs between reference and query.&quot;</span><span class="p">)</span>
+
+<span class="n">hvg_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+    <span class="n">query_adata</span><span class="p">[:,</span> <span class="n">hvgs_available</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+<span class="n">keep_mask</span> <span class="o">=</span> <span class="n">hvg_counts</span> <span class="o">&gt;</span> <span class="mi">100</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">keep_mask</span><span class="p">)</span><span class="si">}</span><span class="s2"> cells will be removed&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0 cells will be removed
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_adata</span> <span class="o">=</span> <span class="n">query_adata</span><span class="p">[</span><span class="n">keep_mask</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -663,23 +715,23 @@ Name: count, dtype: int64
 <h2>Copy query data with all genes<a class="headerlink" href="#Copy-query-data-with-all-genes" title="Link to this heading">#</a></h2>
 <p>Non-HVGs are lost during the projection, so let’s keep a version that has all genes for later.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes = query_adata.copy()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_all_genes</span> <span class="o">=</span> <span class="n">query_adata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_adata
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_adata</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -693,11 +745,11 @@ AnnData object with n_obs × n_vars = 121626 × 56489
 <section id="Query-preparation-according-to-model">
 <h2>Query preparation according to model<a class="headerlink" href="#Query-preparation-according-to-model" title="Link to this heading">#</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span># prepare query adata
-query_adata = scvi.model.SCVI.prepare_query_anndata(query_adata, str(SCVI_DIR), inplace = False)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># prepare query adata</span>
+<span class="n">query_adata</span> <span class="o">=</span> <span class="n">scvi</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">SCVI</span><span class="o">.</span><span class="n">prepare_query_anndata</span><span class="p">(</span><span class="n">query_adata</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">SCVI_DIR</span><span class="p">),</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -706,22 +758,22 @@ query_adata = scvi.model.SCVI.prepare_query_anndata(query_adata, str(SCVI_DIR), 
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-<span class="ansi-blue-fg">INFO    </span> File <span class="ansi-magenta-fg">/REDACTED-path/HypoMap3D-data/v0.9/9_objects/scvi/</span><span class="ansi-magenta-intense-fg">model.pt</span> already downloaded
+<span class="ansi-blue-fg">INFO    </span> File <span class="ansi-magenta-fg">/REDACTED-path/HypoMap3D-data/v1.0/9_objects/scvi/</span><span class="ansi-magenta-intense-fg">model.pt</span> already downloaded
 <span class="ansi-blue-fg">INFO    </span> Found <span class="ansi-cyan-intense-fg ansi-bold">90.0</span>% reference vars in query data.
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span># create the new query model instance.
-vae_query = scvi.model.SCVI.load_query_data(
-    query_adata,
-    str(SCVI_DIR)
-)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the new query model instance.</span>
+<span class="n">vae_query</span> <span class="o">=</span> <span class="n">scvi</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">SCVI</span><span class="o">.</span><span class="n">load_query_data</span><span class="p">(</span>
+    <span class="n">query_adata</span><span class="p">,</span>
+    <span class="nb">str</span><span class="p">(</span><span class="n">SCVI_DIR</span><span class="p">)</span>
+<span class="p">)</span>
 
-# train
-vae_query.train(max_epochs=20, plan_kwargs=dict(weight_decay=0.0))
+<span class="c1"># train</span>
+<span class="n">vae_query</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">max_epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">plan_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">weight_decay</span><span class="o">=</span><span class="mf">0.0</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -730,7 +782,7 @@ vae_query.train(max_epochs=20, plan_kwargs=dict(weight_decay=0.0))
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-<span class="ansi-blue-fg">INFO    </span> File <span class="ansi-magenta-fg">/REDACTED-path/HypoMap3D-data/v0.9/9_objects/scvi/</span><span class="ansi-magenta-intense-fg">model.pt</span> already downloaded
+<span class="ansi-blue-fg">INFO    </span> File <span class="ansi-magenta-fg">/REDACTED-path/HypoMap3D-data/v1.0/9_objects/scvi/</span><span class="ansi-magenta-intense-fg">model.pt</span> already downloaded
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -743,15 +795,15 @@ TPU available: False, using: 0 TPU cores
 💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
 You are using a CUDA device (&#39;NVIDIA A40&#39;) that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision(&#39;medium&#39; | &#39;high&#39;)` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
 LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
-/beegfs/home/mfeldmann/repos/HypoMap3D/.venv/lib/python3.11/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The &#39;train_dataloader&#39; does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=63` in the `DataLoader` to improve performance.
-/beegfs/home/mfeldmann/repos/HypoMap3D/.venv/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py:534: Found 60 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+/REDACTED-path/HypoMap3D/.venv/lib/python3.11/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The &#39;train_dataloader&#39; does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=63` in the `DataLoader` to improve performance.
+/REDACTED-path/HypoMap3D/.venv/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py:534: Found 60 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "901bf4647c7243c5a1e546d0c8cbe00a", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "2012b2d647ab465ba5b3a0683ee5f185", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
@@ -762,11 +814,11 @@ LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span># get latent representation into query adata that has all genes
-query_all_genes.obsm[&quot;X_embed&quot;] = vae_query.get_latent_representation()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get latent representation into query adata that has all genes</span>
+<span class="n">query_all_genes</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_embed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vae_query</span><span class="o">.</span><span class="n">get_latent_representation</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -777,43 +829,34 @@ query_all_genes.obsm[&quot;X_embed&quot;] = vae_query.get_latent_representation(
 <section id="Step-1:-Let's-get-membership-probabilities-for-L5-cell-types">
 <h2>Step 1: Let’s get membership probabilities for L5 cell types<a class="headerlink" href="#Step-1:-Let's-get-membership-probabilities-for-L5-cell-types" title="Link to this heading">#</a></h2>
 <p>This is performed by the project_query function in a hierarchy-aware manner where the most probable path along the clustering tree is chosen.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PATH_KEYS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;L1_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;L2_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;L3_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;L4_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;L5_ID&#39;</span><span class="p">]</span>
+
+<span class="n">pathmat</span><span class="p">,</span> <span class="n">P_path</span> <span class="o">=</span> <span class="n">project_query</span><span class="p">(</span>
+    <span class="n">ref_adata</span><span class="p">,</span>
+    <span class="n">query_all_genes</span><span class="p">,</span>
+    <span class="n">path_keys</span><span class="o">=</span><span class="n">PATH_KEYS</span><span class="p">,</span>
+    <span class="n">k</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">use_rep</span><span class="o">=</span><span class="s1">&#39;X_embed&#39;</span><span class="p">,</span>
+    <span class="n">use_gpu</span><span class="o">=</span><span class="n">use_gpu</span>
+<span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<p>The output of the project query function is a matrix of shape (n_cells, n_unique_L5_labels) containing the cell type membership probabilities for all L5 cell types.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>pathmat, P_path = project_query(
-    ref_adata,
-    query_all_genes,
-    path_keys=[f&#39;L{i}_ID&#39; for i in range(1,6)],
-    k=50,
-    use_rep=&#39;X_embed&#39;,
-    use_gpu=use_gpu
-)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">P_path</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-2026-08-08 10:31:51 | [WARNING]
-            Precomputed reference neighbor adjacencies, `.obsp[&#39;50nn_adjacencies&#39;]`, not found.
-            Computing reference 50 neighbors and adding to `.obsp[&#39;50nn_adjacencies&#39;]`.
-
-</pre></div></div>
-</div>
-<p>The output of the project query function is a matrix of shape (n_cells, n_unique_L5_labels) containing the cell type membership probabilities for all L5 cell types.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
-</pre></div>
-</div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>P_path
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -827,7 +870,7 @@ query_all_genes.obsm[&quot;X_embed&quot;] = vae_query.get_latent_representation(
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>pathmat
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pathmat</span>
 </pre></div>
 </div>
 </div>
@@ -847,173 +890,135 @@ array([[&#39;Gb1-2&#39;, &#39;Gb2-39&#39;, &#39;Gb3-124&#39;, &#39;Gb4-319&#39;,
       shape=(932, 5), dtype=object)
 </pre></div></div>
 </div>
-<p>Pathmat is required during smoothing, so let us keep it in the adata.</p>
+<p>Pathmat will be used used later, so let us keep it in the adata.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes.uns[&quot;pathmat&quot;] = pathmat
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_all_genes</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s1">&#39;pathmat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pathmat</span>
 </pre></div>
 </div>
 </div>
 </section>
 <section id="Step-2:-Let's-get-hard-cell-type-assignments-for-all-levels">
 <h2>Step 2: Let’s get hard cell type assignments for all levels<a class="headerlink" href="#Step-2:-Let's-get-hard-cell-type-assignments-for-all-levels" title="Link to this heading">#</a></h2>
-<p>To get a hard cell type assignment, we will use the cell type with the highest probabilities.</p>
-<p>However, before doing so, let us prepare some cell type label mappers as to map our abc-like as well as our short from descriptive labels into obs next to the level-specific IDs.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
-</pre></div>
-</div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>def build_id_mapping(n_df, id_pattern, target_pattern, levels=range(1, 6),):
-    mapping = {}
-
-    # --- 1. from wide dataframe ---
-    for i in levels:
-        id_col = id_pattern.format(i=i)
-        target_col = target_pattern.format(i=i)
-
-        if id_col in n_df.columns and target_col in n_df.columns:
-            mapping.update(
-                n_df[[id_col, target_col]]
-                .dropna()
-                .drop_duplicates()
-                .set_index(id_col)[target_col]
-                .to_dict()
-            )
-
-    return mapping
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
-</pre></div>
-</div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>abclike_mapper = build_id_mapping(ref_adata.obs,
-    id_pattern=&quot;L{i}_ID&quot;,
-    target_pattern=&quot;L{i}_abc_like&quot;)
-
-descr_mapper = build_id_mapping(ref_adata.obs,
-    id_pattern=&quot;L{i}_ID&quot;,
-    target_pattern=&quot;L{i}_descr&quot;)
-<br/></pre></div>
-</div>
-</div>
-<p>Now, as to get cell type labels and label transfer confidences for all levels above L5, we add up cell type membership probabilities of all leaf cell types in a given branch to create the membership probabilities of the above levels.</p>
+<p>Furthermore, we add level-specific path probabilities for convenience.</p>
+<p>Here, we add up cell type membership probabilities of all leaf cell types in a given branch to create the membership probabilities of the above levels.</p>
 <p>So for a given L4 cell type, we sum up the probabilities of all its L5 subclusters.</p>
 <p>The same operation is performed up until L1.</p>
-<p>We also keep the path probabilities for all levels separately and add them to the query adata.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><br/><span></span>def build_map_matrix(leaves_to_level):
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get index of best path for each query cell</span>
+<span class="n">best_path_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">P_path</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
-    leaves_to_level = np.asarray(leaves_to_level)
-    level_names, inv = np.unique(leaves_to_level, return_inverse=True)
-    rows = inv
-    cols = np.arange(len(leaves_to_level))
-    data = np.ones(len(leaves_to_level), dtype=np.uint8)
-    M = sp.coo_matrix(
-        (data, (rows, cols)),
-        shape=(len(level_names), len(leaves_to_level)),
-    ).tocsr()
+<span class="c1"># Iterate over each hierarchical level and assign hard and soft labels to query cells</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">level_id_key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">PATH_KEYS</span><span class="p">):</span>
 
-    return M, level_names
+    <span class="c1"># Derive level key from level ID key</span>
+    <span class="n">level_key</span> <span class="o">=</span> <span class="n">level_id_key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 
-def propagate_confidences(adata, pathmat, P_path):
+    <span class="c1"># ------------------------ Get Hard Label Assignments ------------------------ #</span>
 
-    # Build index maps
+    <span class="c1"># Get all possible labels that can be assigned from the corresponding reference level</span>
+    <span class="n">level_categories</span> <span class="o">=</span> <span class="n">ref_adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">level_id_key</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">query_all_genes</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="n">level_id_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">level_categories</span> <span class="c1"># store in .uns for later pathmat usage</span>
 
-    level_maps = [] # 4 arrays indicating the cluster label of the path at Level i
-    level_labels = {} # 4 keys, one for each level, mapping to arrays of unique cluster labels
+    <span class="c1"># We assign the label for each query cell at this level based on the winning path</span>
+    <span class="n">query_all_genes</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">level_id_key</span><span class="si">}</span><span class="s2">_assigned&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+        <span class="n">pathmat</span><span class="p">[:,</span> <span class="n">i</span><span class="p">][</span><span class="n">best_path_idx</span><span class="p">],</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">query_all_genes</span><span class="o">.</span><span class="n">obs_names</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">CategoricalDtype</span><span class="p">(</span><span class="n">categories</span><span class="o">=</span><span class="n">level_categories</span><span class="p">))</span>
 
-    for lvl in range(4):
-        labels = pathmat[:, lvl]
-        level_labels[lvl] = np.unique(labels)
-        level_maps.append(labels)
+    <span class="c1"># ------------------------ Get Soft Label Confidences ------------------------ #</span>
 
-    # sum up
+    <span class="n">cell_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">query_all_genes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-    P_levels = {}
+    <span class="c1"># Construct Adjacency matrix between current level and lowest level</span>
+    <span class="n">category_to_idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">cat</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cat</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">level_categories</span><span class="p">)}</span>
+    <span class="n">inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">category_to_idx</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pathmat</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]])</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">(</span>
+        <span class="n">inv</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">level_categories</span><span class="p">)),</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span>
+    <span class="p">)</span>
 
-    for lvl in range(4):
-        M, ids = build_map_matrix(level_maps[lvl])
+    <span class="n">P_level</span> <span class="o">=</span> <span class="n">P_path</span> <span class="o">@</span> <span class="n">A</span> <span class="c1"># convert (n_cells, nPaths) to (n_cells, nLevelClusters)</span>
+    <span class="n">query_all_genes</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;P_</span><span class="si">{</span><span class="n">level_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">P_level</span> <span class="c1"># save to .obsm for later usage (csr matrix)</span>
 
-        # (cells × leaves) @ (leaves × level_nodes)^T
-        # Multiplying the cell × L5 probability matrix with M.T sums the
-        # probabilities of all leaves belonging to the same parent cluster.
-        P_lvl = P_path @ M.T
+    <span class="c1"># Get probability of hard assigned label</span>
+    <span class="n">assigned_label_idx</span> <span class="o">=</span> <span class="n">query_all_genes</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">level_id_key</span><span class="si">}</span><span class="s2">_assigned&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">query_all_genes</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">level_key</span><span class="si">}</span><span class="s1">_assigned_p&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+        <span class="n">P_level</span><span class="p">[</span><span class="n">cell_indices</span><span class="p">,</span> <span class="n">assigned_label_idx</span><span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
-        P_levels[f&quot;L{lvl+1}&quot;] = P_lvl
-        adata.uns[f&quot;L{lvl+1}_ID&quot;] = ids
-        adata.uns[f&quot;L{lvl+1}_descr&quot;] = [descr_mapper[i] for i in ids]
-        adata.uns[f&quot;L{lvl+1}_abc_like&quot;] = [abclike_mapper[i] for i in ids]
-        adata.obsm[f&quot;P_L{lvl+1}&quot;] = P_lvl
+    <span class="c1"># -------------------------- Descriptive Annotations ------------------------- #</span>
 
-    ids = pathmat[:, 4]
-    adata.uns[f&quot;L5_ID&quot;] = ids
-    adata.uns[f&quot;L5_descr&quot;] = [descr_mapper[i] for i in ids]
-    adata.uns[f&quot;L5_abc_like&quot;] = [abclike_mapper[i] for i in ids]
-    adata.obsm[f&quot;P_L5&quot;] = P_path
+    <span class="c1"># Build map from ID to descriptive annotation</span>
+    <span class="n">categories_decr</span> <span class="o">=</span> <span class="n">ref_adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">level_key</span><span class="si">}</span><span class="s2">_descr&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">map_descr</span> <span class="o">=</span> <span class="p">{</span><span class="n">annotation</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">annotation</span> <span class="k">for</span> <span class="n">annotation</span> <span class="ow">in</span> <span class="n">categories_decr</span><span class="p">}</span>
 
-    for lvl in range(1, 6):
-        P = adata.obsm[f&quot;P_L{lvl}&quot;]
+    <span class="c1"># Map cell annotations</span>
+    <span class="n">query_all_genes</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">level_key</span><span class="si">}</span><span class="s1">_descr_assigned&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">map_descr</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">query_all_genes</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">level_id_key</span><span class="si">}</span><span class="s2">_assigned&quot;</span><span class="p">]</span>
+    <span class="p">]</span>
 
-        max_idx = np.asarray(P.argmax(axis=1)).ravel()
-        max_prob = np.asarray(P.max(axis=1).toarray()).ravel()
+    <span class="c1"># Map category lookup</span>
+    <span class="n">query_all_genes</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">level_key</span><span class="si">}</span><span class="s2">_descr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">map_descr</span><span class="p">[</span><span class="n">id_</span><span class="p">]</span> <span class="k">for</span> <span class="n">id_</span> <span class="ow">in</span> <span class="n">query_all_genes</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="n">level_id_key</span><span class="p">]</span>
+    <span class="p">]</span>
 
-        descr = np.asarray(adata.uns[f&quot;L{lvl}_descr&quot;])
-        abc = np.asarray(adata.uns[f&quot;L{lvl}_abc_like&quot;])
+    <span class="c1"># ------------------------------ ABC Annotations ----------------------------- #</span>
 
-        adata.obs[f&quot;L{lvl}_descr_max_p&quot;] = descr[max_idx]
-        adata.obs[f&quot;L{lvl}_abc_like_max_p&quot;] = abc[max_idx]
-        adata.obs[f&quot;L{lvl}_max_p&quot;] = max_prob
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
-</pre></div>
-</div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>propagate_confidences(query_all_genes, pathmat, P_path)
-</pre></div>
+    <span class="c1"># Build map from ID to ABC-like annotation</span>
+    <span class="n">categories_abc</span> <span class="o">=</span> <span class="n">ref_adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">level_key</span><span class="si">}</span><span class="s2">_abc_like&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">map_abc</span> <span class="o">=</span> <span class="p">{</span><span class="n">annotation</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">annotation</span> <span class="k">for</span> <span class="n">annotation</span> <span class="ow">in</span> <span class="n">categories_abc</span><span class="p">}</span>
+
+    <span class="c1"># Map cell ABC-like annotations</span>
+    <span class="n">query_all_genes</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">level_key</span><span class="si">}</span><span class="s1">_abc_like_assigned&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">map_abc</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">query_all_genes</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">level_id_key</span><span class="si">}</span><span class="s2">_assigned&quot;</span><span class="p">]</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Map ABC-like annotations for the category lookup in .uns</span>
+    <span class="n">query_all_genes</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">level_key</span><span class="si">}</span><span class="s2">_abc_like&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">map_abc</span><span class="p">[</span><span class="n">id_</span><span class="p">]</span> <span class="k">for</span> <span class="n">id_</span> <span class="ow">in</span> <span class="n">query_all_genes</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="n">level_id_key</span><span class="p">]</span>
+    <span class="p">]</span>
+<br/><br/></pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_all_genes</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 AnnData object with n_obs × n_vars = 121626 × 56489
-    obs: &#39;CellID&#39;, &#39;Sample&#39;, &#39;L1_descr_max_p&#39;, &#39;L1_abc_like_max_p&#39;, &#39;L1_max_p&#39;, &#39;L2_descr_max_p&#39;, &#39;L2_abc_like_max_p&#39;, &#39;L2_max_p&#39;, &#39;L3_descr_max_p&#39;, &#39;L3_abc_like_max_p&#39;, &#39;L3_max_p&#39;, &#39;L4_descr_max_p&#39;, &#39;L4_abc_like_max_p&#39;, &#39;L4_max_p&#39;, &#39;L5_descr_max_p&#39;, &#39;L5_abc_like_max_p&#39;, &#39;L5_max_p&#39;
+    obs: &#39;CellID&#39;, &#39;Sample&#39;, &#39;L1_ID_assigned&#39;, &#39;L1_assigned_p&#39;, &#39;L1_descr_assigned&#39;, &#39;L1_abc_like_assigned&#39;, &#39;L2_ID_assigned&#39;, &#39;L2_assigned_p&#39;, &#39;L2_descr_assigned&#39;, &#39;L2_abc_like_assigned&#39;, &#39;L3_ID_assigned&#39;, &#39;L3_assigned_p&#39;, &#39;L3_descr_assigned&#39;, &#39;L3_abc_like_assigned&#39;, &#39;L4_ID_assigned&#39;, &#39;L4_assigned_p&#39;, &#39;L4_descr_assigned&#39;, &#39;L4_abc_like_assigned&#39;, &#39;L5_ID_assigned&#39;, &#39;L5_assigned_p&#39;, &#39;L5_descr_assigned&#39;, &#39;L5_abc_like_assigned&#39;
     var: &#39;gene_ids&#39;, &#39;IsMouseTF&#39;, &#39;IsHumanTFOrtholog&#39;, &#39;IsSourceGene&#39;, &#39;IsTargetGene&#39;, &#39;IsHvgExcludedGene&#39;, &#39;IsAnnotationExcludedGene&#39;, &#39;IsPriorityGene&#39;, &#39;IsTopGene&#39;, &#39;IsHvg&#39;
-    uns: &#39;L1_ID&#39;, &#39;L1_descr&#39;, &#39;L1_abc_like&#39;, &#39;L2_ID&#39;, &#39;L2_descr&#39;, &#39;L2_abc_like&#39;, &#39;L3_ID&#39;, &#39;L3_descr&#39;, &#39;L3_abc_like&#39;, &#39;L4_ID&#39;, &#39;L4_descr&#39;, &#39;L4_abc_like&#39;, &#39;L5_ID&#39;, &#39;L5_descr&#39;, &#39;L5_abc_like&#39;
+    uns: &#39;pathmat&#39;, &#39;L1_ID&#39;, &#39;L1_descr&#39;, &#39;L1_abc_like&#39;, &#39;L2_ID&#39;, &#39;L2_descr&#39;, &#39;L2_abc_like&#39;, &#39;L3_ID&#39;, &#39;L3_descr&#39;, &#39;L3_abc_like&#39;, &#39;L4_ID&#39;, &#39;L4_descr&#39;, &#39;L4_abc_like&#39;, &#39;L5_ID&#39;, &#39;L5_descr&#39;, &#39;L5_abc_like&#39;
     obsm: &#39;X_embed&#39;, &#39;P_L1&#39;, &#39;P_L2&#39;, &#39;P_L3&#39;, &#39;P_L4&#39;, &#39;P_L5&#39;
 </pre></div></div>
 </div>
 <p>Now, the most likely labels for L1-L5 along with their confidences are in .obs.</p>
-<p>For instance, L2_abc_like_max_p and L2_descr_max_p are the most probable abc-like and short-form labels for L2 with L2_max_p specifying the membership probability (= confidence).</p>
+<p>For instance, L2_abc_like_assigned and L2_descr_assigned are the most probable abc-like and short-form labels for L2 with L2_assigned_p specifying the membership probability (= confidence).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes.obs.head(2)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_all_genes</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1037,21 +1042,25 @@ AnnData object with n_obs × n_vars = 121626 × 56489
       <th></th>
       <th>CellID</th>
       <th>Sample</th>
-      <th>L1_descr_max_p</th>
-      <th>L1_abc_like_max_p</th>
-      <th>L1_max_p</th>
-      <th>L2_descr_max_p</th>
-      <th>L2_abc_like_max_p</th>
-      <th>L2_max_p</th>
-      <th>L3_descr_max_p</th>
-      <th>L3_abc_like_max_p</th>
-      <th>L3_max_p</th>
-      <th>L4_descr_max_p</th>
-      <th>L4_abc_like_max_p</th>
-      <th>L4_max_p</th>
-      <th>L5_descr_max_p</th>
-      <th>L5_abc_like_max_p</th>
-      <th>L5_max_p</th>
+      <th>L1_ID_assigned</th>
+      <th>L1_assigned_p</th>
+      <th>L1_descr_assigned</th>
+      <th>L1_abc_like_assigned</th>
+      <th>L2_ID_assigned</th>
+      <th>L2_assigned_p</th>
+      <th>L2_descr_assigned</th>
+      <th>L2_abc_like_assigned</th>
+      <th>...</th>
+      <th>L3_descr_assigned</th>
+      <th>L3_abc_like_assigned</th>
+      <th>L4_ID_assigned</th>
+      <th>L4_assigned_p</th>
+      <th>L4_descr_assigned</th>
+      <th>L4_abc_like_assigned</th>
+      <th>L5_ID_assigned</th>
+      <th>L5_assigned_p</th>
+      <th>L5_descr_assigned</th>
+      <th>L5_abc_like_assigned</th>
     </tr>
   </thead>
   <tbody>
@@ -1059,58 +1068,67 @@ AnnData object with n_obs × n_vars = 121626 × 56489
       <th>SC2-25_SAMN46505599_AAACAGCCAAGGTACG</th>
       <td>SC2-25_SAMN46505599_AAACAGCCAAGGTACG</td>
       <td>SC2-25_SAMN46505599</td>
+      <td>Gl1-1</td>
+      <td>1.0</td>
       <td>Gl1-1 Glut</td>
       <td>Gl1-1 Glut</td>
+      <td>Gl2-4</td>
       <td>1.0</td>
       <td>Gl2-4 STN-PSTN Pitx2.Angpt1</td>
       <td>Gl2-4 STN-PSTN Pitx2 Angpt1 Glut</td>
-      <td>1.0</td>
+      <td>...</td>
       <td>Gl3-8 PSTN Egfem1</td>
       <td>Gl3-8 STN-PSTN Pitx2 Angpt1 Glut_1</td>
+      <td>Gl4-17</td>
       <td>1.0</td>
       <td>Gl4-17 PSTN Egfem1.Grp</td>
       <td>Gl4-17 STN-PSTN Pitx2 Angpt1 Glut_1-3</td>
+      <td>Gl5-20</td>
       <td>1.0</td>
       <td>Gl5-20 PSTN Egfem1.Grp</td>
       <td>Gl5-20 STN-PSTN Pitx2 Angpt1 Glut_1-3-1</td>
-      <td>1.0</td>
     </tr>
     <tr>
       <th>SC2-25_SAMN46505599_AAACAGCCAATAGCAA</th>
       <td>SC2-25_SAMN46505599_AAACAGCCAATAGCAA</td>
       <td>SC2-25_SAMN46505599</td>
+      <td>NN1-1</td>
+      <td>1.0</td>
       <td>NN1-1 OPC-Oligo</td>
       <td>NN1-1 OPC-Oligo</td>
+      <td>NN2-1</td>
       <td>1.0</td>
       <td>NN2-1 Oligo_1</td>
       <td>NN2-1 Oligo_1</td>
-      <td>1.0</td>
+      <td>...</td>
       <td>NN3-1 Oligo_1_1</td>
       <td>NN3-1 Oligo_1_1</td>
+      <td>NN4-1</td>
       <td>1.0</td>
       <td>NN4-1 Oligo_1_1-1</td>
       <td>NN4-1 Oligo_1_1-1</td>
+      <td>NN5-1</td>
       <td>1.0</td>
       <td>NN5-1 Oligo_1_1-1</td>
       <td>NN5-1 Oligo_1_1-1</td>
-      <td>1.0</td>
     </tr>
   </tbody>
 </table>
+<p>2 rows × 22 columns</p>
 </div></div>
 </div>
 <p>Membership probabilities for all cell types are in .obsm, with one matrix per level.</p>
 <p>For instance, for L3:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes.obsm[&quot;P_L3&quot;]
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_all_genes</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;P_L3&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1121,15 +1139,15 @@ AnnData object with n_obs × n_vars = 121626 × 56489
 </div>
 <p>The cell type labels are stored in .uns:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes.uns[&quot;L3_descr&quot;][:10] # printing just the first 10
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_all_genes</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;L3_descr&quot;</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span> <span class="c1"># printing just the first 10</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1148,19 +1166,19 @@ AnnData object with n_obs × n_vars = 121626 × 56489
 </div>
 <p>So, if you would want to get the membership probability for the cell type “Gb3-228 ARH Agrp” of a particular cell you could use:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>agrp_idx = list(query_all_genes.uns[&quot;L3_ID&quot;]).index(&quot;Gb3-228&quot;)
-cell_idx = 5 # let&#39;s just use the sixth cell here as an example
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">agrp_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">query_all_genes</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;L3_ID&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;Gb3-228&quot;</span><span class="p">)</span>
+<span class="n">cell_idx</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># let&#39;s just use the sixth cell here as an example</span>
 
-p_agrp = query_all_genes.obsm[&quot;P_L3&quot;][cell_idx, agrp_idx]
-p_agrp
+<span class="n">p_agrp</span> <span class="o">=</span> <span class="n">query_all_genes</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;P_L3&quot;</span><span class="p">][</span><span class="n">cell_idx</span><span class="p">,</span> <span class="n">agrp_idx</span><span class="p">]</span>
+<span class="n">p_agrp</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1175,30 +1193,30 @@ np.float32(0.0)
 <h1>Common UMAP<a class="headerlink" href="#Common-UMAP" title="Link to this heading">#</a></h1>
 <p>Now we will project the query data into UMAP space of HypoMap3D for some sweet plots.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span># Saving previous UMAP coordinates as to not overwrite them
-if &quot;X_umap&quot; in query_all_genes.obsm.keys():
-    query_all_genes.obsm[&quot;X_umap_own&quot;] = query_all_genes.obsm[&quot;X_umap&quot;].copy()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Saving previous UMAP coordinates as to not overwrite them</span>
+<span class="k">if</span> <span class="s2">&quot;X_umap&quot;</span> <span class="ow">in</span> <span class="n">query_all_genes</span><span class="o">.</span><span class="n">obsm</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="n">query_all_genes</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap_own&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">query_all_genes</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes.obsm[&#39;X_umap&#39;], _ = project_to_ref_umap(
-    ref_adata.obsm[&#39;X_embed&#39;], # ref embedding
-    query_all_genes.obsm[&#39;X_embed&#39;], # query embedding
-    ref_adata.obsm[&#39;X_umap&#39;], # ref umap
-    spread=1.0,
-    min_dist=0.5,
-    verbose=True,
-    use_gpu=use_gpu,
-    n_epochs=100,
-    seed=0
-)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_all_genes</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">_</span> <span class="o">=</span> <span class="n">project_to_ref_umap</span><span class="p">(</span>
+    <span class="n">ref_adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;X_embed&#39;</span><span class="p">],</span> <span class="c1"># ref embedding</span>
+    <span class="n">query_all_genes</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;X_embed&#39;</span><span class="p">],</span> <span class="c1"># query embedding</span>
+    <span class="n">ref_adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="c1"># ref umap</span>
+    <span class="n">spread</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">use_gpu</span><span class="o">=</span><span class="n">use_gpu</span><span class="p">,</span>
+    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1206,7 +1224,7 @@ if &quot;X_umap&quot; in query_all_genes.obsm.keys():
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "353f3e7e86cd44cbbb97a6288165b568", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "7e1081f3be8f42dd82ac04c680f19cdb", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
@@ -1227,54 +1245,54 @@ if &quot;X_umap&quot; in query_all_genes.obsm.keys():
 </div>
 <p>Let’s plot your cells on HypoMap3D background</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>l1_colors = {
-    &#39;Gl1-1 Glut&#39;: &quot;#8c564b&quot;,
-    &#39;Gb1-2 GABA&#39;: &quot;#aa40fc&quot;,
-    &#39;NN1-4 Astro-Epen&#39;: &quot;#17becf&quot;,
-    &#39;NN1-1 OPC-Oligo&#39;: &quot;#ffbb78&quot;,
-    &#39;NN1-2 Immune&#39;: &quot;#aec7e8&quot;,
-    &#39;NN1-3 Vascular&#39;: &quot;#98df8a&quot;
-}
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">l1_colors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Gl1-1 Glut&#39;</span><span class="p">:</span> <span class="s2">&quot;#8c564b&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;Gb1-2 GABA&#39;</span><span class="p">:</span> <span class="s2">&quot;#aa40fc&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;NN1-4 Astro-Epen&#39;</span><span class="p">:</span> <span class="s2">&quot;#17becf&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;NN1-1 OPC-Oligo&#39;</span><span class="p">:</span> <span class="s2">&quot;#ffbb78&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;NN1-2 Immune&#39;</span><span class="p">:</span> <span class="s2">&quot;#aec7e8&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;NN1-3 Vascular&#39;</span><span class="p">:</span> <span class="s2">&quot;#98df8a&quot;</span>
+<span class="p">}</span>
 
-scattersize=2
+<span class="n">scattersize</span><span class="o">=</span><span class="mi">2</span>
 
-fig, ax = plt.subplots(figsize=(10, 10))
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 
-# 1. Plot SC cells in gray
-sc.pl.umap(
-    ref_adata,
-    color=&quot;L1_descr&quot;,
-    ax=ax,
-    show=False,
-    palette=[&quot;grey&quot;],
-    s=scattersize,
-    legend_loc=None
-)
+<span class="c1"># 1. Plot SC cells in gray</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">ref_adata</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;L1_descr&quot;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;grey&quot;</span><span class="p">],</span>
+    <span class="n">s</span><span class="o">=</span><span class="n">scattersize</span><span class="p">,</span>
+    <span class="n">legend_loc</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">)</span>
 
-# 2. Plot own cells with L1 palette
-sc.pl.umap(
-    query_all_genes,
-    color=&quot;L1_descr_max_p&quot;,
-    palette=l1_colors,
-    ax=ax,
-    show=False,
-    s=scattersize,
-)
+<span class="c1"># 2. Plot own cells with L1 palette</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">query_all_genes</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;L1_descr_assigned&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="n">l1_colors</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">s</span><span class="o">=</span><span class="n">scattersize</span><span class="p">,</span>
+<span class="p">)</span>
 
-# Clean up plot appearance
-ax.set_title(&quot;&quot;)
-for spine in ax.spines.values():
-    spine.set_visible(False)
-ax.set_xticks([])
-ax.set_yticks([])
-ax.set_xlabel(&quot;&quot;)
-ax.set_ylabel(&quot;&quot;)
-ax.set_aspect(&#39;equal&#39;)
+<span class="c1"># Clean up plot appearance</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">spine</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+    <span class="n">spine</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
 
-fig.canvas.draw()
+<span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1286,11 +1304,28 @@ fig.canvas.draw()
 WARNING: Length of palette colors is smaller than the number of categories (palette length: 1, categories length: 6. Some categories will have the same color.
 </pre></div></div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+... storing &#39;L1_descr_assigned&#39; as categorical
+... storing &#39;L1_abc_like_assigned&#39; as categorical
+... storing &#39;L2_descr_assigned&#39; as categorical
+... storing &#39;L2_abc_like_assigned&#39; as categorical
+... storing &#39;L3_descr_assigned&#39; as categorical
+... storing &#39;L3_abc_like_assigned&#39; as categorical
+... storing &#39;L4_descr_assigned&#39; as categorical
+... storing &#39;L4_abc_like_assigned&#39; as categorical
+... storing &#39;L5_descr_assigned&#39; as categorical
+... storing &#39;L5_abc_like_assigned&#39; as categorical
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/pages_tutorials_ProjectAndTransferLabels_69_1.png" class="no-scaled-link" height="623" src="../../_images/pages_tutorials_ProjectAndTransferLabels_69_1.png" width="734" />
+<img alt="../../_images/pages_tutorials_ProjectAndTransferLabels_70_2.png" class="no-scaled-link" height="623" src="../../_images/pages_tutorials_ProjectAndTransferLabels_70_2.png" width="734" />
 </div>
 </div>
 </section>
@@ -1298,10 +1333,10 @@ WARNING: Length of palette colors is smaller than the number of categories (pale
 <h1>Saving the adata<a class="headerlink" href="#Saving-the-adata" title="Link to this heading">#</a></h1>
 <p>Change the path to your heart’s content.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>OUT_PATH = &quot;path/to/your/directory/adata_with_hypomap3d_labels.h5ad&quot;
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">OUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;path/to/your/directory/adata_with_hypomap3d_labels.h5ad&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -1309,7 +1344,7 @@ WARNING: Length of palette colors is smaller than the number of categories (pale
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>query_all_genes.write_h5ad(OUT_PATH)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query_all_genes</span><span class="o">.</span><span class="n">write_h5ad</span><span class="p">(</span><span class="n">OUT_PATH</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1317,14 +1352,14 @@ WARNING: Length of palette colors is smaller than the number of categories (pale
 
 
                 </article>
-              
 
-              
-              
-              
-              
+
+
+
+
+
                 <footer class="prev-next-footer d-print-none">
-                  
+
 <div class="prev-next-area">
     <a class="left-prev"
        href="RegionCellTypeSelection.html"
@@ -1336,21 +1371,21 @@ WARNING: Length of palette colors is smaller than the number of categories (pale
       </div>
     </a>
     <a class="right-next"
-       href="SpatialSmoothing.html"
+       href="advanced/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Spatial smoothing</p>
+        <p class="prev-next-title">Advanced Tutorials</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
-              
+
             </div>
-            
-            
-              
+
+
+
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
@@ -1371,6 +1406,7 @@ WARNING: Length of palette colors is smaller than the number of categories (pale
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#scArches-projection">scArches projection</a><ul class="nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Raw-counts-sanity-check">Raw counts sanity check</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Setting-batch-column">Setting batch column</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Removing-low-quality-cells">Removing low quality cells</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Copy-query-data-with-all-genes">Copy query data with all genes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Query-preparation-according-to-model">Query preparation according to model</a></li>
 </ul>
@@ -1387,49 +1423,49 @@ WARNING: Length of palette colors is smaller than the number of categories (pale
   </nav></div>
 
 </div></div>
-              
-            
+
+
           </div>
           <footer class="bd-footer-content">
-            
+
 <div class="bd-footer-content__inner container">
-  
+
   <div class="footer-item">
-    
+
 <p class="component-author">
 By MPI-SF | Neurogenomics
 </p>
 
   </div>
-  
+
   <div class="footer-item">
-    
+
 
   <p class="copyright">
-    
+
       © Copyright 2026, Max Planck Institute for Metabolism Research.
       <br/>
-    
+
   </p>
 
   </div>
-  
+
   <div class="footer-item">
-    
+
   </div>
-  
+
   <div class="footer-item">
-    
+
   </div>
-  
+
 </div>
           </footer>
-        
+
 
       </main>
     </div>
   </div>
-  
+
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
   <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
 <script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>

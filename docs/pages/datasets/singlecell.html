@@ -148,6 +148,7 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Single Cell Objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="spatial.html">Spatial Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="taxonomy.html">Taxonomy Objects</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
 <ul class="nav bd-sidenav">
@@ -160,10 +161,11 @@
 
 
 
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/SpatialSmoothing.html">Spatial smoothing</a></li>
-
-
-
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/advanced/index.html">Advanced Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/advanced/SpatialSmoothing.html">Spatial smoothing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/advanced/RegionAggAndSpatialFlags.html">CCF region aggregation and spatial warning flags</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -309,16 +311,22 @@
             </div>
             <nav aria-label="Page">
                 <ul class="nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#control-anndata">Control AnnData</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#full-single-cell-anndata">Full Single Cell AnnData</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structure">Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#access">Access</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-loading">Using/Loading</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subsetting-to-control-and-non-control-cells">Subsetting to Control and Non-Control Cells</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-control-anndata">Non-Control AnnData</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#marker-genes-table">Marker Genes Table</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Access</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Using/Loading</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#projection-objects">Projection Objects</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scvi-model-weights">scVI Model Weights</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reduced-full-anndata">Reduced Full AnnData</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reduced-control-anndata">Reduced Control AnnData</a></li>
 </ul>
 </li>
 </ul>
@@ -334,20 +342,28 @@
                   
   <section id="single-cell-objects">
 <h1>Single Cell Objects<a class="headerlink" href="#single-cell-objects" title="Link to this heading">#</a></h1>
-<p>The HypoMap3D consists of <em>1,564,064</em> cells of which <em>896,959</em> are steady-state and <em>667,105</em> are under experimental treatment conditions. We have divided these groups into two separate AnnData objects: control and non-control.</p>
+<p>The HypoMap3D consists of <em>1,564,064</em> cells of which <em>896,959</em> are steady-state and <em>667,105</em> are under experimental treatment conditions. These groups are referred to as the “control” and “non-control” respectively.</p>
 <!-- ======================================================================= -->
-<!--                                 Control                                 -->
+<!--                              Full AnnData                               -->
 <!-- ======================================================================= -->
-<section id="control-anndata">
-<h2>Control AnnData<a class="headerlink" href="#control-anndata" title="Link to this heading">#</a></h2>
-<p>This part of the HypoMap3D dataset conists of ~897k cells classified as ‘steady-state’. These cells were utilized for the definition of the cell-type taxonomy and can be utilized for exploring ‘steady-state’ gene dynamics and for label propagation onto new data.</p>
+<section id="full-single-cell-anndata">
+<h2>Full Single Cell AnnData<a class="headerlink" href="#full-single-cell-anndata" title="Link to this heading">#</a></h2>
+<p>The full single cell dataset is available as an AnnData object and includes:</p>
+<ul class="simple">
+<li><p>Raw Gene Expression</p></li>
+<li><p>Hierarchical Cluster Annotations</p></li>
+<li><p>Latent Space Representations</p></li>
+<li><p>Experiment Metadata</p></li>
+<li><p>Gene Annotations</p></li>
+<li><p>UMAP Embeddings</p></li>
+</ul>
 <section id="structure">
 <h3>Structure<a class="headerlink" href="#structure" title="Link to this heading">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>AnnData<span class="w"> </span>object<span class="w"> </span>with<span class="w"> </span>n_obs<span class="w"> </span>×<span class="w"> </span><span class="nv">n_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">896959</span><span class="w"> </span>×<span class="w"> </span><span class="m">56939</span>
-<span class="w">    </span>X:<span class="w"> </span>raw<span class="w"> </span>count<span class="w"> </span>matrix
-<span class="w">    </span>obs:<span class="w"> </span><span class="s1">&#39;CellID&#39;</span>,<span class="w"> </span><span class="s1">&#39;Dataset&#39;</span>,<span class="w"> </span><span class="s1">&#39;Sample&#39;</span>,<span class="w"> </span><span class="s1">&#39;total_counts&#39;</span>,<span class="w"> </span><span class="s1">&#39;n_genes&#39;</span>,<span class="w"> </span><span class="s1">&#39;pct_mito&#39;</span>,<span class="w"> </span><span class="s1">&#39;Author&#39;</span>,<span class="w"> </span><span class="s1">&#39;Source&#39;</span>,<span class="w"> </span><span class="s1">&#39;Data_source_link&#39;</span>,<span class="w"> </span><span class="s1">&#39;GEO&#39;</span>,<span class="w"> </span><span class="s1">&#39;Publication_Link&#39;</span>,<span class="w"> </span><span class="s1">&#39;Suspension&#39;</span>,<span class="w"> </span><span class="s1">&#39;Technology&#39;</span>,<span class="w"> </span><span class="s1">&#39;Author_Sex_harmonized&#39;</span>,<span class="w"> </span><span class="s1">&#39;sex_per_sample_inferred&#39;</span>,<span class="w"> </span><span class="s1">&#39;Strain&#39;</span>,<span class="w"> </span><span class="s1">&#39;Diet&#39;</span>,<span class="w"> </span><span class="s1">&#39;Treatment&#39;</span>,<span class="w"> </span><span class="s1">&#39;Age&#39;</span>,<span class="w"> </span><span class="s1">&#39;Mean_age_in_weeks&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsControl&#39;</span>,<span class="w"> </span><span class="s1">&#39;L1_ID&#39;</span>,<span class="w"> </span><span class="s1">&#39;L2_ID&#39;</span>,<span class="w"> </span><span class="s1">&#39;L3_ID&#39;</span>,<span class="w"> </span><span class="s1">&#39;L4_ID&#39;</span>,<span class="w"> </span><span class="s1">&#39;L5_ID&#39;</span>,<span class="w"> </span><span class="s1">&#39;L1_descr&#39;</span>,<span class="w"> </span><span class="s1">&#39;L2_descr&#39;</span>,<span class="w"> </span><span class="s1">&#39;L3_descr&#39;</span>,<span class="w"> </span><span class="s1">&#39;L4_descr&#39;</span>,<span class="w"> </span><span class="s1">&#39;L5_descr&#39;</span>,<span class="w"> </span><span class="s1">&#39;L1_abc_like&#39;</span>,<span class="w"> </span><span class="s1">&#39;L2_abc_like&#39;</span>,<span class="w"> </span><span class="s1">&#39;L3_abc_like&#39;</span>,<span class="w"> </span><span class="s1">&#39;L4_abc_like&#39;</span>,<span class="w"> </span><span class="s1">&#39;L5_abc_like&#39;</span>
-<span class="w">    </span>var:<span class="w"> </span><span class="s1">&#39;gene_ids&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsMouseTF&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsHumanTFOrtholog&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsSourceGene&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsTargetGene&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsHvgExcludedGene&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsAnnotationExcludedGene&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsPriorityGene&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsTopGene&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsHvg&#39;</span>
-<span class="w">    </span>obsm:<span class="w"> </span><span class="s1">&#39;X_embed&#39;</span>,<span class="w"> </span><span class="s1">&#39;X_spatial_umap&#39;</span>,<span class="w"> </span><span class="s1">&#39;X_umap&#39;</span>
+<div class="highlight-plaintext notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 1564064 × 56939
+    X: raw counts
+    obs: &#39;CellID&#39;, &#39;Dataset&#39;, &#39;Sample&#39;, &#39;total_counts&#39;, &#39;n_genes&#39;, &#39;pct_mito&#39;, &#39;Author&#39;, &#39;Source&#39;, &#39;Data_source_link&#39;, &#39;GEO&#39;, &#39;Publication_Link&#39;, &#39;Suspension&#39;, &#39;Technology&#39;, &#39;Author_Sex_harmonized&#39;, &#39;sex_per_sample_inferred&#39;, &#39;Strain&#39;, &#39;Diet&#39;, &#39;Treatment&#39;, &#39;Age&#39;, &#39;Mean_age_in_weeks&#39;, &#39;IsControl&#39;, &#39;L1_ID&#39;, &#39;L2_ID&#39;, &#39;L3_ID&#39;, &#39;L4_ID&#39;, &#39;L5_ID&#39;, &#39;L1_descr&#39;, &#39;L2_descr&#39;, &#39;L3_descr&#39;, &#39;L4_descr&#39;, &#39;L5_descr&#39;, &#39;L1_abc_like&#39;, &#39;L2_abc_like&#39;, &#39;L3_abc_like&#39;, &#39;L4_abc_like&#39;, &#39;L5_abc_like&#39;
+    var: &#39;gene_ids&#39;, &#39;IsMouseTF&#39;, &#39;IsHumanTFOrtholog&#39;, &#39;IsSourceGene&#39;, &#39;IsTargetGene&#39;, &#39;IsHvgExcludedGene&#39;, &#39;IsAnnotationExcludedGene&#39;, &#39;IsPriorityGene&#39;, &#39;IsTopGene&#39;, &#39;IsHvg&#39;
+    obsm: &#39;X_embed&#39;, &#39;X_spatial_umap&#39;, &#39;X_umap&#39;
 </pre></div>
 </div>
 </section>
@@ -355,92 +371,118 @@
 <h3>Access<a class="headerlink" href="#access" title="Link to this heading">#</a></h3>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
-<p>Public data access is currently unavailable as dataset is not published.</p>
+<p>Public data access to <code class="docutils literal notranslate"><span class="pre">hm3d_sc_all.h5ad</span></code> is currently unavailable as HypoMap3D is not yet published.</p>
 </div>
 </section>
 <section id="using-loading">
 <h3>Using/Loading<a class="headerlink" href="#using-loading" title="Link to this heading">#</a></h3>
-<p>The full anndata can be loaded using the <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> python package or via the <code class="docutils literal notranslate"><span class="pre">ScanPy</span></code> wrapper</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span> <span class="c1"># via AnnData</span>
-<span class="n">scdata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s1">&#39;sc_anndata_control.h5ad&#39;</span><span class="p">)</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span> <span class="c1"># via ScanPy</span>
-<span class="n">scdata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s1">&#39;sc_anndata_control.h5ad&#39;</span><span class="p">)</span>
+<p>To load the full single cell AnnData object, use the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span> <span class="c1"># or, import scanpy as sc, sc.read_h5ad()</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;hm3d_sc_all.h5ad&quot;</span><span class="p">)</span>
+<span class="n">adata</span>
+</pre></div>
+</div>
+</section>
+<section id="subsetting-to-control-and-non-control-cells">
+<h3>Subsetting to Control and Non-Control Cells<a class="headerlink" href="#subsetting-to-control-and-non-control-cells" title="Link to this heading">#</a></h3>
+<p>A boolean mask is provided in <code class="docutils literal notranslate"><span class="pre">.obs['IsControl']</span></code> to distinguish between control and non-control cells. <code class="docutils literal notranslate"><span class="pre">True</span></code> indicates a control cell, while <code class="docutils literal notranslate"><span class="pre">False</span></code> indicates a non-control cell.</p>
+<p>For example, to subset the AnnData object to only control cells:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">control_adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;IsControl&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>And to subset to only non-control cells:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">non_control_adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="o">~</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;IsControl&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 <!-- ======================================================================= -->
-<!--                               Non Control                               -->
+<!--                              Marker Genes                               -->
 <!-- ======================================================================= -->
 </section>
 </section>
-<section id="non-control-anndata">
-<h2>Non-Control AnnData<a class="headerlink" href="#non-control-anndata" title="Link to this heading">#</a></h2>
-<p>This part of the HypoMap3D dataset conists of ~667k cells under various experimental treatments including high fat diet, influenza infection and other experiments. This provides a resource for checking potential perturbation effects from other experimental designs. Full experiment details can be found at the respective GEO and BioSampleIDs but a truncated and harmonized overview can also be found within the <code class="docutils literal notranslate"><span class="pre">anndata.obs</span></code>.</p>
+<section id="marker-genes-table">
+<h2>Marker Genes Table<a class="headerlink" href="#marker-genes-table" title="Link to this heading">#</a></h2>
+<p>The marker genes for each hierarchical cluster level are provided in a CSV file, which includes the gene names and their corresponding cluster annotations.</p>
+<p>Marker genes are computed using the Van Elteren test, a form of stratified Wilcoxon rank-sum test.</p>
+<p>Markers were computed with respect to three cluster sets across all 5 levels independently:</p>
+<ol class="arabic simple">
+<li><p>against all other clusters of the same level (vsAll)</p></li>
+<li><p>against all sister clusters of the same level (vsSisters)</p></li>
+<li><p>against all cluster within the same brain region of the same level (vsRegion i.e. ZI)</p></li>
+</ol>
 <section id="id1">
 <h3>Structure<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>AnnData<span class="w"> </span>object<span class="w"> </span>with<span class="w"> </span>n_obs<span class="w"> </span>×<span class="w"> </span><span class="nv">n_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">667105</span><span class="w"> </span>×<span class="w"> </span><span class="m">56939</span>
-<span class="w">    </span>X:<span class="w"> </span>raw<span class="w"> </span>count<span class="w"> </span>matrix
-<span class="w">    </span>obs:<span class="w"> </span><span class="s1">&#39;CellID&#39;</span>,<span class="w"> </span><span class="s1">&#39;Dataset&#39;</span>,<span class="w"> </span><span class="s1">&#39;Sample&#39;</span>,<span class="w"> </span><span class="s1">&#39;total_counts&#39;</span>,<span class="w"> </span><span class="s1">&#39;n_genes&#39;</span>,<span class="w"> </span><span class="s1">&#39;pct_mito&#39;</span>,<span class="w"> </span><span class="s1">&#39;Author&#39;</span>,<span class="w"> </span><span class="s1">&#39;Source&#39;</span>,<span class="w"> </span><span class="s1">&#39;Data_source_link&#39;</span>,<span class="w"> </span><span class="s1">&#39;GEO&#39;</span>,<span class="w"> </span><span class="s1">&#39;Publication_Link&#39;</span>,<span class="w"> </span><span class="s1">&#39;Suspension&#39;</span>,<span class="w"> </span><span class="s1">&#39;Technology&#39;</span>,<span class="w"> </span><span class="s1">&#39;Author_Sex_harmonized&#39;</span>,<span class="w"> </span><span class="s1">&#39;sex_per_sample_inferred&#39;</span>,<span class="w"> </span><span class="s1">&#39;Strain&#39;</span>,<span class="w"> </span><span class="s1">&#39;Diet&#39;</span>,<span class="w"> </span><span class="s1">&#39;Treatment&#39;</span>,<span class="w"> </span><span class="s1">&#39;Age&#39;</span>,<span class="w"> </span><span class="s1">&#39;Mean_age_in_weeks&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsControl&#39;</span>,<span class="w"> </span><span class="s1">&#39;L1_ID&#39;</span>,<span class="w"> </span><span class="s1">&#39;L2_ID&#39;</span>,<span class="w"> </span><span class="s1">&#39;L3_ID&#39;</span>,<span class="w"> </span><span class="s1">&#39;L4_ID&#39;</span>,<span class="w"> </span><span class="s1">&#39;L5_ID&#39;</span>,<span class="w"> </span><span class="s1">&#39;L1_descr&#39;</span>,<span class="w"> </span><span class="s1">&#39;L2_descr&#39;</span>,<span class="w"> </span><span class="s1">&#39;L3_descr&#39;</span>,<span class="w"> </span><span class="s1">&#39;L4_descr&#39;</span>,<span class="w"> </span><span class="s1">&#39;L5_descr&#39;</span>,<span class="w"> </span><span class="s1">&#39;L1_abc_like&#39;</span>,<span class="w"> </span><span class="s1">&#39;L2_abc_like&#39;</span>,<span class="w"> </span><span class="s1">&#39;L3_abc_like&#39;</span>,<span class="w"> </span><span class="s1">&#39;L4_abc_like&#39;</span>,<span class="w"> </span><span class="s1">&#39;L5_abc_like&#39;</span>
-<span class="w">    </span>var:<span class="w"> </span><span class="s1">&#39;gene_ids&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsMouseTF&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsHumanTFOrtholog&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsSourceGene&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsTargetGene&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsHvgExcludedGene&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsAnnotationExcludedGene&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsPriorityGene&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsTopGene&#39;</span>,<span class="w"> </span><span class="s1">&#39;IsHvg&#39;</span>
-<span class="w">    </span>obsm:<span class="w"> </span><span class="s1">&#39;X_embed&#39;</span>,<span class="w"> </span><span class="s1">&#39;X_spatial_umap&#39;</span>,<span class="w"> </span><span class="s1">&#39;X_umap&#39;</span>
-</pre></div>
+<p>Here is the first row of the marker genes CSV file:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>clustering</p></th>
+<th class="head"><p>celltype_id</p></th>
+<th class="head"><p>celltype_descr</p></th>
+<th class="head"><p>celltype_abc_like</p></th>
+<th class="head"><p>comparison</p></th>
+<th class="head"><p>gene_name</p></th>
+<th class="head"><p>specificity</p></th>
+<th class="head"><p>pctA</p></th>
+<th class="head"><p>pctB</p></th>
+<th class="head"><p>meanA</p></th>
+<th class="head"><p>meanB</p></th>
+<th class="head"><p>log2FC</p></th>
+<th class="head"><p>p</p></th>
+<th class="head"><p>padj</p></th>
+<th class="head"><p>VE</p></th>
+<th class="head"><p>rank</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>L1</p></td>
+<td><p>Gl1-1</p></td>
+<td><p>Gl1-1 Glut</p></td>
+<td><p>Gl1-1 Glut</p></td>
+<td><p>OneVsSisters</p></td>
+<td><p>Foxb1</p></td>
+<td><p>6.236</p></td>
+<td><p>0.106</p></td>
+<td><p>0.003</p></td>
+<td><p>0.576</p></td>
+<td><p>0.005</p></td>
+<td><p>6.674</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>12.376</p></td>
+<td><p>22</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 <section id="id2">
 <h3>Access<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
-<p>Public data access is currently unavailable as dataset is not published.</p>
+<p>Public data access to <code class="docutils literal notranslate"><span class="pre">hm3d_marker_genes_all_levels.csv</span></code> is currently unavailable as HypoMap3D is not yet published.</p>
 </div>
+<!-- ======================================================================= -->
+<!--                               Projection                                -->
+<!-- ======================================================================= -->
 </section>
-<section id="id3">
-<h3>Using/Loading<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
-<p>The full anndata can be loaded using the <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> python package or via the <code class="docutils literal notranslate"><span class="pre">ScanPy</span></code> wrapper</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span> <span class="c1"># via AnnData</span>
-<span class="n">scdata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s1">&#39;sc_anndata_non_control.h5ad&#39;</span><span class="p">)</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span> <span class="c1"># via ScanPy</span>
-<span class="n">scdata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s1">&#39;sc_anndata_non_control.h5ad&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<!-- ======================================================================= -->
-<!--                                Metacell                                 -->
-<!-- ======================================================================= -->
-<!-- ## Metacell AnnData
-
-The full HypoMap3D dataset is very large, as such a reduced representation was generated for quick search visualization and loading into R environments. Rather than dropping larges amount of data via subsampling, cells were grouped via KMeans to form metacells within each identified cell-type at L5. The expression of these metacells was taken as the average of the 4-80 cells they consist of.
-
-### Structure
-```bash
-AnnData object with n_obs × n_vars = 40000 × 56939
-    obs: 'n_cells', 'L1', 'L1_abc_like', 'L1_descr', 'L2', 'L2_abc_like', 'L2_descr', 'L3', 'L3_abc_like', 'L3_descr', 'L4', 'L4_abc_like', 'L4_descr', 'L5', 'L5_abc_like', 'L5_descr', 'pct_female', 'pct_is_nuclear'
-    obsm: 'X_embed', 'X_umap'
-
-```
-```bash
-[R TO BE MADE]
-```
-
-### Access
-```{caution}
-Public data access is currently unavailable as dataset is not published. 
-```
-
-### Using/Loading
-The metacell anndata can be loaded using the `AnnData` python package or via the `ScanPy` wrapper
-```python
-import anndata as ad # via AnnData
-scdata = ad.read_h5ad('sc_anndata_non_control.h5ad')
-
-import scanpy as sc # via ScanPy
-scdata = sc.read_h5ad('sc_anndata_non_control.h5ad')
-```
-The metacell anndata can be loaded in R via `Seurat`
-```R
-library(seurat)
-
-...
-``` -->
+</section>
+<section id="projection-objects">
+<h2>Projection Objects<a class="headerlink" href="#projection-objects" title="Link to this heading">#</a></h2>
+<p>The projection of novel data onto the HypoMap3D reference space is carried out using <code class="docutils literal notranslate"><span class="pre">scArches</span></code>. This process requires the pre-trained scVI model weights.</p>
+<p>The projection does not require the full gene expression profiles of the reference cells. As such, we provide significantly reduced versions of the full AnnData objects, with the count matrices <code class="docutils literal notranslate"><span class="pre">.X</span></code> removed, for convenience.</p>
+<section id="scvi-model-weights">
+<h3>scVI Model Weights<a class="headerlink" href="#scvi-model-weights" title="Link to this heading">#</a></h3>
+<p>The individual scVI model weights are required for projecting new data onto the HypoMap3D reference space using <code class="docutils literal notranslate"><span class="pre">scArches</span></code>.</p>
+<p>The weights can be downloaded here: <a class="reference internal" href="#"><span class="xref myst">XXX</span></a>.</p>
+</section>
+<section id="reduced-full-anndata">
+<h3>Reduced Full AnnData<a class="headerlink" href="#reduced-full-anndata" title="Link to this heading">#</a></h3>
+<p>The reduced full AnnData object is a version of the full single cell dataset with the count matrix <code class="docutils literal notranslate"><span class="pre">.X</span></code> removed. This allows for efficient storage and faster loading times while retaining all other annotations and embeddings necessary for projection.</p>
+<p>The reduced AnnData can be downloaded here: <a class="reference internal" href="#"><span class="xref myst">XXX</span></a>.</p>
+</section>
+<section id="reduced-control-anndata">
+<h3>Reduced Control AnnData<a class="headerlink" href="#reduced-control-anndata" title="Link to this heading">#</a></h3>
+<p>The reduced control AnnData object is a version of the control-only single cell dataset with the count matrix <code class="docutils literal notranslate"><span class="pre">.X</span></code> removed. This allows for efficient storage and faster loading times while retaining all other annotations and embeddings necessary for projection.</p>
+<p>The reduced control AnnData can be downloaded here: <a class="reference internal" href="#"><span class="xref myst">XXX</span></a>.</p>
 </section>
 </section>
 </section>
@@ -492,16 +534,22 @@ library(seurat)
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#control-anndata">Control AnnData</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#full-single-cell-anndata">Full Single Cell AnnData</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structure">Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#access">Access</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-loading">Using/Loading</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subsetting-to-control-and-non-control-cells">Subsetting to Control and Non-Control Cells</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-control-anndata">Non-Control AnnData</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#marker-genes-table">Marker Genes Table</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Access</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Using/Loading</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#projection-objects">Projection Objects</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scvi-model-weights">scVI Model Weights</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reduced-full-anndata">Reduced Full AnnData</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reduced-control-anndata">Reduced Control AnnData</a></li>
 </ul>
 </li>
 </ul>

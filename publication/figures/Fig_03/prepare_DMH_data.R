@@ -3,52 +3,52 @@
 ### load data
 ##########
 
-figure_outputpath = "/REDACTED-path/HypoMap3D_revision_figures/main_figure_dmh/figure_plots/"
+figure_outputpath = "/cephfs/scratch/bruening_scratch/lsteuernagel/projects/HypoMap3D/HypoMap3D_revision_figures/main_figure_dmh/figure_plots/"
 
 require(Seurat)
 require(dplyr)
 require(ggplot2)
 require(RColorBrewer)
 
-# load data 
-hypomap_v09_controls_downsampled = readRDS("/REDACTED-path/HypoMap3D/v0.9_frozen/hypomap_v09_controls_downsampled500k.rds")
+# load data
+hypomap_v09_controls_downsampled = readRDS("/cephfs/scratch/bruening_scratch/lsteuernagel/data/HypoMap3D/v0.9_frozen/hypomap_v09_controls_downsampled500k.rds")
 hypomap_v09_controls_downsampled = NormalizeData(hypomap_v09_controls_downsampled)
 
 # final update cluster mapper
 cluster_mapper_final = data.table::fread("/REDACTED-path/HypoMap3D-data/v0.9/8_annotation/20260730_descr_update.csv",data.table = F)
 
 # cluster_annos
-cluster_annos = hypomap_v09_controls_downsampled@meta.data %>% dplyr::distinct(L1_ID, L2_ID, L3_ID, L4_ID, L5_ID, L1_descr,L2_descr,L3_descr,L4_descr,L5_descr) 
+cluster_annos = hypomap_v09_controls_downsampled@meta.data %>% dplyr::distinct(L1_ID, L2_ID, L3_ID, L4_ID, L5_ID, L1_descr,L2_descr,L3_descr,L4_descr,L5_descr)
 
 # update names
 cluster_annos = cluster_annos %>%
   dplyr::left_join(cluster_mapper_final %>% dplyr::select(L2_descr_old = old, L2_descr_new = new),by=c("L2_descr"="L2_descr_old")) %>%
   dplyr::left_join(cluster_mapper_final %>% dplyr::select(L3_descr_old = old, L3_descr_new = new),by=c("L3_descr"="L3_descr_old")) %>%
   dplyr::left_join(cluster_mapper_final %>% dplyr::select(L4_descr_old = old, L4_descr_new = new),by=c("L4_descr"="L4_descr_old")) %>%
-  dplyr::left_join(cluster_mapper_final %>% dplyr::select(L5_descr_old = old, L5_descr_new = new),by=c("L5_descr"="L5_descr_old")) 
+  dplyr::left_join(cluster_mapper_final %>% dplyr::select(L5_descr_old = old, L5_descr_new = new),by=c("L5_descr"="L5_descr_old"))
 cluster_annos = cluster_annos %>% dplyr::select(L1_ID, L2_ID, L3_ID, L4_ID, L5_ID,L1_descr,L2_descr = L2_descr_new,L3_descr = L3_descr_new,L4_descr = L4_descr_new,L5_descr = L5_descr_new)
 
 cluster_annos_long = hypomap_v09_controls_downsampled@meta.data %>%
   dplyr::distinct(cluster_id = L1_ID,cluster_name = L1_descr) %>%
   dplyr::bind_rows(
     hypomap_v09_controls_downsampled@meta.data %>%
-      dplyr::distinct(cluster_id = L2_ID,cluster_name = L2_descr) 
+      dplyr::distinct(cluster_id = L2_ID,cluster_name = L2_descr)
   ) %>%
   dplyr::bind_rows(
     hypomap_v09_controls_downsampled@meta.data %>%
-      dplyr::distinct(cluster_id = L3_ID,cluster_name = L3_descr) 
+      dplyr::distinct(cluster_id = L3_ID,cluster_name = L3_descr)
   ) %>%
   dplyr::bind_rows(
     hypomap_v09_controls_downsampled@meta.data %>%
-      dplyr::distinct(cluster_id = L4_ID,cluster_name = L4_descr) 
+      dplyr::distinct(cluster_id = L4_ID,cluster_name = L4_descr)
   ) %>%
   dplyr::bind_rows(
     hypomap_v09_controls_downsampled@meta.data %>%
-      dplyr::distinct(cluster_id = L5_ID,cluster_name = L5_descr) 
+      dplyr::distinct(cluster_id = L5_ID,cluster_name = L5_descr)
   )
 
 ## load markers
-all_markers =  data.table::fread("/REDACTED-path/HypoMap3D_cell_type_marker_genes_all_levels.csv",data.table = F)
+all_markers =  data.table::fread("/REDACTED-path/HypoMap3D-data/v0.9/9_objects/markers/hypomap3d_cell_type_marker_genes_all_levels.csv",data.table = F)
 all_markers_updated = all_markers %>%
   dplyr::filter(padj < 0.001 & specificity >= 0.25) %>%
   dplyr::mutate(pct_diff = pctA - pctB) %>%
@@ -60,7 +60,7 @@ all_markers_updated = all_markers %>%
 tree_structure = hypomap_v09_controls_downsampled@meta.data %>% dplyr::distinct(L1_ID,L2_ID,L3_ID,L4_ID,L5_ID) %>%
   dplyr::arrange(L1_ID,L2_ID,L3_ID,L4_ID)
 tree_structure$L5 = as.character(tree_structure$L5)
-#data.table::fwrite(tree_structure,"/REDACTED-path/HypoMap3D_v09x_treestructure.tsv",sep="\t")
+#data.table::fwrite(tree_structure,"/cephfs/scratch/bruening_scratch/lsteuernagel/data/HypoMap3D/v0.9_eda/hypomap3d_v09x_treestructure.tsv",sep="\t")
 
 # load spatial mapping results - rel masses
 relMass_region_all = data.table::fread("/REDACTED-path/HypoMap3D-data/v0.9/9_objects/spatial/regionwise_relative_masses/regionwise_relative_masses_wo_fibers.csv",data.table = F)
@@ -74,7 +74,7 @@ region_markers = data.table::fread("/REDACTED-path/HypoMap3D-data/v0.9/8_annotat
 region_assignments_L3 = data.table::fread("/REDACTED-path/HypoMap3D-data/v0.9/9_objects/spatial/region_assignments/L3_region_assignments.csv",data.table = F)
 region_assignments_L4 = data.table::fread("/REDACTED-path/HypoMap3D-data/v0.9/9_objects/spatial/region_assignments/L4_region_assignments.csv",data.table = F)
 
-# 
+#
 # dot1 = Seurat::DotPlot(hypomap_v09_controls_downsampled,features = "Pomc",group.by = "L4_desc")
 # dot1_data = dot1$data
 
@@ -89,7 +89,7 @@ dmh_10pct = relMass_region_all %>% dplyr::filter(DMH >= 0.1 & grepl("Gl3|Gb3",ce
 ##########
 
 # we filter for relative mass of 12.5% in DMH (the standard is 10%), but this way we can manually exclude some non-DMH clusters from the LHA as well as Ghrh neurons
-dmh_clusters_L3 = region_assignments_L3 %>% dplyr::filter(region == "DMH" & relative_mass >= 0.125)  # 
+dmh_clusters_L3 = region_assignments_L3 %>% dplyr::filter(region == "DMH" & relative_mass >= 0.125)  #
 dmh_clusters_L4 = region_assignments_L4 %>% dplyr::filter(region == "DMH")
 
 # we manually add back Gb3-208
@@ -104,10 +104,10 @@ dmh_cluster_overview = dmh_clusters_L3 %>%
   dplyr::left_join(cluster_annos[,c("L2_descr","L3_descr")] %>% dplyr::distinct(),by=c("celltype_descr"="L3_descr")) %>%
   dplyr::select(L3_ID = celltype_id , L3_descr= celltype_descr, L2_descr, region_rank, relative_mass, cum_mass, flag) %>% dplyr::arrange(desc(L3_ID))
 
-# we manually add cluster Gb3-208 
+# we manually add cluster Gb3-208
 
 # # add the L2 subclass
-# dmh_cluster_overview  = dmh_cluster_overview %>% 
+# dmh_cluster_overview  = dmh_cluster_overview %>%
 #   dplyr::left_join(tree_structure %>% dplyr::distinct(L2_ID,L4_ID) ,by=c("L4_ID"="L4_ID"))  %>%
 #   dplyr::left_join(cluster_annos_long,by=c("L2_ID"="cluster_id")) %>%
 #   dplyr::rename(L2_descr = cluster_name)
@@ -166,12 +166,12 @@ dmh_cluster_overview$color_L2 = color_vector_L2[match(dmh_cluster_overview$L2_de
 # "#E41A1C"
 # "#4C71A4"
 # "#F781BF"
-# "#E8D430" 
+# "#E8D430"
 # "#CB6651"
-# "#7B7281" 
-# "#B05B3A" 
-# "#47A265"    
-# "#F781BF" 
+# "#7B7281"
+# "#B05B3A"
+# "#47A265"
+# "#F781BF"
 
 ##########
 ### Highlight clusters on global UMAP
@@ -204,7 +204,7 @@ ggsave(filename = paste0(figure_outputpath,"umap_L2_DMH_global",".png"),
        height = 300,
        device = png,
        units="mm"
-       
+
 )
 ggsave(filename = paste0(figure_outputpath,"umap_L2_DMH_global",".pdf"),
        plot = umap_L2_DMH,
@@ -223,7 +223,7 @@ ggsave(filename = paste0(figure_outputpath,"umap_L3_DMH_global",".png"),
        height = 300,
        device = png,
        units="mm"
-       
+
 )
 ggsave(filename = paste0(figure_outputpath,"umap_L3_DMH_global",".pdf"),
        plot = umap_L3_DMH,
@@ -250,18 +250,6 @@ FeaturePlot(DMH_seurat,features = "Prlh",reduction = "umap_DMH",order = TRUE)
 ### save DMH data
 ##########
 
-data.table::fwrite(dmh_cluster_overview,"/REDACTED-path/HypoMap3D/revisions_data/dmh_cluster_overview.tsv",sep="\t")
+data.table::fwrite(dmh_cluster_overview,"/cephfs/scratch/bruening_scratch/lsteuernagel/data/HypoMap3D/revisions_data/dmh_cluster_overview.tsv",sep="\t")
 
-saveRDS(DMH_seurat,"/REDACTED-path/HypoMap3D/revisions_data/dmh_seurat_object.rds")
-
-
-
-
-
-
-
-
-
-
-
-
+saveRDS(DMH_seurat,"/cephfs/scratch/bruening_scratch/lsteuernagel/data/HypoMap3D/revisions_data/dmh_seurat_object.rds")

@@ -17,7 +17,7 @@ Seq_Sim1_projected = anndataR::read_h5ad("/REDACTED-path/HypoMap3D-data/PVN_data
 #Seq_Sim1_projected = NormalizeData(Seq_Sim1_projected)
 Seq_Sim1_projected@meta.data$Cell_ID = rownames(Seq_Sim1_projected@meta.data)
 
-# add projection results  
+# add projection results
 Seq_Sim1_seurat@meta.data = Seq_Sim1_projected@meta.data
 Seq_Sim1_seurat@reductions$embed = Seq_Sim1_projected@reductions$embed
 
@@ -69,7 +69,7 @@ MFISH_Sim1_seurat@meta.data$L4_descr_filt[MFISH_Sim1_seurat@meta.data$L4_descr %
 
 # Get coordinates for all images
 all_coords <- lapply(names(MFISH_Sim1_seurat@images), function(img) {
-  coords <- GetTissueCoordinates(MFISH_Sim1_seurat, 
+  coords <- GetTissueCoordinates(MFISH_Sim1_seurat,
                                  image = img,
                                  which = "centroids")
   coords$image <- img  # track which image each cell came from
@@ -89,9 +89,9 @@ MFISH_Sim1_seurat@meta.data = temp_meta
 
 # Plot each slice separately to assess rotation needed
 lapply(unique(MFISH_Sim1_seurat$image), function(b) {
-  
+
   df <- MFISH_Sim1_seurat@meta.data %>% filter(image == b)
-  
+
   print(ggplot(df, aes(x = x, y = y, color = seurat_clusters)) +
           geom_point(size = 0.3) +
           coord_equal() +
@@ -145,15 +145,15 @@ rotation_angles <- c(
   "PVH7Region4z3L" = -76,
   "PVH7Region5z3L" = -79
 )
-# 
+#
 
 # Rotation function
 rotate_coords <- function(x, y, angle_deg) {
   angle_rad <- angle_deg * pi / 180
-  
+
   x_rot <- x * cos(angle_rad) - y * sin(angle_rad)
   y_rot <- x * sin(angle_rad) + y * cos(angle_rad)
-  
+
   return(data.frame(x_rot = x_rot, y_rot = y_rot))
 }
 
@@ -192,9 +192,9 @@ cowplot::plot_grid(p1,p2,nrow = 2)
 
 #check all
 lapply(unique(MFISH_Sim1_seurat$image), function(b) {
-  
+
   df <- MFISH_Sim1_seurat@meta.data %>% filter(image == b)
-  
+
   print(ggplot(df, aes(x = x_rot, y = y_rot, color = seurat_clusters)) +
           geom_point(size = 0.3) +
           coord_equal() +
@@ -212,9 +212,7 @@ lapply(unique(MFISH_Sim1_seurat$image), function(b) {
 # save result
 
 # MFISH_Sim1_seurat
-saveRDS(MFISH_Sim1_seurat,"/REDACTED-path/HypoMap3D_figure_objects/MFISH_Sim1_figures.rds")
+saveRDS(MFISH_Sim1_seurat,"/REDACTED-path/HypoMap3D-data/PVN_data_CellReports/hypomap3d_figure_objects/MFISH_Sim1_figures.rds")
 
 # Seq_Sim1_seurat
-saveRDS(Seq_Sim1_seurat,"/REDACTED-path/HypoMap3D_figure_objects/Seq_Sim1_figures.rds")
-
-
+saveRDS(Seq_Sim1_seurat,"/REDACTED-path/HypoMap3D-data/PVN_data_CellReports/hypomap3d_figure_objects/Seq_Sim1_figures.rds")
